@@ -9,6 +9,7 @@ class Parser:
     source = 'base'
 
     imagecut = 1
+    uncensored = False
     # update
     proxy = None
     cookies = None
@@ -71,27 +72,28 @@ class Parser:
         ret = etree.fromstring(resp, etree.HTMLParser())
         return ret
 
-    def dictformat(dic, htmltree):
+    def dictformat(self, htmltree):
         dic = {
-            'number': dic.getNum(htmltree),
-            'title': dic.getTitle(htmltree),
-            'studio': dic.getStudio(htmltree),
-            'year': dic.getYear(htmltree),
-            'outline': dic.getOutline(htmltree),
-            'runtime': dic.getRuntime(htmltree),
-            'director': dic.getDirector(htmltree),
-            'actor': dic.getActor(htmltree),
-            'release': dic.getRelease(htmltree),
-            'cover': dic.getCover(htmltree),
-            'cover_small': dic.getSmallCover(htmltree),
-            'extrafanart': dic.getExtrafanart(htmltree),
-            'imagecut': dic.imagecut,
-            'tag': dic.getTags(htmltree),
-            'label': dic.getLabel(htmltree),
-            'actor_photo': dic.getActorPhoto(htmltree),
-            'website': dic.detailurl,
-            'source': dic.source,
-            'series': dic.getSeries(htmltree)
+            'number': self.getNum(htmltree),
+            'title': self.getTitle(htmltree),
+            'studio': self.getStudio(htmltree),
+            'year': self.getYear(htmltree),
+            'outline': self.getOutline(htmltree),
+            'runtime': self.getRuntime(htmltree),
+            'director': self.getDirector(htmltree),
+            'actor': self.getActor(htmltree),
+            'release': self.getRelease(htmltree),
+            'cover': self.getCover(htmltree),
+            'cover_small': self.getSmallCover(htmltree),
+            'extrafanart': self.getExtrafanart(htmltree),
+            'imagecut': self.imagecut,
+            'tag': self.getTags(htmltree),
+            'label': self.getLabel(htmltree),
+            'actor_photo': self.getActorPhoto(htmltree),
+            'website': self.detailurl,
+            'source': self.source,
+            'series': self.getSeries(htmltree),
+            'uncensored': self.uncensored
         }
         return dic
 
