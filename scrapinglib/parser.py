@@ -12,9 +12,11 @@ class Parser:
     # update
     proxy = None
     cookies = None
+    verify = None
+
     number = ''
     detailurl = ''
-    # xpath
+    # xpath expr
     expr_number = ''
     expr_title = ''
     expr_studio = ''
@@ -48,6 +50,9 @@ class Parser:
 
     def updateCore(self, core):
         """ 从`core`内更新参数
+        
+        针对需要传递的参数: cookies, proxy等
+        子类继承后修改
         """
         pass
 
@@ -60,7 +65,9 @@ class Parser:
         return url
 
     def getHtmlTree(self, url):
-        resp = httprequest.get(url)
+        """ 访问网页,返回`etree`
+        """
+        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxy, verify=self.verify)
         ret = etree.fromstring(resp, etree.HTMLParser())
         return ret
 
@@ -88,116 +95,70 @@ class Parser:
         }
         return dic
 
+    def getNum(self, htmltree):
+        return self.getFirst(htmltree, self.expr_number)
+
+    def getTitle(self, htmltree):
+        return self.getFirst(htmltree, self.expr_title)
+
+    def getStudio(self, htmltree):
+        return self.getFirst(htmltree, self.expr_studio)
+
+    def getYear(self, htmltree):
+        return self.getFirst(htmltree, self.expr_year)
+
+    def getRuntime(self, htmltree):
+        return self.getFirst(htmltree, self.expr_runtime)
+
+    def getRelease(self, htmltree):
+        return self.getFirst(htmltree, self.expr_release)
+
+    def getOutline(self, htmltree):
+        return self.getFirst(htmltree, self.expr_outline)
+
+    def getDirector(self, htmltree):
+        return self.getFirst(htmltree, self.expr_director)
+
+    def getActor(self, htmltree):
+        return self.getFirst(htmltree, self.expr_actor)
+
+    def getTags(self, htmltree):
+        return self.getFirst(htmltree, self.expr_tags)
+
+    def getLabel(self, htmltree):
+        return self.getFirst(htmltree, self.expr_label)
+
+    def getSeries(self, htmltree):
+        return self.getFirst(htmltree, self.expr_series)
+
+    def getCover(self, htmltree):
+        return self.getFirst(htmltree, self.expr_cover)
+
+    def getSmallCover(self, htmltree):
+        return self.getFirst(htmltree, self.expr_smallcover)
+
+    def getExtrafanart(self, htmltree):
+        return self.getFirst(htmltree, self.expr_extrafanart)
+
+    def getActorPhoto(self, htmltree):
+        return self.getFirst(htmltree, self.expr_actorphoto)
+
     def getFirst(self, tree, expr):
-        """ 根据表达式从`etree`中获取第一个值
+        """ 根据表达式从`xmltree`中获取第一个匹配值
         """
-        if expr == "":
-            return ""
+        if expr == '':
+            return ''
         result = tree.xpath(expr)
         try:
             return result[0]
         except:
-            return ""
+            return ''
 
     def getAll(self, tree, expr):
+        """ 根据表达式从`xmltree`中获取全部匹配值
+        """
         result = tree.xpath(expr)
         try:
             return result
         except:
-            return ""
-
-    def getNum(self, htmltree):
-        if self.expr_title == '':
             return ''
-        t = self.getFirst(htmltree, self.expr_number)
-        return str(t)
-
-    def getTitle(self, htmltree):
-        if self.expr_title == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_title)
-        return str(t)
-
-    def getStudio(self, htmltree):
-        if self.expr_studio == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_studio)
-        return str(t)
-
-    def getYear(self, htmltree):
-        if self.expr_year == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_year)
-        return str(t)
-
-    def getRuntime(self, htmltree):
-        if self.expr_runtime == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_runtime)
-        return str(t)
-
-    def getRelease(self, htmltree):
-        if self.expr_release == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_release)
-        return str(t)
-
-    def getOutline(self, htmltree):
-        if self.expr_outline == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_outline)
-        return str(t)
-
-    def getDirector(self, htmltree):
-        if self.expr_director == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_director)
-        return str(t)
-
-    def getActor(self, htmltree):
-        if self.expr_actor == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_actor)
-        return str(t)
-
-    def getTags(self, htmltree):
-        if self.expr_tags == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_tags)
-        return str(t)
-
-    def getLabel(self, htmltree):
-        if self.expr_tags == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_label)
-        return str(t)
-
-    def getSeries(self, htmltree):
-        if self.expr_series == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_series)
-        return str(t)
-
-    def getCover(self, htmltree):
-        if self.expr_series == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_cover)
-        return str(t)
-
-    def getSmallCover(self, htmltree):
-        if self.expr_series == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_smallcover)
-        return str(t)
-
-    def getExtrafanart(self, htmltree):
-        if self.expr_series == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_extrafanart)
-        return str(t)
-
-    def getActorPhoto(self, htmltree):
-        if self.expr_series == '':
-            return ''
-        t = self.getFirst(htmltree, self.expr_actorphoto)
-        return str(t)
