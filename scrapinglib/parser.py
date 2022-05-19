@@ -11,7 +11,7 @@ class Parser:
     imagecut = 1
     uncensored = False
     # update
-    proxy = None
+    proxies = None
     cookies = None
     verify = None
 
@@ -34,6 +34,7 @@ class Parser:
     expr_smallcover = ''
     expr_extrafanart = ''
     expr_actorphoto = ''
+    expr_uncensored = ''
 
     def __init__(self) -> None:
         pass
@@ -65,10 +66,15 @@ class Parser:
         url = httprequest.get(number)
         return url
 
+    def getHtml(self, url):
+        """ 访问网页
+        """
+        return httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+
     def getHtmlTree(self, url):
         """ 访问网页,返回`etree`
         """
-        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxy, verify=self.verify)
+        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
         ret = etree.fromstring(resp, etree.HTMLParser())
         return ret
 
@@ -81,7 +87,7 @@ class Parser:
             'outline': self.getOutline(htmltree),
             'runtime': self.getRuntime(htmltree),
             'director': self.getDirector(htmltree),
-            'actor': self.getActor(htmltree),
+            'actor': self.getActors(htmltree),
             'release': self.getRelease(htmltree),
             'cover': self.getCover(htmltree),
             'cover_small': self.getSmallCover(htmltree),
@@ -93,7 +99,7 @@ class Parser:
             'website': self.detailurl,
             'source': self.source,
             'series': self.getSeries(htmltree),
-            'uncensored': self.uncensored
+            'uncensored': self.getUncensored(htmltree)
         }
         return dic
 
@@ -121,8 +127,8 @@ class Parser:
     def getDirector(self, htmltree):
         return self.getFirst(htmltree, self.expr_director)
 
-    def getActor(self, htmltree):
-        return self.getFirst(htmltree, self.expr_actor)
+    def getActors(self, htmltree):
+        return self.getAll(htmltree, self.expr_actor)
 
     def getTags(self, htmltree):
         return self.getFirst(htmltree, self.expr_tags)
@@ -144,6 +150,13 @@ class Parser:
 
     def getActorPhoto(self, htmltree):
         return self.getFirst(htmltree, self.expr_actorphoto)
+
+    def getUncensored(self, htmlree):
+        if self.expr_uncensored:
+            u = self.getAll(htmlree, self.expr_uncensored)
+            return bool(u)
+        else:
+            return self.uncensored
 
     def getFirst(self, tree, expr):
         """ 根据表达式从`xmltree`中获取第一个匹配值

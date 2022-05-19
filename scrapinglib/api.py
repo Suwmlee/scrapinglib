@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import re
+
+from scrapinglib.javbus import Javbus
 from .avsox import Avsox
 
 
@@ -33,9 +35,10 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox']
+    full_sources = ['avsox', 'javbus']
     func_mapping = {
         'avsox': Avsox().search,
+        'javbus': Javbus().search
     }
 
     dbcookies = 'db cookie'
