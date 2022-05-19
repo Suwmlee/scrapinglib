@@ -56,7 +56,8 @@ class Parser:
         针对需要传递的参数: cookies, proxy等
         子类继承后修改
         """
-        pass
+        if core.proxies:
+            self.proxies = core.proxies
 
     def queryNumberUrl(self, number):
         """ 根据番号查询详细信息url

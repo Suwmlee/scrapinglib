@@ -6,9 +6,9 @@ from scrapinglib.javbus import Javbus
 from .avsox import Avsox
 
 
-def search(number, souces=None):
+def search(number, souces=None, proxies=None):
     sc = Scraping()
-    return sc.search(number, souces)
+    return sc.search(number, souces, proxies)
 
 
 class Scraping():
@@ -41,9 +41,10 @@ class Scraping():
         'javbus': Javbus().search
     }
 
-    dbcookies = 'db cookie'
+    proxies = None
 
-    def search(self, number, sources=None):
+    def search(self, number, sources=None, proxies = None):
+        self.proxies = proxies
 
         sources = self.checkSources(sources, number)
         ret = ''
