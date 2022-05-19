@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-
+import json
 from scrapinglib.javbus import Javbus
 from .avsox import Avsox
 
@@ -47,12 +47,27 @@ class Scraping():
         self.proxies = proxies
 
         sources = self.checkSources(sources, number)
-        ret = ''
-        for souce in sources:
-            js = self.func_mapping[souce](number, self)
-            print(js)
+        json_data = {}
+        for source in sources:
+            try:
+                print('[+]select', source)
+                try:
+                    json_data = json.loads(self.func_mapping[source](number, self))
+                except:
+                    json_data = self.func_mapping[source](number, self)
+                # if any service return a valid return, break
+                if self.get_data_state(json_data):
+                    print(f"[+]Find movie [{number}] metadata on website '{source}'")
+                    break
+            except:
+                break
 
-        return ret
+        # Return if data not found in all sources
+        if not json_data:
+            print('[-]Movie Number not found!')
+            return None
+
+        return json_data
 
 
     def checkSources(self, c_sources, file_number):
@@ -109,3 +124,12 @@ class Scraping():
             print('[!] Remove Source : ' + s)
             sources.remove(d)
         return sources
+
+    def get_data_state(self, data: dict) -> bool:  # 元数据获取失败检测
+        if "title" not in data or "number" not in data:
+            return False
+        if data["title"] is None or data["title"] == "" or data["title"] == "null":
+            return False
+        if data["number"] is None or data["number"] == "" or data["number"] == "null":
+            return False
+        return True
