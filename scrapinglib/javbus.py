@@ -7,7 +7,6 @@ import inspect
 from lxml import etree
 from urllib.parse import urljoin
 from .parser import Parser
-from . import httprequest
 
 class Javbus(Parser):
     
@@ -27,6 +26,7 @@ class Javbus(Parser):
     expr_release = '/html/body/div[5]/div[1]/div[2]/p[2]/text()'
     expr_runtime = '/html/body/div[5]/div[1]/div[2]/p[3]/text()'
     expr_actor = '//div[@class="star-name"]/a'
+    expr_actorphoto = '//div[@class="star-name"]/../a/img'
     expr_tags = '/html/head/meta[@name="keywords"]/@content'
     expr_uncensored = '//*[@id="navbar"]/ul[1]/li[@class="active"]/a[contains(@href,"uncensored")]'
 
@@ -34,7 +34,6 @@ class Javbus(Parser):
         
         self.number = number
         self.updateCore(core)
-
         try:    
             url = "https://www." + secrets.choice([
                 'buscdn.fun', 'busdmm.fun', 'busfan.fun', 'busjav.fun',
@@ -45,11 +44,11 @@ class Javbus(Parser):
                 ]) + "/"
             try:
                 self.detailurl = url + number
-                self.htmlcode = httprequest.get(self.detailurl, proxies=self.proxies)
+                self.htmlcode = self.getHtml(self.detailurl)
             except:
                 self.detailurl = 'https://www.javbus.com/' + number
-                self.htmlcode = httprequest.get(self.detailurl, proxies=self.proxies)
-            if "<title>404 Page Not Found" in self.htmlcode:
+                self.htmlcode = self.getHtml(self.detailurl)
+            if self.htmlcode == 404:
                 return {"title": ""}
             htmltree = etree.fromstring(self.htmlcode,etree.HTMLParser())
             result = self.dictformat(htmltree)
@@ -65,8 +64,8 @@ class Javbus(Parser):
 
         w_number = number.replace('.', '-')
         self.detailurl = 'https://www.javbus.red/' + w_number
-        self.htmlcode = httprequest.get(self.detailurl, proxies=self.proxies)
-        if "<title>404 Page Not Found" in self.htmlcode:
+        self.htmlcode = self.getHtml(self.detailurl)
+        if self.htmlcode == 404:
             return {"title": ""}
         htmltree = etree.fromstring(self.htmlcode, etree.HTMLParser())
         result = self.dictformat(htmltree)

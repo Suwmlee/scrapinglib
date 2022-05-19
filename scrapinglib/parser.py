@@ -69,7 +69,10 @@ class Parser:
     def getHtml(self, url):
         """ 访问网页
         """
-        return httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+        if "<title>404 Page Not Found" in resp:
+            return 404
+        return resp
 
     def getHtmlTree(self, url):
         """ 访问网页,返回`etree`
