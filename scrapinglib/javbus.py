@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
+import os
 import secrets
+import inspect
 from lxml import etree
 from urllib.parse import urljoin
 from .parser import Parser
@@ -43,10 +45,10 @@ class Javbus(Parser):
                 ]) + "/"
             try:
                 self.detailurl = url + number
-                self.htmlcode = httprequest.get(self.detailurl)
+                self.htmlcode = httprequest.get(self.detailurl, proxies=self.proxies)
             except:
                 self.detailurl = 'https://www.javbus.com/' + number
-                self.htmlcode = httprequest.get(self.detailurl)
+                self.htmlcode = httprequest.get(self.detailurl, proxies=self.proxies)
             if "<title>404 Page Not Found" in self.htmlcode:
                 return {"title": ""}
             htmltree = etree.fromstring(self.htmlcode,etree.HTMLParser())
@@ -63,7 +65,7 @@ class Javbus(Parser):
 
         w_number = number.replace('.', '-')
         self.detailurl = 'https://www.javbus.red/' + w_number
-        self.htmlcode = httprequest.get(self.detailurl)
+        self.htmlcode = httprequest.get(self.detailurl, proxies=self.proxies)
         if "<title>404 Page Not Found" in self.htmlcode:
             return {"title": ""}
         htmltree = etree.fromstring(self.htmlcode, etree.HTMLParser())
@@ -103,6 +105,17 @@ class Javbus(Parser):
         for i in actors:
             b.append(i.attrib['title'])
         return b
+    
+    def getActorPhoto(self, htmltree):
+        actors = super().getActorPhoto(htmltree)
+        d = {}
+        for i in actors:
+            p = i.attrib['src']
+            if "nowprinting.gif" in p:
+                continue
+            t = i.attrib['title']
+            d[t] = urljoin("https://www.javbus.com", p)
+        return d
 
     def getDirector(self, htmltree):
         if self.uncensored:
@@ -130,3 +143,9 @@ class Javbus(Parser):
             if extrafanart_imgs:
                 return [urljoin('https://www.javbus.com',img) for img in extrafanart_imgs]
         return ''
+
+    def getOutline(self, htmltree):
+        if any(caller for caller in inspect.stack() if os.path.basename(caller.filename) == 'airav.py'):
+            return ''   # 从airav.py过来的调用不计算outline直接返回，避免重复抓取数据拖慢处理速度
+        from .storyline import getStoryline
+        return getStoryline(self.number , uncensored = self.uncensored)

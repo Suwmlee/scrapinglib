@@ -5,11 +5,13 @@ from .parser import Parser
 
 
 class Avsox(Parser):
-    
+
     source = 'avsox'
     imagecut = 3
 
     expr_number = '//span[contains(text(),"识别码:")]/../span[2]/text()'
+    expr_actor = '//a[@class="avatar-box"]'
+    expr_actorphoto = '//a[@class="avatar-box"]'
     expr_title = '/html/body/div[2]/h3/text()'
     expr_year = '//span[contains(text(),"发行时间:")]/../text()'
     expr_studio = '//p[contains(text(),"制作商: ")]/following-sibling::p[1]/a/text()'
@@ -36,24 +38,45 @@ class Avsox(Parser):
     def getNum(self, htmltree):
         new_number = self.getFirst(htmltree, self.expr_number)
         if new_number.upper() != self.number.upper():
-            raise ValueError('number not found')
+            raise ValueError('number not found in ' + self.source)
         self.number = new_number
         return new_number
 
     def getTitle(self, htmltree):
-        t = super().getTitle(htmltree).replace('/','').strip(self.number)
-        return str(t)
+        return super().getTitle(htmltree).replace('/', '').strip(self.number)
 
     def getStudio(self, htmltree):
-        return super().getStudio(htmltree).replace("', '",' ')
+        return super().getStudio(htmltree).replace("', '", ' ')
 
     def getSmallCover(self, htmltree):
-        s = self.getFirst(self.searchtree, self.expr_smallcover)
-        return s
+        """ 使用搜索页面的预览小图
+        """
+        return self.getFirst(self.searchtree, self.expr_smallcover)
 
     def getTags(self, htmltree):
         tags = super().getTags(htmltree).split(',')
-        return [i.strip() for i in tags[2:]]  if len(tags) > 2 else []
+        return [i.strip() for i in tags[2:]] if len(tags) > 2 else []
 
     def getYear(self, htmltree):
         return re.findall('\d{4}', super().getYear(htmltree))[0]
+
+    def getOutline(self, htmltree):
+        from .storyline import getStoryline
+        return getStoryline(self.number)
+
+    def getActors(self, htmltree):
+        a = super().getActors(htmltree)
+        d = []
+        for i in a:
+            d.append(i.find('span').text)
+        return d
+
+    def getActorPhoto(self, htmltree):
+        a = super().getActorPhoto(htmltree)
+        d = {}
+        for i in a:
+            l = i.find('.//img').attrib['src']
+            t = i.find('span').text
+            p2 = {t: l}
+            d.update(p2)
+        return d

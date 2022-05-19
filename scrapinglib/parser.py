@@ -7,7 +7,6 @@ from . import httprequest
 class Parser:
 
     source = 'base'
-
     imagecut = 1
     uncensored = False
     # update
@@ -150,7 +149,7 @@ class Parser:
         return self.getFirst(htmltree, self.expr_extrafanart)
 
     def getActorPhoto(self, htmltree):
-        return self.getFirst(htmltree, self.expr_actorphoto)
+        return self.getAll(htmltree, self.expr_actorphoto)
 
     def getUncensored(self, htmlree):
         if self.expr_uncensored:
@@ -173,6 +172,8 @@ class Parser:
     def getAll(self, tree, expr):
         """ 根据表达式从`xmltree`中获取全部匹配值
         """
+        if expr == '':
+            return ''
         result = tree.xpath(expr)
         try:
             return result
