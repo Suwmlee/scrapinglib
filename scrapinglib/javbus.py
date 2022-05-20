@@ -81,9 +81,9 @@ class Javbus(Parser):
 
     def getStudio(self, htmltree):
         if self.uncensored:
-            return self.getFirst(htmltree, self.expr_studioJa)
+            return self.getTreeIndex(htmltree, self.expr_studioJa)
         else:
-            return self.getFirst(htmltree, self.expr_studio)
+            return self.getTreeIndex(htmltree, self.expr_studio)
 
     def getYear(self, htmltree):
         result = super().getYear(htmltree).strip(" ['']").strip()
@@ -118,15 +118,15 @@ class Javbus(Parser):
 
     def getDirector(self, htmltree):
         if self.uncensored:
-            return self.getFirst(htmltree, self.expr_directorJa)
+            return self.getTreeIndex(htmltree, self.expr_directorJa)
         else:
-            return self.getFirst(htmltree, self.expr_director)
+            return self.getTreeIndex(htmltree, self.expr_director)
 
     def getSeries(self, htmltree):
         if self.uncensored:
-            return self.getFirst(htmltree, self.expr_seriesJa)
+            return self.getTreeIndex(htmltree, self.expr_seriesJa)
         else:
-            return self.getFirst(htmltree, self.expr_series)
+            return self.getTreeIndex(htmltree, self.expr_series)
 
     def getTags(self, htmltree):
         tags = super().getTags(htmltree).split(',')

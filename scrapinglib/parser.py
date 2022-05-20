@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 from lxml import etree
 from . import httprequest
 
@@ -82,74 +83,83 @@ class Parser:
         return ret
 
     def dictformat(self, htmltree):
-        dic = {
-            'number': self.getNum(htmltree),
-            'title': self.getTitle(htmltree),
-            'studio': self.getStudio(htmltree),
-            'year': self.getYear(htmltree),
-            'outline': self.getOutline(htmltree),
-            'runtime': self.getRuntime(htmltree),
-            'director': self.getDirector(htmltree),
-            'actor': self.getActors(htmltree),
-            'release': self.getRelease(htmltree),
-            'cover': self.getCover(htmltree),
-            'cover_small': self.getSmallCover(htmltree),
-            'extrafanart': self.getExtrafanart(htmltree),
-            'imagecut': self.imagecut,
-            'tag': self.getTags(htmltree),
-            'label': self.getLabel(htmltree),
-            'actor_photo': self.getActorPhoto(htmltree),
-            'website': self.detailurl,
-            'source': self.source,
-            'series': self.getSeries(htmltree),
-            'uncensored': self.getUncensored(htmltree)
-        }
-        return dic
+        try:
+            dic = {
+                'number': self.getNum(htmltree),
+                'title': self.getTitle(htmltree),
+                'studio': self.getStudio(htmltree),
+                'year': self.getYear(htmltree),
+                'outline': self.getOutline(htmltree),
+                'runtime': self.getRuntime(htmltree),
+                'director': self.getDirector(htmltree),
+                'actor': self.getActors(htmltree),
+                'release': self.getRelease(htmltree),
+                'cover': self.getCover(htmltree),
+                'cover_small': self.getSmallCover(htmltree),
+                'extrafanart': self.getExtrafanart(htmltree),
+                'imagecut': self.imagecut,
+                'tag': self.getTags(htmltree),
+                'label': self.getLabel(htmltree),
+                'actor_photo': self.getActorPhoto(htmltree),
+                'website': self.detailurl,
+                'source': self.source,
+                'series': self.getSeries(htmltree),
+                'uncensored': self.getUncensored(htmltree)
+            }
+        except Exception as e:
+            print(e)
+            dic = {"title": ""}
+        js = json.dumps(dic, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ':'), )
+        return js
 
     def getNum(self, htmltree):
-        return self.getFirst(htmltree, self.expr_number)
+        """ 增加 strip 过滤
+        """
+        return self.getTreeIndex(htmltree, self.expr_number)
 
     def getTitle(self, htmltree):
-        return self.getFirst(htmltree, self.expr_title)
+        return self.getTreeIndex(htmltree, self.expr_title)
 
     def getStudio(self, htmltree):
-        return self.getFirst(htmltree, self.expr_studio)
+        return self.getTreeIndex(htmltree, self.expr_studio)
 
     def getYear(self, htmltree):
-        return self.getFirst(htmltree, self.expr_year)
+        return self.getTreeIndex(htmltree, self.expr_year)
 
     def getRuntime(self, htmltree):
-        return self.getFirst(htmltree, self.expr_runtime)
+        return self.getTreeIndex(htmltree, self.expr_runtime)
 
     def getRelease(self, htmltree):
-        return self.getFirst(htmltree, self.expr_release)
+        return self.getTreeIndex(htmltree, self.expr_release)
 
     def getOutline(self, htmltree):
-        return self.getFirst(htmltree, self.expr_outline)
+        return self.getTreeIndex(htmltree, self.expr_outline)
 
     def getDirector(self, htmltree):
-        return self.getFirst(htmltree, self.expr_director)
+        return self.getTreeIndex(htmltree, self.expr_director)
 
     def getActors(self, htmltree):
         return self.getAll(htmltree, self.expr_actor)
 
     def getTags(self, htmltree):
-        return self.getFirst(htmltree, self.expr_tags)
+        return self.getTreeIndex(htmltree, self.expr_tags)
 
     def getLabel(self, htmltree):
-        return self.getFirst(htmltree, self.expr_label)
+        return self.getTreeIndex(htmltree, self.expr_label)
 
     def getSeries(self, htmltree):
-        return self.getFirst(htmltree, self.expr_series)
+        return self.getTreeIndex(htmltree, self.expr_series)
 
     def getCover(self, htmltree):
-        return self.getFirst(htmltree, self.expr_cover)
+        """ 增加开头检测 https
+        """
+        return self.getTreeIndex(htmltree, self.expr_cover)
 
     def getSmallCover(self, htmltree):
-        return self.getFirst(htmltree, self.expr_smallcover)
+        return self.getTreeIndex(htmltree, self.expr_smallcover)
 
     def getExtrafanart(self, htmltree):
-        return self.getFirst(htmltree, self.expr_extrafanart)
+        return self.getTreeIndex(htmltree, self.expr_extrafanart)
 
     def getActorPhoto(self, htmltree):
         return self.getAll(htmltree, self.expr_actorphoto)
@@ -161,14 +171,14 @@ class Parser:
         else:
             return self.uncensored
 
-    def getFirst(self, tree, expr):
-        """ 根据表达式从`xmltree`中获取第一个匹配值
+    def getTreeIndex(self, tree, expr, index = 0):
+        """ 根据表达式从`xmltree`中获取匹配值,默认 index 为 0
         """
         if expr == '':
             return ''
         result = tree.xpath(expr)
         try:
-            return result[0]
+            return result[index]
         except:
             return ''
 

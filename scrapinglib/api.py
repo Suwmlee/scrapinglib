@@ -2,7 +2,8 @@
 
 import re
 import json
-from scrapinglib.javbus import Javbus
+from .javbus import Javbus
+from .xcity import Xcity
 from .avsox import Avsox
 
 
@@ -35,10 +36,11 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox', 'javbus']
+    full_sources = ['avsox', 'javbus', 'xcity']
     func_mapping = {
         'avsox': Avsox().search,
-        'javbus': Javbus().search
+        'javbus': Javbus().search,
+        'xcity': Xcity().search
     }
 
     proxies = None
@@ -53,7 +55,9 @@ class Scraping():
                 print('[+]select', source)
                 try:
                     json_data = json.loads(self.func_mapping[source](number, self))
-                except:
+                except Exception as e:
+                    print('[!] 出错啦')
+                    print(e)
                     json_data = self.func_mapping[source](number, self)
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
