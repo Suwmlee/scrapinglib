@@ -33,6 +33,7 @@ class Parser:
     expr_cover = ''
     expr_smallcover = ''
     expr_extrafanart = ''
+    expr_trailer = ''
     expr_actorphoto = ''
     expr_uncensored = ''
 
@@ -75,6 +76,8 @@ class Parser:
             return 404
         if '<title>未找到页面' in resp:
             return 404
+        if '<title>お探しの商品が見つかりません' in resp:
+            return 404
         return resp
 
     def getHtmlTree(self, url):
@@ -99,6 +102,7 @@ class Parser:
                 'cover': self.getCover(htmltree),
                 'cover_small': self.getSmallCover(htmltree),
                 'extrafanart': self.getExtrafanart(htmltree),
+                'trailer': self.getTrailer(htmltree),
                 'imagecut': self.imagecut,
                 'tag': self.getTags(htmltree),
                 'label': self.getLabel(htmltree),
@@ -123,7 +127,7 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_title)
 
     def getStudio(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_studio).strip()
+        return self.getTreeIndex(htmltree, self.expr_studio).strip(" ['']")
 
     def getYear(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_year)
@@ -161,6 +165,9 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_smallcover)
 
     def getExtrafanart(self, htmltree):
+        return self.getTreeIndex(htmltree, self.expr_extrafanart)
+
+    def getTrailer(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_extrafanart)
 
     def getActorPhoto(self, htmltree):
