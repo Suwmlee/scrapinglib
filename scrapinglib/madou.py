@@ -22,7 +22,7 @@ class Madou(Parser):
         self.detailurl = "https://madou.club/" + number + ".html"
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
-            return
+            return 404
         htmltree = etree.fromstring(self.htmlcode, etree.HTMLParser())
         self.detailurl = self.getUrl(htmltree)
 

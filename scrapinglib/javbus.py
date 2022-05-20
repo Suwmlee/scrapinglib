@@ -49,7 +49,7 @@ class Javbus(Parser):
                 self.detailurl = 'https://www.javbus.com/' + number
                 self.htmlcode = self.getHtml(self.detailurl)
             if self.htmlcode == 404:
-                return {"title": ""}
+                return 404
             htmltree = etree.fromstring(self.htmlcode,etree.HTMLParser())
             result = self.dictformat(htmltree)
             return result
@@ -66,7 +66,7 @@ class Javbus(Parser):
         self.detailurl = 'https://www.javbus.red/' + w_number
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
-            return {"title": ""}
+            return 404
         htmltree = etree.fromstring(self.htmlcode, etree.HTMLParser())
         result = self.dictformat(htmltree)
         return result

@@ -27,7 +27,7 @@ class Fc2(Parser):
         self.detailurl = 'https://adult.contents.fc2.com/article/' + self.number + '/'
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
-            return
+            return 404
         htmltree = etree.HTML(self.htmlcode)
         result = self.dictformat(htmltree)
         return result

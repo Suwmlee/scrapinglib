@@ -61,7 +61,10 @@ class Scraping():
             try:
                 print('[+]select', source)
                 try:
-                    json_data = json.loads(self.func_mapping[source](number, self))
+                    data = self.func_mapping[source](number, self)
+                    if data == 404:
+                        continue
+                    json_data = json.loads(data)
                 except Exception as e:
                     print('[!] 出错啦')
                     print(e)
