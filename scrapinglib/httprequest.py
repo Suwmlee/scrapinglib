@@ -32,7 +32,7 @@ def get(url: str, cookies = None, ua: str = None, return_type: str = None, encod
                 result.encoding = encoding or result.apparent_encoding
                 return result.text
         except Exception as e:
-            print("[-]Connect: {} retry {}/{}".format(url, i + 1, retry))
+            print(f"[-]Connect: {url} retry {i + 1}/{retry}")
             errors = str(e)
     if "getaddrinfo failed" in errors:
         print("[-]Connect Failed! Please Check your proxy config")

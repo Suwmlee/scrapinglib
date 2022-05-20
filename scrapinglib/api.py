@@ -3,6 +3,8 @@
 import re
 import json
 
+from scrapinglib.dlsite import Dlsite
+
 from .fc2 import Fc2
 from .madou import Madou
 from .mgstage import Mgstage
@@ -40,7 +42,7 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2']
+    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite']
     func_mapping = {
         'avsox': Avsox().search,
         'javbus': Javbus().search,
@@ -48,6 +50,7 @@ class Scraping():
         'mgstage': Mgstage().search,
         'madou': Madou().search,
         'fc2': Fc2().search,
+        'dlsite': Dlsite().search,
     }
 
     proxies = None
@@ -78,7 +81,7 @@ class Scraping():
 
         # Return if data not found in all sources
         if not json_data:
-            print('[-]Movie Number not found!')
+            print(f'[-]Movie Number [{number}] not found!')
             return None
 
         return json_data

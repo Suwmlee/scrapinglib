@@ -25,11 +25,7 @@ class Xcity(Parser):
     expr_series2 = "//span[contains(text(),'シリーズ')]/../span/text()"
 
     def getStudio(self, htmltree):
-        try:
-            result = str(self.getAll(htmltree, self.expr_studio)).strip(" ['']")
-        except:
-            result = str(self.getAll(htmltree, self.expr_studio2)).strip(" ['']")
-        return result.strip('+').replace("', '", '').replace('"', '')
+        return super().getStudio(htmltree).strip('+').replace("', '", '').replace('"', '')
 
     def getRuntime(self, htmltree):
         return self.getAll(htmltree, self.expr_runtime)[1].strip()
@@ -73,18 +69,6 @@ class Xcity(Parser):
     def getOutline(self, htmltree):
         from .storyline import getStoryline
         return getStoryline(self.number, uncensored=False)
-
-    def getSeries(self, htmltree):
-        try:
-            result = self.getTreeIndex(htmltree, self.expr_series)
-            return result
-        except:
-            pass
-        try:
-            result = self.getTreeIndex(htmltree, self.expr_series2)
-            return result
-        except:
-            return ''
 
     def getActors(self, htmltree):
         htmla = self.browser.page.select('#avodDetails > div > div.frame > div.content > div > ul.profileCL > li.credit-links > a')

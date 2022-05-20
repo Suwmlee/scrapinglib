@@ -16,11 +16,11 @@ class Javbus(Parser):
     expr_title = '/html/head/title/text()'
     expr_year = '/html/body/div[5]/div[1]/div[2]/p[2]/text()'
     expr_studio = '//span[contains(text(),"製作商:")]/../a/text()'
-    expr_studioJa = '//span[contains(text(),"メーカー:")]/../a/text()'
+    expr_studio2 = '//span[contains(text(),"メーカー:")]/../a/text()'
     expr_director = '//span[contains(text(),"導演:")]/../a/text()'
     expr_directorJa = '//span[contains(text(),"監督:")]/../a/text()'
     expr_series = '//span[contains(text(),"系列:")]/../a/text()'
-    expr_seriesJa = '//span[contains(text(),"シリーズ:")]/../a/text()'
+    expr_series2 = '//span[contains(text(),"シリーズ:")]/../a/text()'
     expr_label = '//span[contains(text(),"系列:")]/../a/text()'
     expr_cover = '//a[@class="bigImage"]/@href'
     expr_release = '/html/body/div[5]/div[1]/div[2]/p[2]/text()'
@@ -81,7 +81,7 @@ class Javbus(Parser):
 
     def getStudio(self, htmltree):
         if self.uncensored:
-            return self.getTreeIndex(htmltree, self.expr_studioJa)
+            return self.getTreeIndex(htmltree, self.expr_studio2)
         else:
             return self.getTreeIndex(htmltree, self.expr_studio)
 
@@ -124,7 +124,7 @@ class Javbus(Parser):
 
     def getSeries(self, htmltree):
         if self.uncensored:
-            return self.getTreeIndex(htmltree, self.expr_seriesJa)
+            return self.getTreeIndex(htmltree, self.expr_series2)
         else:
             return self.getTreeIndex(htmltree, self.expr_series)
 

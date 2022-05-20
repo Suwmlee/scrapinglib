@@ -21,6 +21,7 @@ class Parser:
     expr_number = ''
     expr_title = ''
     expr_studio = ''
+    expr_studio2 = ''
     expr_year = ''
     expr_runtime = ''
     expr_release = ''
@@ -29,7 +30,9 @@ class Parser:
     expr_actor = ''
     expr_tags = ''
     expr_label = ''
+    expr_label2 = ''
     expr_series = ''
+    expr_series2 = ''
     expr_cover = ''
     expr_smallcover = ''
     expr_extrafanart = ''
@@ -127,7 +130,15 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_title)
 
     def getStudio(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_studio).strip(" ['']")
+        try:
+            return self.getTreeIndex(htmltree, self.expr_studio).strip(" ['']")
+        except:
+            pass
+        try:
+            ret = self.getTreeIndex(htmltree, self.expr_studio2).strip(" ['']")
+        except:
+            ret = ''
+        return ret
 
     def getYear(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_year)
@@ -151,10 +162,26 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_tags)
 
     def getLabel(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_label)
+        try:
+            return self.getTreeIndex(htmltree, self.expr_label).strip(" ['']")
+        except:
+            pass
+        try:
+            ret = self.getTreeIndex(htmltree, self.expr_label2).strip(" ['']")
+        except:
+            ret = ''
+        return ret
 
     def getSeries(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_series)
+        try:
+            return self.getTreeIndex(htmltree, self.expr_series).strip(" ['']")
+        except:
+            pass
+        try:
+            ret = self.getTreeIndex(htmltree, self.expr_series2).strip(" ['']")
+        except:
+            ret = ''
+        return ret
 
     def getCover(self, htmltree):
         """ 增加开头检测 https
