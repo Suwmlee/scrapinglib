@@ -71,7 +71,9 @@ class Parser:
         """ 访问网页
         """
         resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
-        if "<title>404 Page Not Found" in resp:
+        if '<title>404 Page Not Found' in resp:
+            return 404
+        if '<title>未找到页面' in resp:
             return 404
         return resp
 
@@ -121,7 +123,7 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_title)
 
     def getStudio(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_studio)
+        return self.getTreeIndex(htmltree, self.expr_studio).strip()
 
     def getYear(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_year)

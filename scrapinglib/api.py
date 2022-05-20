@@ -3,6 +3,7 @@
 import re
 import json
 
+from .madou import Madou
 from .mgstage import Mgstage
 from .javbus import Javbus
 from .xcity import Xcity
@@ -38,12 +39,13 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage']
+    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou']
     func_mapping = {
         'avsox': Avsox().search,
         'javbus': Javbus().search,
         'xcity': Xcity().search,
         'mgstage': Mgstage().search,
+        'madou': Madou().search,
     }
 
     proxies = None
