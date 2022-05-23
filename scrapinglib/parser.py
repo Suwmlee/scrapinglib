@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from lxml import etree
+from lxml import etree, html
 from . import httprequest
 
 
@@ -24,6 +24,7 @@ class Parser:
     expr_studio2 = ''
     expr_year = ''
     expr_runtime = ''
+    expr_runtime2 = ''
     expr_release = ''
     expr_outline = ''
     expr_director = ''
@@ -75,11 +76,7 @@ class Parser:
         """ 访问网页
         """
         resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
-        if '<title>404 Page Not Found' in resp:
-            return 404
-        if '<title>未找到页面' in resp:
-            return 404
-        if '<title>お探しの商品が見つかりません' in resp:
+        if '<title>404 Page Not Found' in resp or '<title>未找到页面' in resp or '<title>お探しの商品が見つかりません' in resp:
             return 404
         return resp
 
@@ -141,13 +138,21 @@ class Parser:
         return ret
 
     def getYear(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_year)
+        return self.getTreeIndex(htmltree, self.expr_year).strip()
 
     def getRuntime(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_runtime)
+        try:
+            return self.getTreeIndex(htmltree, self.expr_runtime).strip(" ['']")
+        except:
+            pass
+        try:
+            ret = self.getTreeIndex(htmltree, self.expr_runtime2).strip(" ['']")
+        except:
+            ret = ''
+        return ret
 
     def getRelease(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_release)
+        return self.getTreeIndex(htmltree, self.expr_release).strip()
 
     def getOutline(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_outline)
@@ -207,7 +212,7 @@ class Parser:
         else:
             return self.uncensored
 
-    def getTreeIndex(self, tree, expr, index = 0):
+    def getTreeIndex(self, tree: html.HtmlElement, expr, index = 0):
         """ 根据表达式从`xmltree`中获取匹配值,默认 index 为 0
         """
         if expr == '':
@@ -218,7 +223,7 @@ class Parser:
         except:
             return ''
 
-    def getAll(self, tree, expr):
+    def getAll(self, tree: html.HtmlElement, expr):
         """ 根据表达式从`xmltree`中获取全部匹配值
         """
         if expr == '':

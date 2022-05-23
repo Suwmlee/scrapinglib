@@ -7,12 +7,14 @@ from .parser import Parser
 
 class Dlsite(Parser):
     source = 'dlsite'
-    imagecut = 0
+    imagecut = 4
 
     expr_title = '/html/head/title/text()'
     expr_actor = '//th[contains(text(),"声优")]/../td/a/text()'
-    expr_studio = '//th[contains(text(),"系列名")]/../td/span[1]/a/text()'
+    expr_studio = '//th[contains(text(),"商标名")]/../td/span[1]/a/text()'
     expr_studio2 = '//th[contains(text(),"社团名")]/../td/span[1]/a/text()'
+    expr_runtime = '//strong[contains(text(),"時長")]/../span/text()'
+    expr_runtime2 = '//strong[contains(text(),"時長")]/../span/a/text()'
     expr_outline = '//*[@class="work_parts_area"]/p/text()'
     expr_series = '//th[contains(text(),"系列名")]/../td/span[1]/a/text()'
     expr_series2 = '//th[contains(text(),"社团名")]/../td/span[1]/a/text()'
@@ -22,15 +24,39 @@ class Dlsite(Parser):
     expr_tags = '//th[contains(text(),"分类")]/../td/div/a/text()'
     expr_label = '//th[contains(text(),"系列名")]/../td/span[1]/a/text()'
     expr_label2 = '//th[contains(text(),"社团名")]/../td/span[1]/a/text()'
+    expr_extrafanart = '//*[@id="work_left"]/div/div/div[1]/div/@data-src'
 
     def search(self, number, core: None):
-        self.number = number.upper()
         self.updateCore(core)
-
-        self.detailurl = 'https://www.dlsite.com/maniax/work/=/product_id/' + number + '.html/?locale=zh_CN'
         self.cookies = {'locale': 'zh-cn'}
 
-        htmltree = self.getHtmlTree(self.detailurl)
+        if "RJ" in number or "VJ" in number:
+            self.number = number.upper()
+            self.detailurl = 'https://www.dlsite.com/maniax/work/=/product_id/' + self.number + '.html/?locale=zh_CN'
+            htmltree = self.getHtmlTree(self.detailurl)
+        else:
+            self.detailurl = f'https://www.dlsite.com/maniax/fsr/=/language/jp/sex_category/male/keyword/{number}/order/trend/work_type_category/movie'
+            htmltree = self.getHtmlTree(self.detailurl)
+            search_result = self.getAll(htmltree, '//*[@id="search_result_img_box"]/li[1]/dl/dd[2]/div[2]/a/@href')
+            if len(search_result) == 0:
+                number = number.replace("THE ANIMATION", "").replace("he Animation", "").replace("t", "").replace("T","")
+                htmltree = self.getHtmlTree(f'https://www.dlsite.com/maniax/fsr/=/language/jp/sex_category/male/keyword/{number}/order/trend/work_type_category/movie')
+                search_result = self.getAll(htmltree, '//*[@id="search_result_img_box"]/li[1]/dl/dd[2]/div[2]/a/@href')
+                if len(search_result) == 0:
+                    if "～" in number:
+                        number = number.replace("～","〜")
+                    elif "〜" in number:
+                        number = number.replace("〜","～")
+                    htmltree = self.getHtmlTree(f'https://www.dlsite.com/maniax/fsr/=/language/jp/sex_category/male/keyword/{number}/order/trend/work_type_category/movie')
+                    search_result = self.getAll(htmltree, '//*[@id="search_result_img_box"]/li[1]/dl/dd[2]/div[2]/a/@href')
+                    if len(search_result) == 0:
+                        number = number.replace('上巻', '').replace('下巻', '').replace('前編', '').replace('後編', '')
+                        htmltree = self.getHtmlTree(f'https://www.dlsite.com/maniax/fsr/=/language/jp/sex_category/male/keyword/{number}/order/trend/work_type_category/movie')
+                        search_result = self.getAll(htmltree, '//*[@id="search_result_img_box"]/li[1]/dl/dd[2]/div[2]/a/@href')
+            self.detailurl = search_result[0]
+            htmltree = self.getHtmlTree(self.detailurl)
+            self.number = str(re.findall("\wJ\w+", self.detailurl)).strip(" [']")
+
         result = self.dictformat(htmltree)
         return result
 
@@ -41,6 +67,7 @@ class Dlsite(Parser):
         result = super().getTitle(htmltree)
         result = result[:result.rfind(' | DLsite')]
         result = result[:result.rfind(' [')]
+        result = result.replace('【HD版】', '')
         return result
 
     def getOutline(self, htmltree):
@@ -66,3 +93,12 @@ class Dlsite(Parser):
             return result
         except:
             return release
+
+    def getExtrafanart(self, htmltree):
+        try:
+            result = []
+            for i in self.getAll(self.expr_extrafanart):
+                result.append("https:" + i)
+        except:
+            result = ''
+        return result
