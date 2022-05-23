@@ -43,6 +43,37 @@ def get(url: str, cookies = None, ua: str = None, return_type: str = None, encod
     raise Exception('Connect Failed')
 
 
+def post(url: str, data: dict, cookies = None, ua: str = None, return_type: str = None, encoding: str = None,
+        retry: int = 3, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+    """
+    是否使用代理应由上层处理
+    """
+    errors = ""
+    headers = {"User-Agent": ua or G_USER_AGENT}
+
+    for i in range(retry):
+        try:
+            result = requests.post(url, data=data, headers=headers, timeout=timeout, proxies=proxies,
+                                  verify=verify,
+                                  cookies=cookies)
+            if return_type == "object":
+                return result
+            elif return_type == "content":
+                return result.content
+            else:
+                result.encoding = encoding or result.apparent_encoding
+                return result
+        except Exception as e:
+            print(f"[-]Connect: {url} retry {i + 1}/{retry}")
+            errors = str(e)
+    if "getaddrinfo failed" in errors:
+        print("[-]Connect Failed! Please Check your proxy config")
+        print("[-]" + errors)
+    else:
+        print("[-]" + errors)
+        print('[-]Connect Failed! Please check your Proxy or Network!')
+    raise Exception('Connect Failed')
+
 
 #
 # TODO: 以下临时使用，更新完各站后，再更新

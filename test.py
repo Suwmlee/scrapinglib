@@ -37,5 +37,8 @@ proxydict = {
 # print(search('FC2-607854', 'fc2', proxies=proxydict))
 # print(search('FC2-2787433', 'fc2', proxies=proxydict))
 
-print(search('VJ013178', 'dlsite', proxies=proxydict))
-print(search('RJ329607', 'dlsite', proxies=proxydict))
+# print(search('VJ013178', 'dlsite', proxies=proxydict))
+# print(search('RJ329607', 'dlsite', proxies=proxydict))
+# print(search('牝教師4～穢された教壇～ 「生意気ドジっ娘女教師・美結～高飛車ハメ堕ち2濁金」', 'dlsite', proxies=proxydict))
+ 
+print(search('jul-404', 'jav321', proxies=proxydict))

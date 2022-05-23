@@ -4,6 +4,7 @@ import re
 import json
 
 from scrapinglib.dlsite import Dlsite
+from scrapinglib.jav321 import Jav321
 
 from .fc2 import Fc2
 from .madou import Madou
@@ -42,7 +43,7 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite']
+    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite', 'jav321']
     func_mapping = {
         'avsox': Avsox().search,
         'javbus': Javbus().search,
@@ -51,6 +52,7 @@ class Scraping():
         'madou': Madou().search,
         'fc2': Fc2().search,
         'dlsite': Dlsite().search,
+        'jav321': Jav321().search,
     }
 
     proxies = None
