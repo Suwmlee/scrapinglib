@@ -76,7 +76,10 @@ class Parser:
         """ 访问网页
         """
         resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
-        if '<title>404 Page Not Found' in resp or '<title>未找到页面' in resp or '<title>お探しの商品が見つかりません' in resp:
+        if '<title>404 Page Not Found' in resp \
+            or '<title>未找到页面' in resp \
+            or '404 Not Found' in resp \
+            or '<title>お探しの商品が見つかりません' in resp:
             return 404
         return resp
 
@@ -212,7 +215,7 @@ class Parser:
         else:
             return self.uncensored
 
-    def getTreeIndex(self, tree: html.HtmlElement, expr, index = 0):
+    def getTreeIndex(self, tree: html.HtmlElement, expr, index=0):
         """ 根据表达式从`xmltree`中获取匹配值,默认 index 为 0
         """
         if expr == '':

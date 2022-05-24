@@ -4,6 +4,7 @@ import re
 import json
 
 from scrapinglib.dlsite import Dlsite
+from scrapinglib.fanza import Fanza
 from scrapinglib.jav321 import Jav321
 
 from .fc2 import Fc2
@@ -43,7 +44,7 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite', 'jav321']
+    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite', 'jav321', 'fanza']
     func_mapping = {
         'avsox': Avsox().search,
         'javbus': Javbus().search,
@@ -53,6 +54,7 @@ class Scraping():
         'fc2': Fc2().search,
         'dlsite': Dlsite().search,
         'jav321': Jav321().search,
+        'fanza': Fanza().search,
     }
 
     proxies = None
