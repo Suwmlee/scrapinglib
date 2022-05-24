@@ -3,6 +3,7 @@
 import re
 import json
 from scrapinglib.airav import Airav
+from scrapinglib.carib import Carib
 
 from scrapinglib.dlsite import Dlsite
 from scrapinglib.fanza import Fanza
@@ -45,7 +46,7 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite', 'jav321', 'fanza', 'airav']
+    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite', 'jav321', 'fanza', 'airav', 'carib']
     func_mapping = {
         'avsox': Avsox().search,
         'javbus': Javbus().search,
@@ -57,6 +58,7 @@ class Scraping():
         'jav321': Jav321().search,
         'fanza': Fanza().search,
         'airav': Airav().search,
+        'carib': Carib().search,
     }
 
     proxies = None

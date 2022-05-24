@@ -72,21 +72,24 @@ class Parser:
         url = httprequest.get(number)
         return url
 
-    def getHtml(self, url):
+    def getHtml(self, url, type = None):
         """ 访问网页
         """
-        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify, return_type=type)
         if '<title>404 Page Not Found' in resp \
             or '<title>未找到页面' in resp \
             or '404 Not Found' in resp \
+            or '<title>404' in resp \
             or '<title>お探しの商品が見つかりません' in resp:
             return 404
         return resp
 
-    def getHtmlTree(self, url):
+    def getHtmlTree(self, url, type = None):
         """ 访问网页,返回`etree`
         """
-        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+        resp = self.getHtml(url, type)
+        if resp == 404:
+            return 404
         ret = etree.fromstring(resp, etree.HTMLParser())
         return ret
 
@@ -127,7 +130,7 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_number)
 
     def getTitle(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_title)
+        return self.getTreeIndex(htmltree, self.expr_title).strip()
 
     def getStudio(self, htmltree):
         try:
@@ -145,7 +148,7 @@ class Parser:
 
     def getRuntime(self, htmltree):
         try:
-            return self.getTreeIndex(htmltree, self.expr_runtime).strip(" ['']")
+            return self.getTreeIndex(htmltree, self.expr_runtime).strip(" ['']").strip()
         except:
             pass
         try:
@@ -158,7 +161,7 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_release).strip()
 
     def getOutline(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_outline)
+        return self.getTreeIndex(htmltree, self.expr_outline).strip()
 
     def getDirector(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_director)
@@ -203,7 +206,7 @@ class Parser:
         return self.getTreeIndex(htmltree, self.expr_extrafanart)
 
     def getTrailer(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_extrafanart)
+        return self.getTreeIndex(htmltree, self.expr_trailer)
 
     def getActorPhoto(self, htmltree):
         return self.getAll(htmltree, self.expr_actorphoto)
