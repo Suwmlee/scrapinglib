@@ -158,10 +158,10 @@ class Parser:
         return ret
 
     def getRelease(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_release).strip()
+        return self.getTreeIndex(htmltree, self.expr_release).strip().replace('/','-')
 
     def getOutline(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_outline).strip()
+        return self.getTreeIndex(htmltree, self.expr_outline).strip().replace("\n","")
 
     def getDirector(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_director)

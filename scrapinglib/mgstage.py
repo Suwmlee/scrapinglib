@@ -51,9 +51,6 @@ class Mgstage(Parser):
     def getRuntime(self, htmltree):
         return super().getRuntime(htmltree).rstrip('mi')
 
-    def getRelease(self, htmltree):
-        return super().getRelease(htmltree).replace('/','-')
-
     def getCover(self, htmltree):
         return super().getCover(self.htmlcodetree)
 
