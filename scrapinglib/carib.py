@@ -47,9 +47,6 @@ class Carib(Parser):
                 r.append(act)
         return r
 
-    def getRelease(self, htmltree):
-        return super().getRelease(htmltree).replace('/','-')
-
     def getNum(self, htmltree):
         return self.number
 

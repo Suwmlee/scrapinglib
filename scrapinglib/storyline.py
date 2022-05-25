@@ -31,7 +31,7 @@ class noThread(object):
 # 获取剧情介绍 从列表中的站点同时查，取值优先级从前到后
 def getStoryline(number, title = None, sites: list=None, uncensored=None):
     start_time = time.time()
-    debug = True
+    debug = False
     storyine_sites = "1:avno1,4:airavwiki".split(',')
     if uncensored:
         storyine_sites += "3:58avgo".split(',')
