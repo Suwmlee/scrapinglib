@@ -1,11 +1,24 @@
 
 
+from http.cookies import SimpleCookie
 from scrapinglib import search
+
+def load_cookies(rawcookie):
+    cookie = SimpleCookie()
+    cookie.load(rawcookie)
+    cookies = {}
+    for key, morsel in cookie.items():
+        cookies[key] = morsel.value
+    return cookies
 
 proxydict = {
     "http": "socks5h://127.0.0.1:1080",
     "https": "socks5h://127.0.0.1:1080"
 }
+# NOTE: 浏览器内鼠标选取复制,不是右键`copy value`
+# javdb仅VIP才能浏览部分页面，使用cookies的意义不大了
+cookies_copy = "theme=auto; locale=zh; _ym_d=1645511085; _ym_uid=1645511085939221453; over18=1; list_mode=h; _ym_isad=1; hide_app_banner=1"
+cookies = load_cookies(cookies_copy)
 
 # print(search('012717_472', 'avsox', proxies=proxydict)))
 # print(search('FC2-PPV-2848294', 'avsox', proxies=proxydict)))
@@ -68,17 +81,17 @@ proxydict = {
 # print(search('834255', 'gcolle', proxies=proxydict))
 # print(search('814179', 'gcolle', proxies=proxydict))
 
-print(search('AGAV-042', 'javdb', proxies=proxydict))
-print(search('BANK-022', 'javdb', proxies=proxydict))
-print(search('070116-197', 'javdb', proxies=proxydict))
-print(search('093021_539', 'javdb', proxies=proxydict))  # 没有剧照 片商pacopacomama
-# print(search('FC2-2278260', 'javdb', proxies=proxydict))
+# print(search('AGAV-042', 'javdb', proxies=proxydict))
+# print(search('BANK-022', 'javdb', proxies=proxydict))
+# print(search('070116-197', 'javdb', proxies=proxydict))
+# print(search('093021_539', 'javdb', proxies=proxydict))  # 没有剧照 片商pacopacomama
+# print(search('FC2-2278260', 'javdb', proxies=proxydict, dbcookies=cookies))
 # print(search('FC2-735670', 'javdb', proxies=proxydict))
 # print(search('FC2-1174949', 'javdb', proxies=proxydict)) # not found
-print(search('MVSD-439', 'javdb', proxies=proxydict))
+# print(search('MVSD-439', 'javdb', proxies=proxydict))
 # print(search('EHM0001', 'javdb', proxies=proxydict)) # not found
 # print(search('FC2-2314275', 'javdb', proxies=proxydict))
-print(search('EBOD-646', 'javdb', proxies=proxydict))
-print(search('LOVE-262', 'javdb', proxies=proxydict))
-print(search('ABP-890', 'javdb', proxies=proxydict))
-print(search('blacked.14.12.08', 'javdb', proxies=proxydict))
+# print(search('EBOD-646', 'javdb', proxies=proxydict))
+# print(search('LOVE-262', 'javdb', proxies=proxydict))
+# print(search('ABP-890', 'javdb', proxies=proxydict))
+# print(search('blacked.14.12.08', 'javdb', proxies=proxydict))

@@ -19,9 +19,9 @@ from .xcity import Xcity
 from .avsox import Avsox
 
 
-def search(number, souces=None, proxies=None):
+def search(number, souces=None, proxies=None, dbcookies=None):
     sc = Scraping()
-    return sc.search(number, souces, proxies)
+    return sc.search(number, souces, proxies=proxies, dbcookies=dbcookies)
 
 
 class Scraping():
@@ -71,8 +71,9 @@ class Scraping():
     proxies = None
     dbcookies = None
 
-    def search(self, number, sources=None, proxies = None):
+    def search(self, number, sources=None, proxies=None, dbcookies=None):
         self.proxies = proxies
+        self.dbcookies = dbcookies
 
         sources = self.checkSources(sources, number)
         json_data = {}

@@ -218,6 +218,7 @@ class Javdb(Parser):
             x = re.findall(r'/actors/(.*)', i.attrib['href'], re.A)
             if not len(x) or not len(x[0]) or i.text not in actors:
                 continue
+            # NOTE: https://c1.jdbstatic.com 会经常变动，直接使用页面内的地址获取
             # actor_id = x[0]
             # pic_url = f"https://c1.jdbstatic.com/avatars/{actor_id[:2].lower()}/{actor_id}.jpg"
             # if not self.session.head(pic_url).ok:

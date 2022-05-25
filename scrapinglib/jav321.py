@@ -14,6 +14,7 @@ class Jav321(Parser):
     expr_title = "/html/body/div[2]/div[1]/div[1]/div[1]/h3/text()"
     expr_cover = "/html/body/div[2]/div[2]/div[1]/p/a/img/@src"
     expr_outline = "/html/body/div[2]/div[1]/div[1]/div[2]/div[3]/div/text()"
+    # NOTE: 统一使用 xpath
     expr_number = '//b[contains(text(),"品番")]/following-sibling::node()'
     expr_actor = '//b[contains(text(),"出演者")]/following-sibling::a[starts-with(@href,"/star")]'
     expr_label = '//b[contains(text(),"メーカー")]/following-sibling::a[starts-with(@href,"/company")]'
