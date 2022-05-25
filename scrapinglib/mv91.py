@@ -41,8 +41,7 @@ class Mv91(Parser):
                 result = ' '.join(num.replace('/',' ').split())
                 result = result.split()[1]
                 if self.number.upper() != result.upper():
-                    print(f'[!]{self.number} find {result} in mv91, not match')
-                    self.number = result
+                    raise Exception(f'[!] {self.number}: find {result} in mv91, not match')
             return result.strip()
         except:
             return ''

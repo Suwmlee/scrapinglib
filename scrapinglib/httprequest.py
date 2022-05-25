@@ -100,11 +100,12 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 def get_html_session(url: str = None, cookies = None, ua: str = None, return_type: str = None,
                      encoding: str = None, retry: int = 3, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
     session = requests.Session()
-    session.cookies = cookies
     retries = Retry(total=retry, connect=retry, backoff_factor=1,
                     status_forcelist=[429, 500, 502, 503, 504])
     session.mount("https://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
     session.mount("http://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
+    if cookies:
+        session.cookies = cookies
     if verify:
         session.verify = verify
     if proxies:
