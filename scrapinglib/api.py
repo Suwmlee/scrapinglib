@@ -2,15 +2,15 @@
 
 import re
 import json
+
 from scrapinglib.airav import Airav
 from scrapinglib.carib import Carib
-
 from scrapinglib.dlsite import Dlsite
 from scrapinglib.fanza import Fanza
 from scrapinglib.gcolle import Gcolle
 from scrapinglib.jav321 import Jav321
+from scrapinglib.javdb import Javdb
 from scrapinglib.mv91 import Mv91
-
 from .fc2 import Fc2
 from .madou import Madou
 from .mgstage import Mgstage
@@ -48,7 +48,9 @@ class Scraping():
 
     """
 
-    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 'dlsite', 'jav321', 'fanza', 'airav', 'carib', 'mv91', 'gcolle']
+    full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 
+                    'dlsite', 'jav321', 'fanza', 'airav', 'carib', 'mv91',
+                    'gcolle', 'javdb']
     func_mapping = {
         'avsox': Avsox().search,
         'javbus': Javbus().search,
@@ -63,9 +65,11 @@ class Scraping():
         'carib': Carib().search,
         'mv91': Mv91().search,
         'gcolle': Gcolle().search,
+        'javdb': Javdb().search,
     }
 
     proxies = None
+    dbcookies = None
 
     def search(self, number, sources=None, proxies = None):
         self.proxies = proxies
@@ -83,7 +87,7 @@ class Scraping():
                 except Exception as e:
                     print('[!] 出错啦')
                     print(e)
-                    json_data = self.func_mapping[source](number, self)
+                    # json_data = self.func_mapping[source](number, self)
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
                     print(f"[+]Find movie [{number}] metadata on website '{source}'")

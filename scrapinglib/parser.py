@@ -35,11 +35,14 @@ class Parser:
     expr_series = ''
     expr_series2 = ''
     expr_cover = ''
+    expr_cover2 = ''
     expr_smallcover = ''
     expr_extrafanart = ''
     expr_trailer = ''
     expr_actorphoto = ''
     expr_uncensored = ''
+    expr_userrating = ''
+    expr_uservotes = ''
 
     def __init__(self) -> None:
         pass
@@ -116,7 +119,9 @@ class Parser:
                 'website': self.detailurl,
                 'source': self.source,
                 'series': self.getSeries(htmltree),
-                'uncensored': self.getUncensored(htmltree)
+                'uncensored': self.getUncensored(htmltree),
+                'userrating': self.getUserRating(htmltree),
+                'uservotes': self.getUserVotes(htmltree)
             }
         except Exception as e:
             print(e)
@@ -138,24 +143,22 @@ class Parser:
         except:
             pass
         try:
-            ret = self.getTreeIndex(htmltree, self.expr_studio2).strip(" ['']")
+            return self.getTreeIndex(htmltree, self.expr_studio2).strip(" ['']")
         except:
-            ret = ''
-        return ret
+            return ''
 
     def getYear(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_year).strip()
 
     def getRuntime(self, htmltree):
         try:
-            return self.getTreeIndex(htmltree, self.expr_runtime).strip(" ['']").strip()
+            return self.getTreeIndex(htmltree, self.expr_runtime).strip("\n\t ['']")
         except:
             pass
         try:
-            ret = self.getTreeIndex(htmltree, self.expr_runtime2).strip(" ['']")
+            return self.getTreeIndex(htmltree, self.expr_runtime2).strip("\n\t ['']")
         except:
-            ret = ''
-        return ret
+            return ''
 
     def getRelease(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_release).strip().replace('/','-')
@@ -178,10 +181,9 @@ class Parser:
         except:
             pass
         try:
-            ret = self.getTreeIndex(htmltree, self.expr_label2).strip(" ['']")
+            return self.getTreeIndex(htmltree, self.expr_label2).strip(" ['']")
         except:
-            ret = ''
-        return ret
+            return ''
 
     def getSeries(self, htmltree):
         try:
@@ -189,21 +191,25 @@ class Parser:
         except:
             pass
         try:
-            ret = self.getTreeIndex(htmltree, self.expr_series2).strip(" ['']")
+            return self.getTreeIndex(htmltree, self.expr_series2).strip(" ['']")
         except:
-            ret = ''
-        return ret
+            return ''
 
     def getCover(self, htmltree):
-        """ 增加开头检测 https
-        """
-        return self.getTreeIndex(htmltree, self.expr_cover)
+        try:
+            return self.getTreeIndex(htmltree, self.expr_cover).strip(" ['']")
+        except:
+            pass
+        try:
+            return self.getTreeIndex(htmltree, self.expr_cover2).strip(" ['']")
+        except:
+            return ''
 
     def getSmallCover(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_smallcover)
 
     def getExtrafanart(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_extrafanart)
+        return self.getAll(htmltree, self.expr_extrafanart)
 
     def getTrailer(self, htmltree):
         return self.getTreeIndex(htmltree, self.expr_trailer)
@@ -217,6 +223,12 @@ class Parser:
             return bool(u)
         else:
             return self.uncensored
+
+    def getUserRating(self, htmltree):
+        return self.getAll(htmltree, self.expr_userrating)
+
+    def getUserVotes(self, htmltree):
+        return self.getAll(htmltree, self.expr_uservotes)
 
     def getTreeIndex(self, tree: html.HtmlElement, expr, index=0):
         """ 根据表达式从`xmltree`中获取匹配值,默认 index 为 0
