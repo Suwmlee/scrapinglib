@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import re
 from lxml import etree, html
 from . import httprequest
 
@@ -22,7 +23,6 @@ class Parser:
     expr_title = ''
     expr_studio = ''
     expr_studio2 = ''
-    expr_year = ''
     expr_runtime = ''
     expr_runtime2 = ''
     expr_release = ''
@@ -148,15 +148,21 @@ class Parser:
             return ''
 
     def getYear(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_year).strip()
+        """ year基本都是从release中解析的
+        """
+        try:
+            release = self.getRelease(htmltree)
+            return str(re.findall('\d{4}', release)).strip(" ['']")
+        except:
+            return release
 
     def getRuntime(self, htmltree):
         try:
-            return self.getTreeIndex(htmltree, self.expr_runtime).strip("\n\t ['']")
+            return self.getTreeIndex(htmltree, self.expr_runtime).strip("\n\t ['']").rstrip('mi')
         except:
             pass
         try:
-            return self.getTreeIndex(htmltree, self.expr_runtime2).strip("\n\t ['']")
+            return self.getTreeIndex(htmltree, self.expr_runtime2).strip("\n\t ['']").rstrip('mi')
         except:
             return ''
 

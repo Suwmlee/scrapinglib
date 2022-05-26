@@ -11,7 +11,6 @@ class Mv91(Parser):
 
     expr_number = '//div[@class="player-title"]/text()'
     expr_title = '//div[@class="player-title"]/text()'
-    expr_year = '//p[@class="date"]/text()'
     expr_release = '//p[@class="date"]/text()'
     expr_outline = '//div[@class="play-text"]/text()'
     expr_tags = '//div[@class="player-tag"]/text()'
@@ -61,16 +60,6 @@ class Mv91(Parser):
 
     def getStudio(self, htmltree):
         return '91制片厂'
-
-    def getYear(self, htmltree):
-        try:
-            result = super().getYear(htmltree).replace('/','-')
-            date = result.replace('日期：','')
-            if isinstance(date, str) and len(date):
-                return date[:4]
-        except:
-            pass
-        return ''
 
     def getTags(self, htmltree):
         return self.getAll(htmltree, self.expr_tags)

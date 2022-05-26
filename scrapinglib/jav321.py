@@ -64,12 +64,6 @@ class Jav321(Parser):
     def getRuntime(self, htmltree):
         return super().getRuntime(htmltree).split(": ")[1]
 
-    def getYear(self, htmltree):
-        try:
-            return self.getRelease(htmltree)[:4]
-        except:
-            return ''
-
     def parseElement(self, all):
         if all:
             ret = []

@@ -86,14 +86,6 @@ class Dlsite(Parser):
     def getTags(self, htmltree):
         return self.getAll(htmltree, self.expr_tags)
 
-    def getYear(self, htmltree):
-        try:
-            release = self.getRelease(htmltree)
-            result = str(re.search('\d{4}', release).group())
-            return result
-        except:
-            return release
-
     def getExtrafanart(self, htmltree):
         try:
             result = []

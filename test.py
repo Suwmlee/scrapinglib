@@ -16,12 +16,12 @@ proxydict = {
     "https": "socks5h://127.0.0.1:1080"
 }
 # NOTE: 浏览器内鼠标选取复制,不是右键`copy value`
-# javdb仅VIP才能浏览部分页面，使用cookies的意义不大了
-cookies_copy = "theme=auto; locale=zh; _ym_d=1645511085; _ym_uid=1645511085939221453; over18=1; list_mode=h; _ym_isad=1; hide_app_banner=1"
-cookies = load_cookies(cookies_copy)
+# javdb仅VIP才能浏览fc2等页面，因此使用cookies刮削fc2的方式不可行了
+# cookies_copy = "theme=auto; locale=zh; _ym_d=1645511085; _ym_uid=1645511085939221453; over18=1; list_mode=h; _ym_isad=1; hide_app_banner=1"
+# cookies = load_cookies(cookies_copy)
 
-# print(search('012717_472', 'avsox', proxies=proxydict)))
-# print(search('FC2-PPV-2848294', 'avsox', proxies=proxydict)))
+# print(search('012717_472', 'avsox', proxies=proxydict))
+# print(search('FC2-PPV-2848294', 'avsox', proxies=proxydict))
 
 # print(search('STAR-438', 'javbus', proxies=proxydict))
 # print(search('ABP-960', 'javbus', proxies=proxydict))

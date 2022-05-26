@@ -37,13 +37,6 @@ class Fc2(Parser):
 
     def getRelease(self, htmltree):
         return super().getRelease(htmltree).strip(" ['販売日 : ']").replace('/','-')
-
-    def getYear(self, htmltree):
-        try:
-            result = re.search('\d{4}',self.getRelease(htmltree)).group()
-            return result
-        except:
-            return ''
     
     def getActors(self, htmltree):
         actors = super().getActors(htmltree)

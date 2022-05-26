@@ -11,7 +11,6 @@ class Carib(Parser):
     uncensored = True
 
     expr_title = "//div[@class='movie-info section']/div[@class='heading']/h1[@itemprop='name']/text()"
-    expr_year = "//li[2]/span[@class='spec-content']/text()"
     expr_release = "//li[2]/span[@class='spec-content']/text()"
     expr_runtime = "//span[@class='spec-content']/span[@itemprop='duration']/text()"
     expr_actor = "//span[@class='spec-content']/a[@itemprop='actor']/span/text()"
@@ -35,9 +34,6 @@ class Carib(Parser):
 
     def getStudio(self, htmltree):
         return '加勒比'
-
-    def getYear(self, htmltree):
-        return super().getYear(htmltree)[:4]
 
     def getActors(self, htmltree):
         r = []

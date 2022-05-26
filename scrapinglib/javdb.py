@@ -22,7 +22,6 @@ class Javdb(Parser):
     expr_uncensored = '//strong[contains(text(),"類別")]/../span/a[contains(@href,"/tags/uncensored?") or contains(@href,"/tags/western?")]'
     expr_actor = '//span[@class="value"]/a[contains(@href,"/actors/")]/text()'
     expr_actor2 = '//span[@class="value"]/a[contains(@href,"/actors/")]/../strong/@class'
-    expr_year = '//strong[contains(text(),"日期")]/../span/text()'
     expr_release = '//strong[contains(text(),"日期")]/../span/text()'
     expr_studio = '//strong[contains(text(),"片商")]/../span/a/text()'
     expr_studio2 = '//strong[contains(text(),"賣家:")]/../span/a/text()'
@@ -160,9 +159,6 @@ class Javdb(Parser):
             return self.getAll(htmltree, self.expr_studio2).strip(" ['']")
         except:
             return ''
-
-    def getYear(self, htmltree):
-        return re.findall('\d{4}', super().getYear(htmltree))[0]
 
     def getTrailer(self, htmltree):
         video_pather = re.compile(r'<video id\=\".*?>\s*?<source src=\"(.*?)\"')

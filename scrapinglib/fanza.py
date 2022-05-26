@@ -135,9 +135,6 @@ class Fanza(Parser):
     
     def getLabel(self, htmltree):
         return self.getFanzaStrings('レーベル')
-    
-    def getYear(self, htmltree):
-        return re.findall('\d{4}',self.getRelease(htmltree))[0]
 
     def getSeries(self, htmltree):
         return self.getFanzaStrings('シリーズ：')

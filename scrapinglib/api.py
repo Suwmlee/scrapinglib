@@ -40,7 +40,7 @@ class Scraping():
         cookies
         proxy
         sources
-        multi threading
+        TODO multi threading (加速是否会触发反爬？)
 
         [x] translate
         [x] naming rule

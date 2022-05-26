@@ -19,7 +19,6 @@ class Gcolle(Parser):
     expr_label = '//td[contains(text(),"アップロード会員名")]/b/text()'
     expr_series = '//td[contains(text(),"アップロード会員名")]/b/text()'
     expr_release = '//td[contains(text(),"商品登録日")]/../td[2]/time/@datetime'
-    expr_year = '//td[contains(text(),"商品登録日")]/../td[2]/time/@datetime'
     expr_cover = '//*[@id="cart_quantity"]/table/tr[3]/td/table/tr/td/a/@href'
     expr_tags = '//*[@id="cart_quantity"]/table/tr[4]/td/a/text()'
     expr_outline = '//*[@id="cart_quantity"]/table/tr[3]/td/p/text()'
@@ -42,15 +41,11 @@ class Gcolle(Parser):
         result = self.dictformat(htmltree)
         return result
 
-
     def getNum(self, htmltree):
         num = super().getNum(htmltree)
         if self.number != num:
             raise Exception(f'[!] {self.number}: find [{num}] in gcolle, not match')
         return "GCOLLE-" + str(num)
-
-    def getYear(self, htmltree):
-        return re.findall('\d{4}', super().getYear(htmltree))[0]
 
     def getOutline(self, htmltree):
         result = self.getAll(htmltree, self.expr_outline)

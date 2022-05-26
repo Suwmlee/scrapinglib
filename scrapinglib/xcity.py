@@ -30,14 +30,6 @@ class Xcity(Parser):
     def getRuntime(self, htmltree):
         return self.getAll(htmltree, self.expr_runtime)[1].strip()
 
-    def getYear(self, htmltree):
-        try:
-            rel = self.getRelease(htmltree)
-            result = str(re.search('\d{4}', rel).group())
-            return result
-        except:
-            return rel
-
     def getRelease(self, htmltree):
         try:
             result = self.getTreeIndex(htmltree, self.expr_release, 1)

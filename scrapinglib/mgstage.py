@@ -21,7 +21,6 @@ class Mgstage(Parser):
     expr_label = '//th[contains(text(),"シリーズ：")]/../td/a/text()'
     expr_tags = '//th[contains(text(),"ジャンル：")]/../td/a/text()'
     expr_tags2 = '//th[contains(text(),"ジャンル：")]/../td/text()'
-    expr_year = '//th[contains(text(),"配信開始日：")]/../td/a/text()'
     expr_series = '//th[contains(text(),"シリーズ")]/../td/a/text()'
 
     def search(self, number, core: None):
@@ -48,16 +47,12 @@ class Mgstage(Parser):
     def getOutline(self, htmltree):
         return super().getOutline(self.introtree).strip(" ['']").replace(u'\\n', '').replace("', '', '", '')
 
-    def getRuntime(self, htmltree):
-        return super().getRuntime(htmltree).rstrip('mi')
-
     def getCover(self, htmltree):
         return super().getCover(self.htmlcodetree)
 
     def getTags(self, htmltree):
-        html = etree.fromstring(self.detailpage, etree.HTMLParser())  # //table/tr[1]/td[1]/text()
-        result1 = str(self.getAll(html, self.expr_tags)).strip(" ['']").strip('\\n    ').strip('\\n')
-        result2 = str(self.getAll(html, self.expr_tags2)).strip(" ['']").strip('\\n    ').strip('\\n')
+        result1 = str(self.getAll(htmltree, self.expr_tags)).strip(" ['']").strip('\\n    ').strip('\\n')
+        result2 = str(self.getAll(htmltree, self.expr_tags2)).strip(" ['']").strip('\\n    ').strip('\\n')
         result = str(result1 + result2).strip('+').replace("', '\\n",",").replace("', '","").replace('"','').replace(',,','').split(',')
         return result
 
@@ -72,15 +67,11 @@ class Mgstage(Parser):
                 return extrafanart_imgs
         return ''
 
-    def getYear(self, htmltree):
-        y = super().getYear(htmltree)
-        return str(re.findall('\d{4}', y)).strip(" ['']"),
-
-
     def getTreeIndex(self, tree, expr, index=0):
         if expr == '':
             return ''
         if tree == self.detailtree:
+            # NOTE: 合并 getMgsString
             result1 = str(tree.xpath(expr)).strip(" ['']").strip('\\n    ').strip('\\n').strip(" ['']").replace(u'\\n', '').replace("', '', '", '')
             result2 = str(tree.xpath(expr.replace('td/a/','td/'))).strip(" ['']").strip('\\n    ').strip('\\n')
             return str(result1 + result2).strip('+').replace("', '",'').replace('"','')
@@ -90,4 +81,3 @@ class Mgstage(Parser):
                 return result[index]
             except:
                 return ''
-

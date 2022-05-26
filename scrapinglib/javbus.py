@@ -14,7 +14,6 @@ class Javbus(Parser):
 
     expr_number = '/html/head/meta[@name="keywords"]/@content'
     expr_title = '/html/head/title/text()'
-    expr_year = '/html/body/div[5]/div[1]/div[2]/p[2]/text()'
     expr_studio = '//span[contains(text(),"製作商:")]/../a/text()'
     expr_studio2 = '//span[contains(text(),"メーカー:")]/../a/text()'
     expr_director = '//span[contains(text(),"導演:")]/../a/text()'
@@ -84,10 +83,6 @@ class Javbus(Parser):
             return self.getTreeIndex(htmltree, self.expr_studio2)
         else:
             return self.getTreeIndex(htmltree, self.expr_studio)
-
-    def getYear(self, htmltree):
-        result = super().getYear(htmltree).strip(" ['']").strip()
-        return result[:4] if len(result)>=len('2000-01-01') else ''
 
     def getCover(self, htmltree):
         return urljoin("https://www.javbus.com", super().getCover(htmltree)) 

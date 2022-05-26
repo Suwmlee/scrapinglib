@@ -13,7 +13,6 @@ class Avsox(Parser):
     expr_actor = '//a[@class="avatar-box"]'
     expr_actorphoto = '//a[@class="avatar-box"]'
     expr_title = '/html/body/div[2]/h3/text()'
-    expr_year = '//span[contains(text(),"发行时间:")]/../text()'
     expr_studio = '//p[contains(text(),"制作商: ")]/following-sibling::p[1]/a/text()'
     expr_release = '//span[contains(text(),"发行时间:")]/../text()'
     expr_cover = '/html/body/div[2]/div[1]/div[1]/a/img/@src'
@@ -56,9 +55,6 @@ class Avsox(Parser):
     def getTags(self, htmltree):
         tags = super().getTags(htmltree).split(',')
         return [i.strip() for i in tags[2:]] if len(tags) > 2 else []
-
-    def getYear(self, htmltree):
-        return re.findall('\d{4}', super().getYear(htmltree))[0]
 
     def getOutline(self, htmltree):
         from .storyline import getStoryline
