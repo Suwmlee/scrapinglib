@@ -8,6 +8,7 @@ from .parser import Parser
 class Dlsite(Parser):
     source = 'dlsite'
     imagecut = 4
+    allow_number_change = True
 
     expr_title = '/html/head/title/text()'
     expr_actor = '//th[contains(text(),"声优")]/../td/a/text()'

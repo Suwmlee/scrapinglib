@@ -81,7 +81,7 @@ proxydict = {
 # print(search('834255', 'gcolle', proxies=proxydict))
 # print(search('814179', 'gcolle', proxies=proxydict))
 
-# print(search('AGAV-042', 'javdb', proxies=proxydict))
+# print(search('AGAV-042', 'javdb', proxies=proxydict, dbsite='javdb40'))
 # print(search('BANK-022', 'javdb', proxies=proxydict))
 # print(search('070116-197', 'javdb', proxies=proxydict))
 # print(search('093021_539', 'javdb', proxies=proxydict))  # 没有剧照 片商pacopacomama
@@ -95,3 +95,6 @@ proxydict = {
 # print(search('LOVE-262', 'javdb', proxies=proxydict))
 # print(search('ABP-890', 'javdb', proxies=proxydict))
 # print(search('blacked.14.12.08', 'javdb', proxies=proxydict))
+
+# print(search('item4039214', 'getchu', proxies=proxydict))
+# print(search('お兄ちゃん、朝までずっとギュッてして！ 女未すみ編', 'getchu', proxies=proxydict))

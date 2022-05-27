@@ -11,9 +11,11 @@ class Parser:
     source = 'base'
     imagecut = 1
     uncensored = False
+    allow_number_change = False
     # update
     proxies = None
     verify = None
+    extraheader = None
     cookies = None
     morestoryline = False
 
@@ -86,7 +88,7 @@ class Parser:
     def getHtml(self, url, type = None):
         """ 访问网页
         """
-        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, verify=self.verify, return_type=type)
+        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, extra_headers=self.extraheader, verify=self.verify, return_type=type)
         if '<title>404 Page Not Found' in resp \
             or '<title>未找到页面' in resp \
             or '404 Not Found' in resp \

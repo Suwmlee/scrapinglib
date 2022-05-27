@@ -8,6 +8,7 @@ from scrapinglib.carib import Carib
 from scrapinglib.dlsite import Dlsite
 from scrapinglib.fanza import Fanza
 from scrapinglib.gcolle import Gcolle
+from scrapinglib.getchu import Getchu
 from scrapinglib.jav321 import Jav321
 from scrapinglib.javdb import Javdb
 from scrapinglib.mv91 import Mv91
@@ -56,7 +57,7 @@ class Scraping():
 
     full_sources = ['avsox', 'javbus', 'xcity', 'mgstage', 'madou', 'fc2', 
                     'dlsite', 'jav321', 'fanza', 'airav', 'carib', 'mv91',
-                    'gcolle', 'javdb']
+                    'gcolle', 'javdb', 'getchu']
     func_mapping = {
         'avsox': Avsox().scrape,
         'javbus': Javbus().scrape,
@@ -72,6 +73,7 @@ class Scraping():
         'mv91': Mv91().scrape,
         'gcolle': Gcolle().scrape,
         'javdb': Javdb().scrape,
+        'getchu': Getchu().scrape,
     }
 
     proxies = None
