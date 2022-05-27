@@ -43,15 +43,22 @@ class Javdb(Parser):
     def updateCore(self, core):
         if core.proxies:
             self.proxies = core.proxies
+        if core.verify:
+            self.verify = core.verify
+        if core.morestoryline:
+            self.morestoryline = True
+        # special
         if core.dbcookies:
             self.cookies = core.dbcookies
         else:
             self.cookies =  {'over18':'1', 'theme':'auto', 'locale':'zh'}
+        if core.dbsite:
+            self.dbsite = core.dbsite
+        else:
+            self.dbsite = 'javdb'
 
-    def search(self, number, core: None):
+    def search(self, number):
         self.number = number
-        self.updateCore(core)
-
         self.session = get_html_session(cookies=self.cookies, proxies=self.proxies, verify=self.verify)
         self.detailurl = self.queryNumberUrl(number)
 
@@ -61,7 +68,7 @@ class Javdb(Parser):
         return result
 
     def queryNumberUrl(self, number):
-        javdb_url = 'https://javdb.com/search?q=' + number + '&f=all'
+        javdb_url = 'https://' + self.dbsite + '.com/search?q=' + number + '&f=all'
         try:
             resp = self.session.get(javdb_url)
         except Exception as e:
@@ -91,6 +98,7 @@ class Javdb(Parser):
         result1 = str(self.getAll(htmltree, self.expr_number)).strip(" ['']")
         result2 = str(self.getAll(htmltree, self.expr_number2)).strip(" ['']")
         dp_number = str(result2 + result1).strip('+')
+        # NOTE 检测匹配与更新 self.number
         if dp_number.upper() != self.number.upper():
             raise Exception(f'[!] {self.number}: find [{dp_number}] in javdb, not match')
         self.number = dp_number
@@ -132,7 +140,7 @@ class Javdb(Parser):
         genders = self.getAll(htmltree, self.expr_actor2)
         r = []
         idx = 0
-        # only female, we dont care others
+        # NOTE only female, we dont care others
         actor_gendor = 'female'
         for act in actors:
             if((actor_gendor == 'all')
@@ -147,8 +155,10 @@ class Javdb(Parser):
         return r
 
     def getOutline(self, htmltree):
-        from .storyline import getStoryline
-        return getStoryline(self.number, self.getUncensored(htmltree))
+        if self.morestoryline:
+            from .storyline import getStoryline
+            return getStoryline(self.number, self.getUncensored(htmltree))
+        return ''
 
     def getStudio(self, htmltree):
         try:

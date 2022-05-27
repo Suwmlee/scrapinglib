@@ -13,8 +13,9 @@ class Parser:
     uncensored = False
     # update
     proxies = None
-    cookies = None
     verify = None
+    cookies = None
+    morestoryline = False
 
     number = ''
     detailurl = ''
@@ -47,12 +48,15 @@ class Parser:
     def __init__(self) -> None:
         pass
 
-    def search(self, number, core: None):
-        """ 搜索番号
+    def scrape(self, number, core: None):
+        """ 刮削番号
         """
-        self.number = number
         self.updateCore(core)
+        result = self.search(number)
+        return result
 
+    def search(self, number):
+        self.number = number
         self.detailurl = self.queryNumberUrl(number)
         htmltree = self.getHtmlTree(self.detailurl)
         result = self.dictformat(htmltree)
@@ -66,6 +70,10 @@ class Parser:
         """
         if core.proxies:
             self.proxies = core.proxies
+        if core.verify:
+            self.verify = core.verify
+        if core.morestoryline:
+            self.morestoryline = True
 
     def queryNumberUrl(self, number):
         """ 根据番号查询详细信息url

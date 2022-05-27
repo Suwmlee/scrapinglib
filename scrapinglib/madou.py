@@ -15,16 +15,14 @@ class Madou(Parser):
     expr_studio = '//a[@rel="category tag"]/text()'
     expr_tags = '/html/head/meta[@name="keywords"]/@content'
 
-    def search(self, number, core: None):
+    def search(self, number):
         self.number = number.lower().strip()
-        self.updateCore(core)
-
         self.detailurl = "https://madou.club/" + number + ".html"
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
             return 404
         htmltree = etree.fromstring(self.htmlcode, etree.HTMLParser())
-        self.detailurl = self.getUrl(htmltree)
+        self.detailurl = self.getTreeIndex(htmltree, self.expr_url)
 
         result = self.dictformat(htmltree)
         return result
@@ -42,9 +40,6 @@ class Madou(Parser):
             return result.strip('-')
         except:
             return ''
-
-    def getUrl(self, htmltree):
-        return self.getTreeIndex(htmltree, self.expr_url)
 
     def getTitle(self, htmltree):
         # <title>MD0140-2 / 家有性事EP2 爱在身边-麻豆社</title>
