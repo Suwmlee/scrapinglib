@@ -3,15 +3,15 @@
 import re
 import json
 
-from scrapinglib.airav import Airav
-from scrapinglib.carib import Carib
-from scrapinglib.dlsite import Dlsite
-from scrapinglib.fanza import Fanza
-from scrapinglib.gcolle import Gcolle
-from scrapinglib.getchu import Getchu
-from scrapinglib.jav321 import Jav321
-from scrapinglib.javdb import Javdb
-from scrapinglib.mv91 import Mv91
+from .airav import Airav
+from .carib import Carib
+from .dlsite import Dlsite
+from .fanza import Fanza
+from .gcolle import Gcolle
+from .getchu import Getchu
+from .jav321 import Jav321
+from .javdb import Javdb
+from .mv91 import Mv91
 from .fc2 import Fc2
 from .madou import Madou
 from .mgstage import Mgstage
@@ -20,16 +20,16 @@ from .xcity import Xcity
 from .avsox import Avsox
 
 
-def search(number, souces=None, proxies=None, verify=None, dbcookies=None, dbsite=None, morestoryline=False):
-    """
-    TODO  支持更多网站 douban, imdb,tmdb anidb等
-    type 区分 r18 与 normal
+def search(number, souces=None, proxies=None, verify=None, type='adult',
+            dbcookies=None, dbsite=None, morestoryline=False):
+    """ 根据``番号/电影``名搜索信息
+
+    :param number: number/name  depends on type
+    :param type: ``adult``, ``general``
     """
     sc = Scraping()
-    return sc.search(number, souces, proxies=proxies, verify=verify,
-                     dbcookies=dbcookies, dbsite=dbsite,
-                     morestoryline=morestoryline)
-
+    return sc.search(number, souces, proxies=proxies, verify=verify, type=type,
+                     dbcookies=dbcookies, dbsite=dbsite, morestoryline=morestoryline)
 
 class Scraping():
     """
@@ -77,19 +77,32 @@ class Scraping():
 
     proxies = None
     verify = None
+
     dbcookies = None
     dbsite = None
     # 使用storyline方法进一步获取故事情节
     morestoryline = False
 
-    def search(self, number, sources=None, proxies=None, verify=None,
+    def search(self, number, sources=None, proxies=None, verify=None, type='adult',
                dbcookies=None, dbsite=None, morestoryline=False):
         self.proxies = proxies
         self.verify = verify
         self.dbcookies = dbcookies
         self.dbsite = dbsite
         self.morestoryline = morestoryline
+        if type == 'adult':
+            return self.searchAdult(number, sources)
+        else:
+            return self.searchGeneral()
 
+    def searchGeneral(self):
+        """ 查询电影电视剧
+        imdb,tmdb
+        """
+        # TODO
+        return None
+
+    def searchAdult(self, number, sources):
         sources = self.checkSources(sources, number)
         json_data = {}
         for source in sources:
