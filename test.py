@@ -98,3 +98,4 @@ proxydict = {
 
 # print(search('item4039214', 'getchu', proxies=proxydict))
 # print(search('お兄ちゃん、朝までずっとギュッてして！ 女未すみ編', 'getchu', proxies=proxydict))
+print(search('EBOD-646', proxies=proxydict))
