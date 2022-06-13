@@ -88,6 +88,12 @@ class wwwGetchu(Parser):
                 extrafanart.append(i)
         return extrafanart
 
+    def extradict(self, dic: dict):
+        """ 额外新增的  headers
+        """
+        dic['headers'] =  {'referer': self.detailurl}
+        return dic
+
 class dlGetchu(wwwGetchu):
     imagecut = 4
     allow_number_change = True
@@ -127,3 +133,6 @@ class dlGetchu(wwwGetchu):
 
     def getCover(self, htmltree):
         return "https://dl.getchu.com" + super().getCover(htmltree)
+
+    def extradict(self, dic: dict):
+        return dic
