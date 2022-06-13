@@ -1,4 +1,6 @@
 
+import sys
+sys.path.append('../scrapinglib')
 
 from http.cookies import SimpleCookie
 from scrapinglib import search
@@ -101,5 +103,5 @@ proxydict = {
 
 # print(search('EBOD-646', proxies=proxydict))
 
-print(search('14534', 'tmdb', type='general'))
-print(search('526896', 'tmdb', type='general'))
+# print(search('14534', 'tmdb', type='general'))
+# print(search('526896', 'tmdb', type='general'))
