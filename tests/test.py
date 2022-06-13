@@ -40,6 +40,8 @@ proxydict = {
 # print(search('ABP-988', 'xcity', proxies=proxydict))
 
 # print(search('SIRO-4149', 'mgstage', proxies=proxydict))
+# print(search('ABW-246', 'mgstage', proxies=proxydict))
+# print(search('390JNT-044', 'mgstage', proxies=proxydict))
 
 # print(search('MD0129', 'madou', proxies=proxydict))
 # print(search('TM0002', 'madou', proxies=proxydict))
@@ -64,10 +66,12 @@ proxydict = {
 # print(search("MIAA-391", 'fanza', proxies=proxydict))
 # print(search("OBA-326", 'fanza', proxies=proxydict))
 # print(search("POW-044", 'fanza', proxies=proxydict))
+# print(search("POW023", 'fanza', proxies=proxydict))
 
 # print(search('ADV-R0624', 'airav', proxies=proxydict))  # javbus页面返回404, airav有数据
 # print(search('ADN-188', 'airav', proxies=proxydict))    # 一人
 # print(search('CJOD-278', 'airav', proxies=proxydict))   # 多人 javbus演员名称采用日语假名，airav采用日文汉字
+# print(search('SPRD-1005', 'airav', proxies=proxydict))  # 剧照
 
 # print(search("070116-197", 'carib', proxies=proxydict)) # actor have photo
 # print(search("041721-001", 'carib', proxies=proxydict))
