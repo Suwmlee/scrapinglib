@@ -85,9 +85,9 @@ class Fanza(Parser):
 
     def getActors(self, htmltree):
         if "anime" not in self.detailurl:
-            return super().getActors(htmltree).replace("', '", ",")
+            return super().getActors(htmltree)
         return ''
-    
+
     def getRelease(self, htmltree):
         result = self.getFanzaString('発売日：')
         if result == '' or result == '----':
