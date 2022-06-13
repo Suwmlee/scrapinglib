@@ -95,6 +95,10 @@ class wwwGetchu(Parser):
         return dic
 
 class dlGetchu(wwwGetchu):
+    """ 二者基本一致
+    headers extrafanart 略有区别
+    """
+
     imagecut = 4
     allow_number_change = True
 
@@ -136,3 +140,11 @@ class dlGetchu(wwwGetchu):
 
     def extradict(self, dic: dict):
         return dic
+    
+    def getExtrafanart(self, htmltree):
+        arts = self.getTreeAll(htmltree, self.expr_extrafanart)
+        extrafanart = []
+        for i in arts:
+            i = "https://dl.getchu.com" + i
+            extrafanart.append(i)
+        return extrafanart
