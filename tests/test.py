@@ -63,6 +63,7 @@ proxydict = {
 # print(search("pred00251", 'fanza', proxies=proxydict))
 # print(search("MIAA-391", 'fanza', proxies=proxydict))
 # print(search("OBA-326", 'fanza', proxies=proxydict))
+# print(search("POW-044", 'fanza', proxies=proxydict))
 
 # print(search('ADV-R0624', 'airav', proxies=proxydict))  # javbus页面返回404, airav有数据
 # print(search('ADN-188', 'airav', proxies=proxydict))    # 一人
