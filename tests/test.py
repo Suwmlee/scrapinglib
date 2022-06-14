@@ -61,6 +61,8 @@ proxydict = {
 # print(search('牝教師4～穢された教壇～ 「生意気ドジっ娘女教師・美結～高飛車ハメ堕ち2濁金」', 'dlsite', proxies=proxydict))
  
 # print(search('jul-404', 'jav321', proxies=proxydict))
+# print(search('jul-401', 'jav321', proxies=proxydict))
+# print(search('sivr-160', 'jav321', proxies=proxydict))
 
 # print(search("pred00251", 'fanza', proxies=proxydict))
 # print(search("MIAA-391", 'fanza', proxies=proxydict))
@@ -104,8 +106,10 @@ proxydict = {
 # print(search('ABP-890', 'javdb', proxies=proxydict))
 # print(search('blacked.14.12.08', 'javdb', proxies=proxydict))
 
-# print(search('item4039214', 'getchu', proxies=proxydict))
-# print(search('お兄ちゃん、朝までずっとギュッてして！ 女未すみ編', 'getchu', proxies=proxydict))
+# print(search('item4039214', 'getchu', proxies=proxydict))       # GETCHU-4039214 https://dl.getchu.com/i/item4039214
+# print(search('GETCHU-4039214', 'getchu', proxies=proxydict))
+# print(search('お兄ちゃん、朝までずっとギュッてして！ 女未すみ編', 'getchu', proxies=proxydict)) # GETCHU-1139198 http://www.getchu.com/soft.phtml?id=1139198
+# print(search('GETCHU-1139198', 'getchu', proxies=proxydict))
 
 # print(search('EBOD-646', proxies=proxydict))
 
