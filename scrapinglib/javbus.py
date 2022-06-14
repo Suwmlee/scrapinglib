@@ -26,6 +26,7 @@ class Javbus(Parser):
     expr_runtime = '/html/body/div[5]/div[1]/div[2]/p[3]/text()'
     expr_actor = '//div[@class="star-name"]/a'
     expr_actorphoto = '//div[@class="star-name"]/../a/img'
+    expr_extrafanart = '//div[@id="sample-waterfall"]/a/@href'
     expr_tags = '/html/head/meta[@name="keywords"]/@content'
     expr_uncensored = '//*[@id="navbar"]/ul[1]/li[@class="active"]/a[contains(@href,"uncensored")]'
 
@@ -124,17 +125,6 @@ class Javbus(Parser):
     def getTags(self, htmltree):
         tags = super().getTags(htmltree).split(',')
         return tags[1:]
-
-    def getExtrafanart(self, htmltree):
-        html_pather = re.compile(r'<div id=\"sample-waterfall\">[\s\S]*?</div></a>\s*?</div>')
-        html = html_pather.search(self.htmlcode)
-        if html:
-            html = html.group()
-            extrafanart_pather = re.compile(r'<a class=\"sample-box\" href=\"(.*?)\"')
-            extrafanart_imgs = extrafanart_pather.findall(html)
-            if extrafanart_imgs:
-                return [urljoin('https://www.javbus.com',img) for img in extrafanart_imgs]
-        return ''
 
     def getOutline(self, htmltree):
         if self.morestoryline:
