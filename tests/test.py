@@ -1,9 +1,10 @@
 
 import sys
+import json
 sys.path.append('../scrapinglib')
 
 from http.cookies import SimpleCookie
-from scrapinglib import search
+from scrapinglib import search as orignal_search
 
 def load_cookies(rawcookie):
     cookie = SimpleCookie()
@@ -17,6 +18,14 @@ proxydict = {
     "http": "socks5h://127.0.0.1:1080",
     "https": "socks5h://127.0.0.1:1080"
 }
+
+def search(number, source, **kwargs):
+    """ test
+    """
+    data = orignal_search(number, source, kwargs)
+    beaty = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ':'))
+    return beaty
+
 # NOTE: 浏览器内鼠标选取复制,不是右键`copy value`
 # javdb仅VIP才能浏览fc2等页面，因此使用cookies刮削fc2的方式不可行了
 # cookies_copy = "theme=auto; locale=zh; _ym_d=1645511085; _ym_uid=1645511085939221453; over18=1; list_mode=h; _ym_isad=1; hide_app_banner=1"

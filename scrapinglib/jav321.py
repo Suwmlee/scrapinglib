@@ -19,8 +19,8 @@ class Jav321(Parser):
     expr_studio = '//b[contains(text(),"メーカー")]/following-sibling::a[starts-with(@href,"/company")]/text()'
     expr_release = '//b[contains(text(),"配信開始日")]/following-sibling::node()'
     expr_runtime = '//b[contains(text(),"収録時間")]/following-sibling::node()'
+    expr_series = '//b[contains(text(),"シリーズ")]/following-sibling::node()'
     expr_extrafanart = '//div[@class="col-md-3"]/div[@class="col-xs-12 col-md-12"]/p/a/img/@src'
-    # expr_series = '//b[contains(text(),"シリーズ")]'
 
     def queryNumberUrl(self, number):
         return 'https://www.jav321.com/search'

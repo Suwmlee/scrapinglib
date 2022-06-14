@@ -16,7 +16,7 @@ class Mgstage(Parser):
     expr_actor = '//th[contains(text(),"出演：")]/../td/a/text()'
     expr_release = '//th[contains(text(),"配信開始日：")]/../td/a/text()'
     expr_cover = '//*[@id="EnlargeImage"]/@href'
-    expr_label = '//th[contains(text(),"シリーズ：")]/../td/a/text()'
+    expr_label = '//th[contains(text(),"レーベル：")]/../td/a/text()'
     expr_tags = '//th[contains(text(),"ジャンル：")]/../td/a/text()'
     expr_tags2 = '//th[contains(text(),"ジャンル：")]/../td/text()'
     expr_series = '//th[contains(text(),"シリーズ")]/../td/a/text()'
@@ -34,9 +34,7 @@ class Mgstage(Parser):
         return super().getTitle(htmltree).replace('/', ',').strip()
 
     def getTags(self, htmltree):
-        results = self.getTreeAll(htmltree, self.expr_tags)
-        results2 = self.getTreeAll(htmltree, self.expr_tags2)
-        return  [ x.strip() for x in (results + results2) if x.strip()]
+        return self.getTreeAllbyExprs(htmltree, self.expr_tags, self.expr_tags2)
 
     def getTreeAll(self, tree, expr):
         alls = super().getTreeAll(tree, expr)

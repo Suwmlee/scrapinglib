@@ -195,7 +195,7 @@ class Javdb(Parser):
         else:
             video_url = ''
         return video_url
-    
+
     def getTags(self, htmltree):
         return self.getTreeAllbyExprs(htmltree, self.expr_tags, self.expr_tags2)
 
