@@ -76,8 +76,5 @@ class Jav321(Parser):
     def getLabel(self, htmltree):
         return self.parseElement(self.getTreeAll(htmltree, self.expr_label))
 
-    def getTags(self, htmltree):
-        return self.parseElement(self.getTreeAll(htmltree, self.expr_tags))
-    
     def getStudio(self, htmltree):
         return self.parseElement(self.getTreeAll(htmltree, self.expr_studio))

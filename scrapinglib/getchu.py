@@ -73,9 +73,6 @@ class wwwGetchu(Parser):
     def getActors(self, htmltree):
         return super().getDirector(htmltree)
 
-    def getTags(self, htmltree):
-        return self.getTreeAll(htmltree, self.expr_tags)
-    
     def getOutline(self, htmltree):
         outline = ''
         _list = self.getTreeAll(htmltree, self.expr_outline)

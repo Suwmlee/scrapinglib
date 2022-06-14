@@ -37,13 +37,6 @@ class Xcity(Parser):
         except:
             return ''
 
-    def getTags(self, htmltree):
-        result = self.getTreeAll(htmltree, self.expr_tags)
-        total = []
-        for i in result:
-            total.append(i.replace("\n","").replace("\t",""))
-        return total
-
     def getCover(self, htmltree):
         try:
             result = super().getCover(htmltree)

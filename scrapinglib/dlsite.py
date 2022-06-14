@@ -84,9 +84,6 @@ class Dlsite(Parser):
     def getCover(self, htmltree):
         return 'https:' + super().getCover(htmltree).replace('.webp', '.jpg')
 
-    def getTags(self, htmltree):
-        return self.getTreeAll(htmltree, self.expr_tags)
-
     def getExtrafanart(self, htmltree):
         try:
             result = []

@@ -23,9 +23,9 @@ def getTreeAll(tree: HtmlElement, expr=''):
     :param index
     """
     if expr == '':
-        return ''
+        return []
     result = tree.xpath(expr)
     try:
         return result
     except:
-        return ''
+        return []

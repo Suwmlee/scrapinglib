@@ -47,9 +47,6 @@ class Carib(Parser):
     def getCover(self, htmltree):
         return f'https://www.caribbeancom.com/moviepages/{self.number}/images/l_l.jpg'
 
-    def getTags(self, htmltree):
-        return self.getTreeAll(htmltree, self.expr_tags)
-
     def getExtrafanart(self, htmltree):
         r = []
         genres = self.getTreeAll(htmltree, self.expr_extrafanart)

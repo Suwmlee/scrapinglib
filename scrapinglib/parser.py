@@ -180,7 +180,8 @@ class Parser:
         return self.getTreeAll(htmltree, self.expr_actor)
 
     def getTags(self, htmltree):
-        return self.getTreeElement(htmltree, self.expr_tags)
+        alls = self.getTreeAll(htmltree, self.expr_tags)
+        return [ x.strip() for x in alls if x.strip()]
 
     def getStudio(self, htmltree):
         return self.getTreeElementbyExprs(htmltree, self.expr_studio, self.expr_studio2)

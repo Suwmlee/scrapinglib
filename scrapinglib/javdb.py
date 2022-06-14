@@ -207,14 +207,7 @@ class Javdb(Parser):
         return video_url
     
     def getTags(self, htmltree):
-        try:
-            return self.getTreeAll(htmltree, self.expr_tags)
-        except:
-            pass
-        try:
-            return self.getTreeAll(htmltree, self.expr_tags2)
-        except:
-            return ''
+        return self.getTreeAllbyExprs(htmltree, self.expr_tags, self.expr_tags2)
 
     def getUserRating(self, htmltree):
         try:
