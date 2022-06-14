@@ -32,6 +32,7 @@ class Javdb(Parser):
     expr_cover = "//div[contains(@class, 'column-video-cover')]/a/img/@src"
     expr_cover2 = "//div[contains(@class, 'column-video-cover')]/img/@src"
     expr_cover_no = '//*[contains(@class,"movie-list")]/div/a/div[contains(@class, "cover")]/img/@src'
+    expr_trailer = '//span[contains(text(),"預告片")]/../../video/source/@src'
     expr_extrafanart = "//article[@class='message video-panel']/div[@class='message-body']/div[@class='tile-images preview-images']/a[contains(@href,'/samples/')]/@href"
     expr_tags = '//strong[contains(text(),"類別")]/../span/a/text()'
     expr_tags2 = '//strong[contains(text(),"類別")]/../span/text()'
@@ -105,9 +106,10 @@ class Javdb(Parser):
     def getNum(self, htmltree):
         if self.noauth:
             return self.number
-        result1 = str(self.getTreeAll(htmltree, self.expr_number)).strip(" ['']")
-        result2 = str(self.getTreeAll(htmltree, self.expr_number2)).strip(" ['']")
-        dp_number = str(result2 + result1).strip('+')
+        # 番号被分割开，需要合并后才是完整番号
+        part1 = self.getTreeElement(htmltree, self.expr_number)
+        part2 = self.getTreeElement(htmltree, self.expr_number2)
+        dp_number = part2 + part1
         # NOTE 检测匹配与更新 self.number
         if dp_number.upper() != self.number.upper():
             raise Exception(f'[!] {self.number}: find [{dp_number}] in javdb, not match')
@@ -193,14 +195,13 @@ class Javdb(Parser):
             return ''
 
     def getTrailer(self, htmltree):
-        video_pather = re.compile(r'<video id\=\".*?>\s*?<source src=\"(.*?)\"')
-        video = video_pather.findall(self.deatilpage)
+        video = super().getTrailer(htmltree)
         # 加上数组判空
-        if video and video[0] != "":
-            if not 'https:' in video[0]:
-                video_url = 'https:' + video[0]
+        if video:
+            if not 'https:' in video:
+                video_url = 'https:' + video
             else:
-                video_url = video[0]
+                video_url = video
         else:
             video_url = ''
         return video_url
