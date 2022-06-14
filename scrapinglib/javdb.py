@@ -184,16 +184,6 @@ class Javdb(Parser):
             return getStoryline(self.number, self.getUncensored(htmltree))
         return ''
 
-    def getStudio(self, htmltree):
-        try:
-            return self.getTreeAll(htmltree, self.expr_studio).strip(" ['']")
-        except:
-            pass
-        try:
-            return self.getTreeAll(htmltree, self.expr_studio2).strip(" ['']")
-        except:
-            return ''
-
     def getTrailer(self, htmltree):
         video = super().getTrailer(htmltree)
         # 加上数组判空

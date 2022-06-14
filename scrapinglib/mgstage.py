@@ -40,7 +40,7 @@ class Mgstage(Parser):
 
     def getTreeAll(self, tree, expr):
         alls = super().getTreeAll(tree, expr)
-        return [ x.strip() for x in alls ]
+        return [ x.strip() for x in alls if x.strip()]
 
     def getTreeElement(self, tree, expr, index=0):
         if expr == '':
