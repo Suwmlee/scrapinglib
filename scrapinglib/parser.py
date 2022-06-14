@@ -155,15 +155,8 @@ class Parser:
     def getTitle(self, htmltree):
         return self.getTreeElement(htmltree, self.expr_title).strip()
 
-    def getStudio(self, htmltree):
-        try:
-            return self.getTreeElement(htmltree, self.expr_studio).strip(" ['']")
-        except:
-            pass
-        try:
-            return self.getTreeElement(htmltree, self.expr_studio2).strip(" ['']")
-        except:
-            return ''
+    def getRelease(self, htmltree):
+        return self.getTreeElement(htmltree, self.expr_release).strip().replace('/','-')
 
     def getYear(self, htmltree):
         """ year基本都是从release中解析的
@@ -175,23 +168,13 @@ class Parser:
             return release
 
     def getRuntime(self, htmltree):
-        try:
-            return self.getTreeElement(htmltree, self.expr_runtime).strip("\n\t ['']").rstrip('mi')
-        except:
-            pass
-        try:
-            return self.getTreeElement(htmltree, self.expr_runtime2).strip("\n\t ['']").rstrip('mi')
-        except:
-            return ''
-
-    def getRelease(self, htmltree):
-        return self.getTreeElement(htmltree, self.expr_release).strip().replace('/','-')
+        return self.getTreeElementbyExprs(htmltree, self.expr_runtime, self.expr_runtime2).strip().rstrip('mi')
 
     def getOutline(self, htmltree):
-        return self.getTreeElement(htmltree, self.expr_outline).strip().replace("\n","")
+        return self.getTreeElement(htmltree, self.expr_outline).strip()
 
     def getDirector(self, htmltree):
-        return self.getTreeElement(htmltree, self.expr_director)
+        return self.getTreeElement(htmltree, self.expr_director).strip()
 
     def getActors(self, htmltree):
         return self.getTreeAll(htmltree, self.expr_actor)
@@ -199,35 +182,17 @@ class Parser:
     def getTags(self, htmltree):
         return self.getTreeElement(htmltree, self.expr_tags)
 
+    def getStudio(self, htmltree):
+        return self.getTreeElementbyExprs(htmltree, self.expr_studio, self.expr_studio2)
+
     def getLabel(self, htmltree):
-        try:
-            return self.getTreeElement(htmltree, self.expr_label).strip(" ['']")
-        except:
-            pass
-        try:
-            return self.getTreeElement(htmltree, self.expr_label2).strip(" ['']")
-        except:
-            return ''
+        return self.getTreeElementbyExprs(htmltree, self.expr_label, self.expr_label2)
 
     def getSeries(self, htmltree):
-        try:
-            return self.getTreeElement(htmltree, self.expr_series).strip(" ['']")
-        except:
-            pass
-        try:
-            return self.getTreeElement(htmltree, self.expr_series2).strip(" ['']")
-        except:
-            return ''
+        return self.getTreeElementbyExprs(htmltree, self.expr_series, self.expr_series2)
 
     def getCover(self, htmltree):
-        try:
-            return self.getTreeElement(htmltree, self.expr_cover).strip(" ['']")
-        except:
-            pass
-        try:
-            return self.getTreeElement(htmltree, self.expr_cover2).strip(" ['']")
-        except:
-            return ''
+        return self.getTreeElementbyExprs(htmltree, self.expr_cover, self.expr_cover2)
 
     def getSmallCover(self, htmltree):
         return self.getTreeElement(htmltree, self.expr_smallcover)
@@ -263,3 +228,30 @@ class Parser:
         """ 根据表达式从`xmltree`中获取全部匹配值
         """
         return getTreeAll(tree, expr)
+
+    @staticmethod
+    def getTreeElementbyExprs(tree: html.HtmlElement, expr, expr2=''):
+        """ 多个表达式获取element
+        """
+        try:
+            first = getTreeElement(tree, expr).strip()
+            if first:
+                return first
+            second = getTreeElement(tree, expr2).strip()
+            if second:
+                return second
+            return ''
+        except:
+            return ''
+
+    @staticmethod
+    def getTreeAllbyExprs(tree: html.HtmlElement, expr, expr2=''):
+        """ 多个表达式获取所有element
+        """
+        try:
+            result1 = getTreeAll(tree, expr)
+            result2 = getTreeAll(tree, expr2)
+            result =  [ x.strip() for x in (result1 + result2) if x.strip() and x.strip() != ',']
+            return result
+        except:
+            return []
