@@ -206,7 +206,7 @@ class Parser:
         return self.getTreeElement(htmltree, self.expr_trailer)
 
     def getActorPhoto(self, htmltree):
-        return self.getTreeAll(htmltree, self.expr_actorphoto)
+        return {}
 
     def getUncensored(self, htmlree):
         if self.expr_uncensored:

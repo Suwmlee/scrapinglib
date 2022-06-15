@@ -100,7 +100,7 @@ class Javbus(Parser):
         return b
     
     def getActorPhoto(self, htmltree):
-        actors = super().getActorPhoto(htmltree)
+        actors = self.getTreeAll(htmltree, self.expr_actorphoto)
         d = {}
         for i in actors:
             p = i.attrib['src']

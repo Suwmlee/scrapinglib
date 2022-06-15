@@ -70,7 +70,7 @@ class Avsox(Parser):
         return d
 
     def getActorPhoto(self, htmltree):
-        a = super().getActorPhoto(htmltree)
+        a = self.getTreeAll(htmltree, self.expr_actorphoto)
         d = {}
         for i in a:
             l = i.find('.//img').attrib['src']
