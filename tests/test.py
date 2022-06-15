@@ -22,7 +22,7 @@ proxydict = {
 def search(number, source, **kwargs):
     """ test
     """
-    data = orignal_search(number, source, kwargs)
+    data = orignal_search(number, source, **kwargs)
     beaty = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ':'))
     return beaty
 

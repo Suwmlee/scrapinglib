@@ -43,8 +43,8 @@ class Mgstage(Parser):
     def getTreeElement(self, tree, expr, index=0):
         if expr == '':
             return ''
-        result1 = getTreeElement(tree, expr).strip().replace("', '", '').strip(" ['']")
-        result2 = getTreeElement(tree, expr.replace('td/a/','td/')).strip().replace("', '", '').strip(" ['']")
+        result1 = ''.join(self.getTreeAll(tree, expr))
+        result2 = ''.join(self.getTreeAll(tree, expr.replace('td/a/','td/')))
         if result1 == result2:
-            return str(result1).strip('+').replace("', '",'').replace('"','')
-        return str(result1 + result2).strip('+').replace("', '",'').replace('"','')
+            return result1
+        return result1 + result2

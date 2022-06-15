@@ -86,9 +86,6 @@ class Javbus(Parser):
     def getCover(self, htmltree):
         return urljoin("https://www.javbus.com", super().getCover(htmltree)) 
 
-    def getRelease(self, htmltree):
-        return super().getRelease(htmltree).strip(" ['']")
-
     def getRuntime(self, htmltree):
         return super().getRuntime(htmltree).strip(" ['']分鐘")
 

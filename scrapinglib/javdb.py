@@ -133,28 +133,20 @@ class Javdb(Parser):
             return self.getTreeElement(htmltree, self.expr_release_no, self.queryid).strip()
         return super().getRelease(htmltree)
 
-    def getRuntime(self, htmltree):
-        result1 = str(self.getTreeAll(htmltree, self.expr_runtime)).strip(" ['']")
-        result2 = str(self.getTreeAll(htmltree, self.expr_runtime2)).strip(" ['']")
-        return str(result1 + result2).strip('+').rstrip('mi')
-
     def getDirector(self, htmltree):
-        result1 = str(self.getTreeAll(htmltree, self.expr_director)).strip(" ['']")
-        result2 = str(self.getTreeAll(htmltree, self.expr_director2)).strip(" ['']")
-        return str(result1 + result2).strip('+').replace("', '", '').replace('"', '')
+        return self.getTreeElementbyExprs(htmltree, self.expr_director, self.expr_director2)
     
     def getSeries(self, htmltree):
-        result1 = str(self.getTreeAll(htmltree, self.expr_series)).strip(" ['']")
-        result2 = str(self.getTreeAll(htmltree, self.expr_series2)).strip(" ['']")
-        result = str(result1 + result2).strip('+').replace("', '", '').replace('"', '')
+        # NOTE 不清楚javdb是否有一部影片多个series的情况，暂时保留
+        results = self.getTreeAllbyExprs(htmltree, self.expr_series, self.expr_series2)
+        result = ''.join(results)
         if not result and self.fixstudio:
             result = self.getStudio(htmltree)
         return result
 
     def getLabel(self, htmltree):
-        result1 = str(self.getTreeAll(htmltree, self.expr_label)).strip(" ['']")
-        result2 = str(self.getTreeAll(htmltree, self.expr_label2)).strip(" ['']")
-        result = str(result1 + result2).strip('+').replace("', '", '').replace('"', '')
+        results = self.getTreeAllbyExprs(htmltree, self.expr_label, self.expr_label2)
+        result = ''.join(results)
         if not result and self.fixstudio:
             result = self.getStudio(htmltree)
         return result

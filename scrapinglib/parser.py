@@ -248,11 +248,14 @@ class Parser:
 
     def getTreeAllbyExprs(self, tree: html.HtmlElement, expr, expr2=''):
         """ 多个表达式获取所有element
+        合并并剔除重复元素
         """
         try:
             result1 = self.getTreeAll(tree, expr)
             result2 = self.getTreeAll(tree, expr2)
-            result =  [ x.strip() for x in (result1 + result2) if x.strip() and x.strip() != ',']
+            clean = [ x.strip() for x in result1 if x.strip() and x.strip() != ',']
+            clean2 = [ x.strip() for x in result2 if x.strip() and x.strip() != ',']
+            result =  list(set(clean + clean2))
             return result
         except:
             return []
