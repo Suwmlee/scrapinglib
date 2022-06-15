@@ -177,10 +177,10 @@ class Parser:
     def getDirector(self, htmltree):
         return self.getTreeElement(htmltree, self.expr_director).strip()
 
-    def getActors(self, htmltree):
+    def getActors(self, htmltree) -> list:
         return self.getTreeAll(htmltree, self.expr_actor)
 
-    def getTags(self, htmltree):
+    def getTags(self, htmltree) -> list:
         alls = self.getTreeAll(htmltree, self.expr_tags)
         return [ x.strip() for x in alls if x.strip()]
 
@@ -199,16 +199,16 @@ class Parser:
     def getSmallCover(self, htmltree):
         return self.getTreeElement(htmltree, self.expr_smallcover)
 
-    def getExtrafanart(self, htmltree):
+    def getExtrafanart(self, htmltree) -> list:
         return self.getTreeAll(htmltree, self.expr_extrafanart)
 
     def getTrailer(self, htmltree):
         return self.getTreeElement(htmltree, self.expr_trailer)
 
-    def getActorPhoto(self, htmltree):
+    def getActorPhoto(self, htmltree) -> dict:
         return {}
 
-    def getUncensored(self, htmlree):
+    def getUncensored(self, htmlree) -> bool:
         if self.expr_uncensored:
             u = self.getTreeAll(htmlree, self.expr_uncensored)
             return bool(u)

@@ -28,7 +28,7 @@ class Xcity(Parser):
         return super().getStudio(htmltree).strip('+').replace("', '", '').replace('"', '')
 
     def getRuntime(self, htmltree):
-        return self.getTreeAll(htmltree, self.expr_runtime)[1].strip()
+        return self.getTreeElement(htmltree, self.expr_runtime, 1).strip()
 
     def getRelease(self, htmltree):
         try:
