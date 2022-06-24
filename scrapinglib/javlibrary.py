@@ -62,16 +62,13 @@ class Javlibrary(Parser):
     def getTitle(self, htmltree):
         title = super().getTitle(htmltree)
         title = title.replace(self.getNum(htmltree), '').strip()
+        return title
 
     def getCover(self, htmltree):
         url = super().getCover(htmltree)
         if not url.startswith('http'):
             url = 'https:' + url
         return url
-
-    def getUserRating(self, htmltree):
-        rating = super().getUserRating(htmltree)
-        return rating.strip('()')
    
     def getOutline(self, htmltree):
         if self.morestoryline:
