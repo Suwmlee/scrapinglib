@@ -120,6 +120,11 @@ def search(number, source, **kwargs):
 # print(search('お兄ちゃん、朝までずっとギュッてして！ 女未すみ編', 'getchu', proxies=proxydict)) # GETCHU-1139198 http://www.getchu.com/soft.phtml?id=1139198
 # print(search('GETCHU-1139198', 'getchu', proxies=proxydict))
 
+# print(search('IPX-292', 'javlibrary', proxies=proxydict))
+# print(search('STAR-438', 'javlibrary', proxies=proxydict, morestoryline=True))
+# print(search('SNIS-003', 'javlibrary', proxies=proxydict, morestoryline=True))
+# print(search('n1403', 'javlibrary', proxies=proxydict))   # not found
+
 # print(search('EBOD-646', proxies=proxydict))
 
 # print(search('14534', 'tmdb', type='general'))

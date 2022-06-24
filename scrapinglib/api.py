@@ -18,6 +18,7 @@ from .mgstage import Mgstage
 from .javbus import Javbus
 from .xcity import Xcity
 from .avsox import Avsox
+from .javlibrary import Javlibrary
 
 from .tmdb import Tmdb
 
@@ -37,7 +38,7 @@ def search(number, sources: str=None, proxies=None, verify=None, type='adult',
 class Scraping():
     """
     """
-    adult_full_sources = ['javdb', 'javbus', 'airav', 'fanza', 'xcity', 'jav321', 
+    adult_full_sources = ['javlibrary', 'javdb', 'javbus', 'airav', 'fanza', 'xcity', 'jav321', 
                           'mgstage', 'fc2', 'avsox', 'dlsite', 'carib', 'madou', 'mv91', 
                           'getchu', 'gcolle'
                           ]
@@ -57,6 +58,7 @@ class Scraping():
         'gcolle': Gcolle().scrape,
         'javdb': Javdb().scrape,
         'getchu': Getchu().scrape,
+        'javlibrary': Javlibrary().scrape,
     }
 
     general_full_sources = ['tmdb']
