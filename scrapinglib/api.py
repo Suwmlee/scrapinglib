@@ -35,6 +35,18 @@ def search(number, sources: str=None, proxies=None, verify=None, type='adult',
     return sc.search(number, sources, proxies=proxies, verify=verify, type=type,
                      dbcookies=dbcookies, dbsite=dbsite, morestoryline=morestoryline)
 
+
+def getSupportedSources(tag='adult'):
+    """
+    :param tag: ``adult``, ``general``
+    """
+    sc = Scraping()
+    if tag == 'adult':
+        return ','.join(sc.adult_full_sources)
+    else:
+        return ','.join(sc.general_full_sources)
+
+
 class Scraping():
     """
     """

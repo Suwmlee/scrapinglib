@@ -5,6 +5,7 @@ sys.path.append('../scrapinglib')
 
 from http.cookies import SimpleCookie
 from scrapinglib import search as orignal_search
+from scrapinglib import getSupportedSources
 
 def load_cookies(rawcookie):
     cookie = SimpleCookie()
@@ -30,6 +31,9 @@ def search(number, source, **kwargs):
 # javdb仅VIP才能浏览fc2等页面，因此使用cookies刮削fc2的方式不可行了
 # cookies_copy = "theme=auto; locale=zh; _ym_d=1645511085; _ym_uid=1645511085939221453; over18=1; list_mode=h; _ym_isad=1; hide_app_banner=1"
 # cookies = load_cookies(cookies_copy)
+
+sources = getSupportedSources()
+print(f"supported sources: {sources}")
 
 # print(search('012717_472', 'avsox', proxies=proxydict))
 # print(search('FC2-PPV-2848294', 'avsox', proxies=proxydict))
