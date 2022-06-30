@@ -137,3 +137,5 @@ print(f"supported sources: {sources}")
 
 # print(search('14534', 'tmdb', type='general'))
 # print(search('526896', 'tmdb', type='general'))
+
+print(search('tt0468569', 'imdb', type='general'))

@@ -21,15 +21,16 @@ from .avsox import Avsox
 from .javlibrary import Javlibrary
 
 from .tmdb import Tmdb
+from .imdb import Imdb
 
 
 def search(number, sources: str=None, proxies=None, verify=None, type='adult',
             dbcookies=None, dbsite=None, morestoryline=False):
-    """ 根据``番号/电影``名搜索信息
+    """ 根据`番号/电影`名搜索信息
 
     :param number: number/name  depends on type
-    :param sources: sources string with `,` like ``avsox,javbus``
-    :param type: ``adult``, ``general``
+    :param sources: sources string with `,` like `avsox,javbus`
+    :param type: `adult`, `general`
     """
     sc = Scraping()
     return sc.search(number, sources, proxies=proxies, verify=verify, type=type,
@@ -38,7 +39,7 @@ def search(number, sources: str=None, proxies=None, verify=None, type='adult',
 
 def getSupportedSources(tag='adult'):
     """
-    :param tag: ``adult``, ``general``
+    :param tag: `adult`, `general`
     """
     sc = Scraping()
     if tag == 'adult':
@@ -73,9 +74,10 @@ class Scraping():
         'javlibrary': Javlibrary().scrape,
     }
 
-    general_full_sources = ['tmdb']
+    general_full_sources = ['tmdb','imdb']
     general_func_mapping = {
         'tmdb': Tmdb().scrape,
+        'imdb': Imdb().scrape,
     }
 
     proxies = None
