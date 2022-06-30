@@ -20,7 +20,7 @@ proxydict = {
     "https": "socks5h://127.0.0.1:1080"
 }
 
-def search(number, source, **kwargs):
+def search(number, source=None, **kwargs):
     """ test
     """
     data = orignal_search(number, source, **kwargs)
@@ -108,6 +108,9 @@ print(f"supported sources: {sources}")
 # print(search('BANK-022', 'javdb', proxies=proxydict))
 # print(search('070116-197', 'javdb', proxies=proxydict))
 # print(search('093021_539', 'javdb', proxies=proxydict))  # 没有剧照 片商pacopacomama
+# print(search('4030-2405', 'javdb', proxies=proxydict))   # 番号不全
+# print(search('heydouga-4030-2405', 'javdb', proxies=proxydict))
+# print(search('SIRO-4042', 'javdb', proxies=proxydict))
 # print(search('FC2-2278260', 'javdb', proxies=proxydict, dbcookies=cookies))
 # print(search('FC2-735670', 'javdb', proxies=proxydict))
 # print(search('FC2-1174949', 'javdb', proxies=proxydict)) # not found
@@ -128,6 +131,7 @@ print(f"supported sources: {sources}")
 # print(search('STAR-438', 'javlibrary', proxies=proxydict, morestoryline=True))
 # print(search('SNIS-003', 'javlibrary', proxies=proxydict, morestoryline=True))
 # print(search('n1403', 'javlibrary', proxies=proxydict))   # not found
+# print(search('SSNI-468', 'javlibrary', proxies=proxydict))
 
 # print(search('EBOD-646', proxies=proxydict))
 

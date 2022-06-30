@@ -11,7 +11,10 @@ class Parser:
     """ 基础刮削类
     """
     source = 'base'
-    # poster: `0` 复制 `1` 裁剪 
+    # 获取poster封面: 
+    # `0` 复制cover
+    # `1` 裁剪cover 
+    # `3` 下载小封面
     imagecut = 1
     uncensored = False
     allow_number_change = False
