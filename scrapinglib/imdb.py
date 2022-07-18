@@ -13,6 +13,7 @@ class Imdb(Parser):
     expr_cover = '//head/meta[@property="og:image"]/@content'
     expr_outline = '//head/meta[@property="og:description"]/@content'
     expr_actor = '//h3[contains(text(),"Top cast")]/../../../following-sibling::div[1]/div[2]/div/div/a/text()'
+    expr_tags = '//div[@data-testid="genres"]/div[2]/a/ul/li/text()'
 
     def queryNumberUrl(self, number):
         """

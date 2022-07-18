@@ -11,7 +11,7 @@ class Parser:
     """ 基础刮削类
     """
     source = 'base'
-    # 获取poster封面: 
+    # 推荐剪切poster封面:
     # `0` 复制cover
     # `1` 裁剪cover 
     # `3` 下载小封面
