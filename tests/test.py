@@ -97,6 +97,7 @@ print(f"supported sources: {sources}")
 # print(search('91CM-143', 'mv91', proxies=proxydict))
 # print(search('91MS-006', 'mv91', proxies=proxydict))
 
+# print(search('GCOLLE-840724', 'gcolle', proxies=proxydict))
 # print(search('840724', 'gcolle', proxies=proxydict))
 # print(search('840386', 'gcolle', proxies=proxydict))
 # print(search('838671', 'gcolle', proxies=proxydict))
