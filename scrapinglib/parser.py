@@ -64,6 +64,14 @@ class Parser:
         return result
 
     def search(self, number):
+        """ 查询番号
+
+        查询主要流程:
+        1. 获取 url
+        2. 获取详情页面
+        3. 解析
+        4. 返回 result
+        """
         self.number = number
         self.detailurl = self.queryNumberUrl(number)
         htmltree = self.getHtmlTree(self.detailurl)
@@ -86,9 +94,10 @@ class Parser:
     def queryNumberUrl(self, number):
         """ 根据番号查询详细信息url
         
+        需要针对不同站点修改,或者在上层直接获取
         备份查询页面,预览图可能需要
         """
-        url = httprequest.get(number)
+        url = "http://detailurl.ai/" + number
         return url
 
     def getHtml(self, url, type = None):
