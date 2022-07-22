@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-from .httprequest import get_html_session
+from .httprequest import request_session
 from .parser import Parser
 
 
@@ -33,7 +33,7 @@ class Javlibrary(Parser):
 
     def search(self, number):
         self.number = number.upper()
-        self.session = get_html_session(cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+        self.session = request_session(cookies=self.cookies, proxies=self.proxies, verify=self.verify)
         self.detailurl = self.queryNumberUrl(self.number)
         if not self.detailurl:
             return 404
