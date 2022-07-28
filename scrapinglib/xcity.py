@@ -88,8 +88,9 @@ class Xcity(Parser):
     def open_by_browser(self, number):
         xcity_number = number.replace('-','')
         query_result, browser = get_html_by_form(
-            'https://xcity.jp/' + secrets.choice(['about/','sitemap/','policy/','law/','help/','main/']),
+            'https://xcity.jp/' + secrets.choice(['sitemap/','policy/','law/','help/','main/']),
             fields = {'q' : xcity_number.lower()},
+            cookies=self.cookies, proxies=self.proxies, verify=self.verify,
             return_type = 'browser')
         if not query_result or not query_result.ok:
             raise ValueError("xcity.py: page not found")
