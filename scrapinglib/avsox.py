@@ -57,7 +57,7 @@ class Avsox(Parser):
             return ''
 
     def getTags(self, htmltree):
-        tags = self.getTreeElement(htmltree).split(',')
+        tags = self.getTreeElement(htmltree, self.expr_tags).split(',')
         return [i.strip() for i in tags[2:]] if len(tags) > 2 else []
 
     def getOutline(self, htmltree):
