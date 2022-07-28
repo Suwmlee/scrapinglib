@@ -26,6 +26,7 @@ class Xcity(Parser):
     expr_series = "//span[contains(text(),'シリーズ')]/../a/span/text()"
     expr_series2 = "//span[contains(text(),'シリーズ')]/../span/text()"
     expr_extrafanart = '//div[@id="sample_images"]/div/a/@href'
+    expr_outline = '//head/meta[@property="og:description"]/@content'
 
     def queryNumberUrl(self, number):
         xcity_number = number.replace('-','')
@@ -65,12 +66,6 @@ class Xcity(Parser):
             return result
         except:
             return ''
-
-    def getOutline(self, htmltree):
-        if self.morestoryline:
-            from .storyline import getStoryline
-            return getStoryline(self.number, uncensored=False)
-        return ''
 
     def getActorPhoto(self, htmltree):
         treea = self.getTreeAll(htmltree, self.expr_actor_link)

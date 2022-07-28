@@ -42,7 +42,7 @@ print(f"supported sources: {sources}")
 # print(search('012717_472', specifiedSource='avsox', specifiedUrl='https://avsox.click/cn/movie/32628c999f07a942', proxies=proxydict))
 
 # print(search('STAR-438', 'javbus', proxies=proxydict))
-# print(search('ABP-960', 'javbus', proxies=proxydict))
+# print(search('ABP-960', 'javbus', proxies=proxydict, morestoryline=True))
 # print(search('MMNT-010', 'javbus', proxies=proxydict))
 # print(search('ipx-292', 'javbus', proxies=proxydict))
 # print(search('CEMD-011', 'javbus', proxies=proxydict))
