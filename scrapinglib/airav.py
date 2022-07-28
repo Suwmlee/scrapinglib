@@ -8,6 +8,8 @@ from .javbus import Javbus
 
 class Airav(Parser):
     source = 'airav'
+    # for javbus
+    specifiedSource = None
 
     expr_title = '/html/head/title/text()'
     expr_number = '/html/head/title/text()'

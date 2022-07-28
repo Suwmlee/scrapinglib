@@ -1,11 +1,11 @@
 
+from scrapinglib import getSupportedSources
+from scrapinglib import search as orignal_search
+from http.cookies import SimpleCookie
 import sys
 import json
 sys.path.append('../scrapinglib')
 
-from http.cookies import SimpleCookie
-from scrapinglib import search as orignal_search
-from scrapinglib import getSupportedSources
 
 def load_cookies(rawcookie):
     cookie = SimpleCookie()
@@ -15,10 +15,12 @@ def load_cookies(rawcookie):
         cookies[key] = morsel.value
     return cookies
 
+
 proxydict = {
     "http": "socks5h://127.0.0.1:1080",
     "https": "socks5h://127.0.0.1:1080"
 }
+
 
 def search(number, source=None, **kwargs):
     """ test
@@ -32,12 +34,13 @@ def search(number, source=None, **kwargs):
 # cookies_copy = "theme=auto; locale=zh; _ym_d=1645511085; _ym_uid=1645511085939221453; over18=1; list_mode=h; _ym_isad=1; hide_app_banner=1"
 # cookies = load_cookies(cookies_copy)
 
+
 sources = getSupportedSources()
 print(f"supported sources: {sources}")
 
 # print(search('012717_472', 'avsox', proxies=proxydict))
 # print(search('FC2-PPV-2848294', 'avsox', proxies=proxydict))
-# print(search('012717_472', specifiedSource='avsox', specifiedUrl='https://avsox.click/cn/movie/32628c999f07a942'))
+# print(search('012717_472', specifiedSource='avsox', specifiedUrl='https://avsox.click/cn/movie/32628c999f07a942', proxies=proxydict))
 
 # print(search('STAR-438', 'javbus', proxies=proxydict))
 # print(search('ABP-960', 'javbus', proxies=proxydict))
@@ -48,14 +51,17 @@ print(f"supported sources: {sources}")
 # print(search('BrazzersExxtra.21.02.01', 'javbus', proxies=proxydict))
 # print(search('100221_001', 'javbus', proxies=proxydict))
 # print(search('AVSW-061', 'javbus', proxies=proxydict))
+# print(search('AVSW-061', specifiedSource='javbus', specifiedUrl='https://www.buscdn.fun/AVSW-061', proxies=proxydict))
 
 # print(search('RCTD-288', 'xcity', proxies=proxydict))
 # print(search('VNDS-2624', 'xcity', proxies=proxydict))
 # print(search('ABP-988', 'xcity', proxies=proxydict))
+# print(search('ABW-179', specifiedSource='xcity', specifiedUrl='https://xcity.jp/avod/detail/?id=169480', proxies=proxydict))
 
 # print(search('SIRO-4149', 'mgstage', proxies=proxydict))
 # print(search('ABW-246', 'mgstage', proxies=proxydict))
 # print(search('390JNT-044', 'mgstage', proxies=proxydict))
+# print(search('SIRO-4149', specifiedSource='mgstage', specifiedUrl='https://www.mgstage.com/product/product_detail/SIRO-4149/', proxies=proxydict))
 
 # print(search('MD0129', 'madou', proxies=proxydict))
 # print(search('TM0002', 'madou', proxies=proxydict))
@@ -63,40 +69,48 @@ print(f"supported sources: {sources}")
 # print(search('MD0140-2', 'madou', proxies=proxydict))
 # print(search('MAD039', 'madou', proxies=proxydict))
 # print(search('JDMY027', 'madou', proxies=proxydict))
+# print(search('MAD039', specifiedSource='madou', specifiedUrl='https://madou.club/mad039-%e6%9c%ba%e7%81%b5%e5%8f%af%e7%88%b1%e5%b0%8f%e5%8f%ab%e8%8a%b1-%e5%bc%ba%e8%af%b1%e5%83%a7%e4%ba%ba%e8%bf%ab%e7%8a%af%e8%89%b2%e6%88%92.html', proxies=proxydict))
 
 # print(search('FC2-2903008', 'fc2', proxies=proxydict))
 # print(search('FC2-2182382', 'fc2', proxies=proxydict))
 # print(search('FC2-607854', 'fc2', proxies=proxydict))
 # print(search('FC2-2787433', 'fc2', proxies=proxydict))
+# print(search('FC2-2787433', specifiedSource='fc2', specifiedUrl='https://adult.contents.fc2.com/article/2787433/', proxies=proxydict))
 
 # print(search('VJ013178', 'dlsite', proxies=proxydict))
 # print(search('RJ329607', 'dlsite', proxies=proxydict))
 # print(search('RJ167911', 'dlsite', proxies=proxydict))  # 打折标签 50% OFF
 # print(search('牝教師4～穢された教壇～ 「生意気ドジっ娘女教師・美結～高飛車ハメ堕ち2濁金」', 'dlsite', proxies=proxydict))
- 
+# print(search('RJ329607', specifiedSource='dlsite', specifiedUrl='https://www.dlsite.com/maniax/work/=/product_id/RJ329607.html/?locale=zh_CN', proxies=proxydict))
+
 # print(search('jul-404', 'jav321', proxies=proxydict))
 # print(search('jul-401', 'jav321', proxies=proxydict))
 # print(search('sivr-160', 'jav321', proxies=proxydict))
+# print(search('sivr-160', specifiedSource='jav321', specifiedUrl='https://www.jav321.com/video/sivr00160', proxies=proxydict))
 
 # print(search("pred00251", 'fanza', proxies=proxydict))
 # print(search("MIAA-391", 'fanza', proxies=proxydict))
 # print(search("OBA-326", 'fanza', proxies=proxydict))
 # print(search("POW-044", 'fanza', proxies=proxydict))
 # print(search("POW023", 'fanza', proxies=proxydict))
+# print(search('POW023', specifiedSource='fanza', specifiedUrl='https://www.dmm.co.jp/digital/videoc/-/detail/=/cid=pow023', proxies=proxydict))
 
 # print(search('ADV-R0624', 'airav', proxies=proxydict))  # javbus页面返回404, airav有数据
 # print(search('ADN-188', 'airav', proxies=proxydict))    # 一人
 # print(search('CJOD-278', 'airav', proxies=proxydict))   # 多人 javbus演员名称采用日语假名，airav采用日文汉字
 # print(search('SPRD-1005', 'airav', proxies=proxydict))  # 剧照
+# print(search('SPRD-1005', specifiedSource='airav', specifiedUrl='https://cn.airav.wiki/video/SPRD-1005', proxies=proxydict))
 
 # print(search("070116-197", 'carib', proxies=proxydict)) # actor have photo
 # print(search("041721-001", 'carib', proxies=proxydict))
 # print(search("080520-001", 'carib', proxies=proxydict))
+# print(search('080520-001', specifiedSource='carib', specifiedUrl='https://www.caribbeancom.com/moviepages/080520-001/index.html', proxies=proxydict))
 
 # print(search('91CM-121', 'mv91', proxies=proxydict))
 # print(search('91CM-122', 'mv91', proxies=proxydict))
 # print(search('91CM-143', 'mv91', proxies=proxydict))
 # print(search('91MS-006', 'mv91', proxies=proxydict))
+# print(search('91MS-006', specifiedSource='mv91', specifiedUrl='https://www.91mv.org/index/detail?id=108J9W', proxies=proxydict))
 
 # print(search('GCOLLE-840724', 'gcolle', proxies=proxydict))
 # print(search('840724', 'gcolle', proxies=proxydict))
@@ -104,7 +118,7 @@ print(f"supported sources: {sources}")
 # print(search('838671', 'gcolle', proxies=proxydict))
 # print(search('814179', 'gcolle', proxies=proxydict))
 # print(search('834255', 'gcolle', proxies=proxydict))
-# print(search('814179', 'gcolle', proxies=proxydict))
+# print(search('834255', specifiedSource='gcolle', specifiedUrl='https://gcolle.net/product_info.php/products_id/834255', proxies=proxydict))
 
 # print(search('AGAV-042', 'javdb', proxies=proxydict, dbsite='javdb40'))
 # print(search('BANK-022', 'javdb', proxies=proxydict))
@@ -123,17 +137,20 @@ print(f"supported sources: {sources}")
 # print(search('LOVE-262', 'javdb', proxies=proxydict))
 # print(search('ABP-890', 'javdb', proxies=proxydict))
 # print(search('blacked.14.12.08', 'javdb', proxies=proxydict))
+# print(search('EBOD-646', specifiedSource='javdb', specifiedUrl='https://javdb.com/v/DY484', proxies=proxydict))
 
 # print(search('item4039214', 'getchu', proxies=proxydict))       # GETCHU-4039214 https://dl.getchu.com/i/item4039214
 # print(search('GETCHU-4039214', 'getchu', proxies=proxydict))
 # print(search('お兄ちゃん、朝までずっとギュッてして！ 女未すみ編', 'getchu', proxies=proxydict)) # GETCHU-1139198 http://www.getchu.com/soft.phtml?id=1139198
 # print(search('GETCHU-1139198', 'getchu', proxies=proxydict))
+# print(search('GETCHU-1139198', specifiedSource='getchu', specifiedUrl='http://www.getchu.com/soft.phtml?id=1139198', proxies=proxydict))
 
 # print(search('IPX-292', 'javlibrary', proxies=proxydict))
 # print(search('STAR-438', 'javlibrary', proxies=proxydict, morestoryline=True))
 # print(search('SNIS-003', 'javlibrary', proxies=proxydict, morestoryline=True))
 # print(search('n1403', 'javlibrary', proxies=proxydict))   # not found
 # print(search('SSNI-468', 'javlibrary', proxies=proxydict))
+# print(search('SSNI-468', specifiedSource='javlibrary', specifiedUrl='https://www.javlibrary.com/cn/?v=javli7zkyu', proxies=proxydict))
 
 # print(search('EBOD-646', proxies=proxydict))
 

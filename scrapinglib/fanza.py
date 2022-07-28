@@ -22,7 +22,8 @@ class Fanza(Parser):
         self.number = number
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
-            self.htmltree = self.getHtmlTree(self.detailurl)
+            durl = "https://www.dmm.co.jp/age_check/=/declared=yes/?"+ urlencode({"rurl": self.detailurl})
+            self.htmltree = self.getHtmlTree(durl)
             result = self.dictformat(self.htmltree)
             return result
         # fanza allow letter + number + underscore, normalize the input here

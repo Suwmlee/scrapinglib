@@ -66,7 +66,10 @@ class Javbus(Parser):
         self.uncensored = True
 
         w_number = number.replace('.', '-')
-        self.detailurl = 'https://www.javbus.red/' + w_number
+        if self.specifiedUrl:
+            self.detailurl = self.specifiedUrl
+        else:
+            self.detailurl = 'https://www.javbus.red/' + w_number
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
             return 404
