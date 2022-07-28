@@ -18,7 +18,10 @@ class Madou(Parser):
 
     def search(self, number):
         self.number = number.lower().strip()
-        self.detailurl = "https://madou.club/" + number + ".html"
+        if self.specifiedUrl:
+            self.detailurl = self.specifiedUrl
+        else:
+            self.detailurl = "https://madou.club/" + number + ".html"
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
             return 404

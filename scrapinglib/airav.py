@@ -21,7 +21,10 @@ class Airav(Parser):
 
     def search(self, number):
         self.number = number
-        self.detailurl = 'https://cn.airav.wiki/video/' + number
+        if self.specifiedUrl:
+            self.detailurl = self.specifiedUrl
+        else:
+            self.detailurl = 'https://cn.airav.wiki/video/' + number
         engine = Javbus()
         javbusinfo = engine.scrape(number, self)
         if javbusinfo == 404:

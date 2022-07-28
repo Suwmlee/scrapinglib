@@ -108,8 +108,12 @@ class Xcity(Parser):
 
     def search(self, number):
         self.number = number
-        self.detail_page, self.browser = self.open_by_browser(number)
-        self.detailurl = self.browser.url
-        lx = etree.fromstring(self.detail_page, etree.HTMLParser())
+        if self.specifiedUrl:
+            self.detailurl = self.specifiedUrl
+            lx = self.getHtmlTree(self.detailurl)
+        else:
+            self.detail_page, self.browser = self.open_by_browser(number)
+            self.detailurl = self.browser.url
+            lx = etree.fromstring(self.detail_page, etree.HTMLParser())
         result = self.dictformat(lx)
         return result

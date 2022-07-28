@@ -50,7 +50,11 @@ class Avsox(Parser):
     def getSmallCover(self, htmltree):
         """ 使用搜索页面的预览小图
         """
-        return self.getTreeElement(self.searchtree, self.expr_smallcover)
+        try:
+            return self.getTreeElement(self.searchtree, self.expr_smallcover)
+        except:
+            self.imagecut = 1
+            return ''
 
     def getTags(self, htmltree):
         tags = self.getTreeElement(htmltree).split(',')

@@ -24,6 +24,7 @@ class Parser:
     extraheader = None
     cookies = None
     morestoryline = False
+    specifiedUrl = None
 
     number = ''
     detailurl = ''
@@ -73,7 +74,10 @@ class Parser:
         4. 返回 result
         """
         self.number = number
-        self.detailurl = self.queryNumberUrl(number)
+        if self.specifiedUrl:
+            self.detailurl = self.specifiedUrl
+        else:
+            self.detailurl = self.queryNumberUrl(number)
         htmltree = self.getHtmlTree(self.detailurl)
         result = self.dictformat(htmltree)
         return result
@@ -90,6 +94,8 @@ class Parser:
             self.verify = core.verify
         if core.morestoryline:
             self.morestoryline = True
+        if core.specifiedSource == self.source:
+            self.specifiedUrl = core.specifiedUrl
 
     def queryNumberUrl(self, number):
         """ 根据番号查询详细信息url

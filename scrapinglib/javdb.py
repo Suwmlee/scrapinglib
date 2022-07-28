@@ -64,7 +64,10 @@ class Javdb(Parser):
     def search(self, number: str):
         self.number = number
         self.session = request_session(cookies=self.cookies, proxies=self.proxies, verify=self.verify)
-        self.detailurl = self.queryNumberUrl(number)
+        if self.specifiedUrl:
+            self.detailurl = self.specifiedUrl
+        else:
+            self.detailurl = self.queryNumberUrl(number)
         self.deatilpage = self.session.get(self.detailurl).text
         if '此內容需要登入才能查看或操作' in self.deatilpage or '需要VIP權限才能訪問此內容' in self.deatilpage:
             self.noauth = True

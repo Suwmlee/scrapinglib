@@ -34,7 +34,10 @@ class Javlibrary(Parser):
     def search(self, number):
         self.number = number.upper()
         self.session = request_session(cookies=self.cookies, proxies=self.proxies, verify=self.verify)
-        self.detailurl = self.queryNumberUrl(self.number)
+        if self.specifiedUrl:
+            self.detailurl = self.specifiedUrl
+        else:
+            self.detailurl = self.queryNumberUrl(self.number)
         if not self.detailurl:
             return 404
         if self.htmltree is None:

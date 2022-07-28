@@ -37,6 +37,7 @@ print(f"supported sources: {sources}")
 
 # print(search('012717_472', 'avsox', proxies=proxydict))
 # print(search('FC2-PPV-2848294', 'avsox', proxies=proxydict))
+# print(search('012717_472', specifiedSource='avsox', specifiedUrl='https://avsox.click/cn/movie/32628c999f07a942'))
 
 # print(search('STAR-438', 'javbus', proxies=proxydict))
 # print(search('ABP-960', 'javbus', proxies=proxydict))
@@ -138,6 +139,8 @@ print(f"supported sources: {sources}")
 
 # print(search('14534', 'tmdb', type='general'))
 # print(search('526896', 'tmdb', type='general'))
+# print(search('14534', specifiedSource='tmdb', specifiedUrl='https://www.themoviedb.org/movie/14534?language=zh-CN', type='general'))
 
 # print(search('tt0468569', 'imdb', type='general'))
 # print(search('tt0108002', 'imdb', type='general'))
+# print(search('tt0108002', specifiedSource='imdb', specifiedUrl='https://www.imdb.com/title/tt0108002', type='general'))

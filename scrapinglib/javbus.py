@@ -32,7 +32,12 @@ class Javbus(Parser):
 
     def search(self, number):
         self.number = number
-        try:    
+        try:
+            if self.specifiedUrl:
+                self.detailurl = self.specifiedUrl
+                htmltree = self.getHtmlTree(self.detailurl)
+                result = self.dictformat(htmltree)
+                return result
             url = "https://www." + secrets.choice([
                 'buscdn.fun', 'busdmm.fun', 'busfan.fun', 'busjav.fun',
                 'cdnbus.fun',
