@@ -27,10 +27,10 @@ class Airav(Parser):
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
-            self.detailurl = 'https://cn.airav.wiki/video/' + number
+            self.detailurl = self.queryNumberUrl(self.number)
         if self.addtion_Javbus:
             engine = Javbus()
-            javbusinfo = engine.scrape(number, self)
+            javbusinfo = engine.scrape(self.number, self)
             if javbusinfo == 404:
                 self.javbus = {"title": ""}
             else:
@@ -39,6 +39,17 @@ class Airav(Parser):
         htmltree = etree.fromstring(self.htmlcode, etree.HTMLParser())
         result = self.dictformat(htmltree)
         return result
+
+    def queryNumberUrl(self, number):
+        queryUrl =  "https://cn.airav.wiki/?search=" + number
+        queryTree = self.getHtmlTree(queryUrl)
+        results = self.getTreeAll(queryTree, '//div[contains(@class,"videoList")]/div/a')
+        for i in results:
+            num = self.getTreeElement(i, '//div/div[contains(@class,"videoNumber")]/p[1]/text()')
+            if num.replace('-','') == number.replace('-','').upper():
+                self.number = num
+                return "https://cn.airav.wiki" + i.attrib['href']
+        return 'https://cn.airav.wiki/video/' + number
 
     def getNum(self, htmltree):
         if self.addtion_Javbus:
@@ -113,7 +124,7 @@ class Airav(Parser):
             if isinstance(result, str) and len(result):
                 return result
         return super().getCover(htmltree)
-``
+
     def getSeries(self, htmltree):
         if self.addtion_Javbus:
             result = self.javbus.get('series')
