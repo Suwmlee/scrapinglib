@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
 from .parser import Parser
 
 
@@ -21,7 +20,11 @@ class Avsox(Parser):
     expr_label = '//p[contains(text(),"系列:")]/following-sibling::p[1]/a/text()'
     expr_series = '//span[contains(text(),"系列:")]/../span[2]/text()'
 
-    def queryNumberUrl(self, number):
+    def queryNumberUrl(self, number: str):
+        upnum = number.upper()
+        if 'FC2' in upnum and 'FC2-PPV' not in upnum:
+            number = upnum.replace('FC2', 'FC2-PPV')
+            self.number = number
         qurySiteTree = self.getHtmlTree('https://tellme.pw/avsox')
         site = self.getTreeElement(qurySiteTree, '//div[@class="container"]/div/a/@href')
         self.searchtree = self.getHtmlTree(site + '/cn/search/' + number)
