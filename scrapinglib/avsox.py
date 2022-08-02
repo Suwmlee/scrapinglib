@@ -41,8 +41,10 @@ class Avsox(Parser):
         new_number = self.getTreeElement(htmltree, self.expr_number)
         if new_number.upper() != self.number.upper():
             raise ValueError('number not found in ' + self.source)
+        if 'FC2-PPV' in new_number.upper():
+            new_number = new_number.upper().replace('FC2-PPV', 'FC2')
         self.number = new_number
-        return new_number
+        return self.number
 
     def getTitle(self, htmltree):
         return super().getTitle(htmltree).replace('/', '').strip(self.number)
