@@ -2,7 +2,7 @@
 from http.cookies import SimpleCookie
 import sys
 import json
-sys.path.append('../scrapinglib')
+sys.path.insert(0,'../scrapinglib')
 from scrapinglib import getSupportedSources
 from scrapinglib import search as orignal_search
 

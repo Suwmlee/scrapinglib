@@ -6,7 +6,6 @@ from .parser import Parser
 
 class Imdb(Parser):
     source = 'imdb'
-    imagecut = 0
 
     expr_title = '//h1[@data-testid="hero-title-block__title"]/text()'
     expr_release = '//a[contains(text(),"Release date")]/following-sibling::div[1]/ul/li/a/text()'
@@ -14,6 +13,9 @@ class Imdb(Parser):
     expr_outline = '//head/meta[@property="og:description"]/@content'
     expr_actor = '//h3[contains(text(),"Top cast")]/../../../following-sibling::div[1]/div[2]/div/div/a/text()'
     expr_tags = '//div[@data-testid="genres"]/div[2]/a/ul/li/text()'
+
+    def extraInit(self):
+        imagecut = 0
 
     def queryNumberUrl(self, number):
         """
