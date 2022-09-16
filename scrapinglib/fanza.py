@@ -120,6 +120,17 @@ class Fanza(Parser):
             return ''
         return ret
 
+    def getTrailer(self, htmltree):
+        htmltext = re.search(r'<script type=\"application/ld\+json\">[\s\S].*}\s*?</script>', self.htmlcode)
+        if htmltext:
+            htmltext = htmltext.group()
+            url = re.search(r'\"contentUrl\":\"(.*?)\"', htmltext)
+            if url:
+                url = url.group(1)
+                url = url.rsplit('_', 2)[0] + '_mhb_w.mp4'
+                return url
+        return ''
+
     def getFanzaString(self, expr):
         result1 = str(self.htmltree.xpath("//td[contains(text(),'"+expr+"')]/following-sibling::td/a/text()")).strip(" ['']")
         result2 = str(self.htmltree.xpath("//td[contains(text(),'"+expr+"')]/following-sibling::td/text()")).strip(" ['']")

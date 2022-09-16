@@ -155,6 +155,7 @@ print(f"supported sources: {sources}")
 
 # print(search('14534', 'tmdb', type='general'))
 # print(search('526896', 'tmdb', type='general'))
+# print(search('the dark knight', 'tmdb', type='general'))
 # print(search('14534', specifiedSource='tmdb', specifiedUrl='https://www.themoviedb.org/movie/14534?language=zh-CN', type='general'))
 
 # print(search('tt0468569', 'imdb', type='general'))

@@ -77,6 +77,12 @@ class wwwGetchu(Parser):
             outline = outline + i.strip()
         return outline
 
+    def getCover(self, htmltree):
+        url = super().getCover(htmltree)
+        if "getchu.com" in url:
+            return url
+        return "http://www.getchu.com" + url
+
     def getExtrafanart(self, htmltree):
         arts = super().getExtrafanart(htmltree)
         extrafanart = []
