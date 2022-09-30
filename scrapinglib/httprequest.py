@@ -8,10 +8,11 @@ from cloudscraper import create_scraper
 
 G_USER_AGENT = r'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.133 Safari/537.36'
 G_DEFAULT_TIMEOUT = 10
+G_DEFAULT_RETRY = 3
 
 
-def get(url: str, cookies=None, ua: str=None, extra_headers=None, return_type: str=None, encoding: str=None,
-        retry: int=3, timeout: int=G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+def get(url: str, cookies=None, ua: str = None, extra_headers=None, return_type: str = None, encoding: str = None,
+        retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
     """
     网页请求核心函数
 
@@ -44,8 +45,8 @@ def get(url: str, cookies=None, ua: str=None, extra_headers=None, return_type: s
     raise Exception('Connect Failed')
 
 
-def post(url: str, data: dict=None, files=None, cookies=None, ua: str=None, return_type: str=None, encoding: str=None,
-         retry: int=3, timeout: int=G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, return_type: str = None, encoding: str = None,
+         retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
     """
     是否使用代理应由上层处理
     """
@@ -90,7 +91,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def request_session(cookies=None, ua: str=None, retry: int=3, timeout: int=G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
     """
     keep-alive
     """
@@ -112,7 +113,7 @@ def request_session(cookies=None, ua: str=None, retry: int=3, timeout: int=G_DEF
 # storyline xcity only
 def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies: dict = None, ua: str = None,
                      return_type: str = None, encoding: str = None,
-                     retry: int = 3, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+                     retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
     session = requests.Session()
     if isinstance(cookies, dict) and len(cookies):
         requests.utils.add_dict_to_cookiejar(session.cookies, cookies)
@@ -150,9 +151,10 @@ def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies:
         print(f'[-]get_html_by_form() Failed! {e}')
     return None
 
+
 # storyline javdb only
 def get_html_by_scraper(url: str = None, cookies: dict = None, ua: str = None, return_type: str = None,
-                        encoding: str = None, retry: int = 3, proxies=None, timeout: int = G_DEFAULT_TIMEOUT, verify=None):
+                        encoding: str = None, retry: int = G_DEFAULT_RETRY, proxies=None, timeout: int = G_DEFAULT_TIMEOUT, verify=None):
     session = create_scraper(browser={'custom': ua or G_USER_AGENT, })
     if isinstance(cookies, dict) and len(cookies):
         requests.utils.add_dict_to_cookiejar(session.cookies, cookies)
