@@ -164,7 +164,7 @@ class Parser:
             }
             dic = self.extradict(dic)
         except Exception as e:
-            print(e)
+            #print(e)
             dic = {"title": ""}
         js = json.dumps(dic, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
         return js
@@ -255,8 +255,8 @@ class Parser:
     def getImagecut(self, htmltree):
         """ 修正 无码poster不裁剪cover
         """
-        if self.imagecut == 1 and self.getUncensored(htmltree):
-            self.imagecut = 0
+        # if self.imagecut == 1 and self.getUncensored(htmltree):
+        #     self.imagecut = 0
         return self.imagecut
 
     def getUserRating(self, htmltree):
