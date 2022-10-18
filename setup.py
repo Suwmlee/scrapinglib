@@ -3,6 +3,7 @@ from codecs import open
 
 requires = [
     "lxml",
+    "pysocks",
     "mechanicalsoup",
     "cloudscraper",
 ]
