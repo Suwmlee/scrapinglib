@@ -2,6 +2,7 @@
 from http.cookies import SimpleCookie
 import sys
 import json
+import logging
 sys.path.insert(0,'../scrapinglib')
 from scrapinglib import getSupportedSources
 from scrapinglib import search as orignal_search
@@ -24,6 +25,7 @@ proxydict = {
 def search(number, source=None, **kwargs):
     """ test
     """
+    logging.basicConfig(level=logging.DEBUG)
     data = orignal_search(number, source, **kwargs)
     beaty = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ':'))
     return beaty
