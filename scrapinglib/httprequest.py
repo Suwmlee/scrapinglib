@@ -2,6 +2,7 @@
 
 import mechanicalsoup
 import requests
+import logging
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from cloudscraper import create_scraper
@@ -34,14 +35,14 @@ def get(url: str, cookies=None, ua: str = None, extra_headers=None, return_type:
                 result.encoding = encoding or result.apparent_encoding
                 return result.text
         except Exception as e:
-            print(f"[-]Connect: {url} retry {i + 1}/{retry}")
+            logging.debug(f"[-]Connect: {url} retry {i + 1}/{retry}")
             errors = str(e)
     if "getaddrinfo failed" in errors:
-        print("[-]Connect Failed! Please Check your proxy config")
-        print("[-]" + errors)
+        logging.debug("[-]Connect Failed! Please Check your proxy config")
+        logging.debug("[-]" + errors)
     else:
-        print("[-]" + errors)
-        print('[-]Connect Failed! Please check your Proxy or Network!')
+        logging.debug("[-]" + errors)
+        logging.debug('[-]Connect Failed! Please check your Proxy or Network!')
     raise Exception('Connect Failed')
 
 
@@ -65,14 +66,14 @@ def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, 
                 result.encoding = encoding or result.apparent_encoding
                 return result
         except Exception as e:
-            print(f"[-]Connect: {url} retry {i + 1}/{retry}")
+            logging.debug(f"[-]Connect: {url} retry {i + 1}/{retry}")
             errors = str(e)
     if "getaddrinfo failed" in errors:
-        print("[-]Connect Failed! Please Check your proxy config")
-        print("[-]" + errors)
+        logging.debug("[-]Connect Failed! Please Check your proxy config")
+        logging.debug("[-]" + errors)
     else:
-        print("[-]" + errors)
-        print('[-]Connect Failed! Please check your Proxy or Network!')
+        logging.debug("[-]" + errors)
+        logging.debug('[-]Connect Failed! Please check your Proxy or Network!')
     raise Exception('Connect Failed')
 
 
@@ -146,9 +147,9 @@ def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies:
             result.encoding = encoding or "utf-8"
             return response.text
     except requests.exceptions.ProxyError:
-        print("[-]get_html_by_form() Proxy error! Please check your Proxy")
+        logging.debug("[-]get_html_by_form() Proxy error! Please check your Proxy")
     except Exception as e:
-        print(f'[-]get_html_by_form() Failed! {e}')
+        logging.debug(f'[-]get_html_by_form() Failed! {e}')
     return None
 
 
@@ -183,7 +184,7 @@ def get_html_by_scraper(url: str = None, cookies: dict = None, ua: str = None, r
             result.encoding = encoding or "utf-8"
             return result.text
     except requests.exceptions.ProxyError:
-        print("[-]get_html_by_scraper() Proxy error! Please check your Proxy")
+        logging.debug("[-]get_html_by_scraper() Proxy error! Please check your Proxy")
     except Exception as e:
-        print(f"[-]get_html_by_scraper() failed. {e}")
+        logging.debug(f"[-]get_html_by_scraper() failed. {e}")
     return None

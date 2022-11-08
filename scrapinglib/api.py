@@ -2,6 +2,7 @@
 
 import re
 import json
+import logging
 
 from .airav import Airav
 from .carib import Carib
@@ -24,7 +25,7 @@ from .tmdb import Tmdb
 from .imdb import Imdb
 
 
-def search(number, sources: str=None, **kwargs):
+def search(number, sources: str = None, **kwargs):
     """ 根据`番号/电影`名搜索信息
 
     :param number: number/name  depends on type
@@ -77,9 +78,6 @@ class Scraping:
         'tmdb': Tmdb().scrape,
         'imdb': Imdb().scrape,
     }
-
-    debug = False
-
     proxies = None
     verify = None
     specifiedSource = None
@@ -92,9 +90,8 @@ class Scraping:
 
     def search(self, number, sources=None, proxies=None, verify=None, type='adult',
                specifiedSource=None, specifiedUrl=None,
-               dbcookies=None, dbsite=None, morestoryline=False,
-               debug=False):
-        self.debug = debug
+               dbcookies=None, dbsite=None, morestoryline=False
+               ):
         self.proxies = proxies
         self.verify = verify
         self.specifiedSource = specifiedSource
@@ -118,27 +115,24 @@ class Scraping:
         json_data = {}
         for source in sources:
             try:
-                if self.debug:
-                    print('[+]select', source)
+                logging.debug(f'[+]select {source}')
                 try:
                     data = self.general_func_mapping[source](name, self)
                     if data == 404:
                         continue
                     json_data = json.loads(data)
                 except Exception as e:
-                    # print('[!] 出错啦')
-                    # print(e)
                     pass
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
-                    print(f"[+]Find movie [{name}] metadata on website '{source}'")
+                    logging.debug(f"[+]Find movie [{name}] metadata on website '{source}'")
                     break
             except:
                 continue
 
         # Return if data not found in all sources
         if not json_data:
-            print(f'[-]Movie Number [{name}] not found!')
+            logging.debug(f'[-]Movie Number [{name}] not found!')
             return None
 
         return json_data
@@ -151,28 +145,25 @@ class Scraping:
         json_data = {}
         for source in sources:
             try:
-                if self.debug:
-                    print('[+]select', source)
+                logging.debug(f'[+]select {source}')
                 try:
                     data = self.adult_func_mapping[source](number, self)
                     if data == 404:
                         continue
                     json_data = json.loads(data)
                 except Exception as e:
-                    # print('[!] 出错啦')
-                    # print(e)
                     pass
                     # json_data = self.func_mapping[source](number, self)
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
-                    print(f"[+]Find movie [{number}] metadata on website '{source}'")
+                    logging.debug(f"[+]Find movie [{number}] metadata on website '{source}'")
                     break
             except:
                 continue
 
         # Return if data not found in all sources
         if not json_data:
-            print(f'[-]Movie Number [{number}] not found!')
+            logging.debug(f'[-]Movie Number [{number}] not found!')
             return None
 
         return json_data
@@ -187,10 +178,10 @@ class Scraping:
         todel = []
         for s in sources:
             if not s in self.general_func_mapping:
-                print('[!] Source Not Exist : ' + s)
+                logging.debug('[!] Source Not Exist : ' + s)
                 todel.append(s)
         for d in todel:
-            print('[!] Remove Source : ' + s)
+            logging.debug('[!] Remove Source : ' + s)
             sources.remove(d)
         return sources
 
@@ -242,10 +233,10 @@ class Scraping:
         todel = []
         for s in sources:
             if not s in self.adult_func_mapping:
-                print('[!] Source Not Exist : ' + s)
+                logging.debug('[!] Source Not Exist : ' + s)
                 todel.append(s)
         for d in todel:
-            print('[!] Remove Source : ' + s)
+            logging.debug('[!] Remove Source : ' + s)
             sources.remove(d)
         return sources
 

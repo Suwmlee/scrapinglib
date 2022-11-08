@@ -11,13 +11,14 @@ import re
 import time
 import secrets
 import builtins
+import logging
 from urllib.parse import urljoin
 from lxml.html import fromstring
 from multiprocessing.dummy import Pool as ThreadPool
 
 from .airav import Airav
 from .xcity import Xcity
-from .httprequest  import get_html_by_form, get_html_by_scraper, request_session
+from .httprequest import get_html_by_form, get_html_by_scraper, request_session
 
 # 舍弃 Amazon 源
 G_registered_storyline_site = {"airavwiki", "airav", "avno1", "xcity", "58avgo"}
@@ -78,7 +79,7 @@ def getStoryline(number, title=None, sites: list=None, uncensored=None, proxies=
     for site, desc in zip(apply_sites, results):
         sl = len(desc) if isinstance(desc, str) else 0
         s += f'，[选中{site}字数:{sl}]' if site == sel_site else f'，{site}字数:{sl}' if sl else f'，{site}:空'
-    print(s)
+    logging.debug(s)
     return sel
 
 
@@ -100,7 +101,7 @@ def getStoryline_mp(args):
         storyline = getStoryline_58avgo(number, debug, proxies, verify)
     if not debug:
         return storyline
-    print("[!]MP 线程[{}]运行{:.3f}秒，结束于{}返回结果: {}".format(
+    logging.debug("[!]MP 线程[{}]运行{:.3f}秒，结束于{}返回结果: {}".format(
             site,
             time.time() - start_time,
             time.strftime("%H:%M:%S"),
@@ -138,8 +139,7 @@ def getStoryline_airav(number, debug, proxies, verify):
         desc = str(lx.xpath('//span[@id="ContentPlaceHolder1_Label2"]/text()')[0]).strip()
         return desc
     except Exception as e:
-        if debug:
-            print(f"[-]MP getStoryline_airav Error: {e},number [{number}].")
+        logging.debug(f"[-]MP getStoryline_airav Error: {e},number [{number}].")
         pass
     return None
 
@@ -155,8 +155,7 @@ def getStoryline_airavwiki(number, debug, proxies, verify):
         outline = json.loads(jsons).get('outline')
         return outline
     except Exception as e:
-        if debug:
-            print(f"[-]MP def getStoryline_airavwiki Error: {e}, number [{number}].")
+        logging.debug(f"[-]MP def getStoryline_airavwiki Error: {e}, number [{number}].")
         pass
     return ''
 
@@ -195,8 +194,7 @@ def getStoryline_58avgo(number, debug, proxies, verify):
             raise ValueError(f"detail page number not match, got ->[{detail_number}]")
         return browser.page.select_one('#ContentPlaceHolder1_Label2').text.strip()
     except Exception as e:
-        if debug:
-            print(f"[-]MP getOutline_58avgo Error: {e}, number [{number}].")
+        logging.debug(f"[-]MP getOutline_58avgo Error: {e}, number [{number}].")
         pass
     return ''
 
@@ -222,8 +220,7 @@ def getStoryline_avno1(number, debug, proxies, verify):  #获取剧情介绍 从
                 return desc.strip()
         raise ValueError(f"page number ->[{page_number}] not match")
     except Exception as e:
-        if debug:
-            print(f"[-]MP getOutline_avno1 Error: {e}, number [{number}].")
+        logging.debug(f"[-]MP getOutline_avno1 Error: {e}, number [{number}].")
         pass
     return ''
 
@@ -249,8 +246,7 @@ def getStoryline_avno1OLD(number, debug, proxies, verify):  #获取剧情介绍 
                 return div['data-description'].strip()
         raise ValueError(f"page number ->[{page_number}] not match")
     except Exception as e:
-        if debug:
-            print(f"[-]MP getOutline_avno1 Error: {e}, number [{number}].")
+        logging.debug(f"[-]MP getOutline_avno1 Error: {e}, number [{number}].")
         pass
     return ''
 
@@ -264,7 +260,6 @@ def getStoryline_xcity(number, debug, proxies, verify):  #获取剧情介绍 从
         outline = json.loads(jsons).get('outline')
         return outline
     except Exception as e:
-        if debug:
-            print(f"[-]MP getOutline_xcity Error: {e}, number [{number}].")
+        logging.debug(f"[-]MP getOutline_xcity Error: {e}, number [{number}].")
         pass
     return ''
