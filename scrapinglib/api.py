@@ -6,8 +6,6 @@ import logging
 import importlib
 
 from .parser import Parser
-from .tmdb import Tmdb
-from .imdb import Imdb
 
 
 def search(number, sources: str = None, **kwargs):
@@ -41,10 +39,6 @@ class Scraping:
                           ]
 
     general_full_sources = ['tmdb', 'imdb']
-    general_func_mapping = {
-        'tmdb': Tmdb().scrape,
-        'imdb': Imdb().scrape,
-    }
     proxies = None
     verify = None
     specifiedSource = None
@@ -84,12 +78,15 @@ class Scraping:
             try:
                 logging.debug(f'[+]select {source}')
                 try:
-                    data = self.general_func_mapping[source](name, self)
+                    module = importlib.import_module('.' + source, 'scrapinglib')
+                    parser_type = getattr(module, source.capitalize())
+                    parser: Parser = parser_type()
+                    data = parser.scrape(name, self)
                     if data == 404:
                         continue
                     json_data = json.loads(data)
                 except Exception as e:
-                    pass
+                    logging.debug(e)
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
                     logging.debug(f"[+]Find movie [{name}] metadata on website '{source}'")
@@ -122,8 +119,7 @@ class Scraping:
                         continue
                     json_data = json.loads(data)
                 except Exception as e:
-                    pass
-                    # json_data = self.func_mapping[source](number, self)
+                    logging.debug(e)
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
                     logging.debug(f"[+]Find movie [{number}] metadata on website '{source}'")
@@ -147,7 +143,7 @@ class Scraping:
         # check sources in func_mapping
         todel = []
         for s in sources:
-            if not s in self.general_func_mapping:
+            if not s in self.general_full_sources:
                 logging.debug('[!] Source Not Exist : ' + s)
                 todel.append(s)
         for d in todel:
