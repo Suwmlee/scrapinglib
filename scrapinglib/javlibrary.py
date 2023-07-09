@@ -62,8 +62,12 @@ class Javlibrary(Parser):
             if number in numbers:
                 urls = queryTree.xpath('//div[@class="id"]/../@href')
                 if len(numbers) == 2 and numbers[0] == numbers[1]:
-                    # 两个相同番号，第一个结果海报被拉伸，第二个正常
-                    detailurl = urls[1]
+                    # 相同番号, 剔除标题含 ブルーレイディスク 字段
+                    titles = queryTree.xpath('//div[@class="title"]/text()')
+                    if titles and "ブルーレイディスク" in titles[0]:
+                        detailurl = urls[1]
+                    else:
+                        detailurl = urls[0]
                 else:
                     detailurl = urls[numbers.index(number)]
                 return "http://www.javlibrary.com/cn" + detailurl.strip('.')

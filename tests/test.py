@@ -150,7 +150,7 @@ print(f"supported sources: {sources}")
 # print(search('STAR-438', 'javlibrary', proxies=proxydict, morestoryline=True))
 # print(search('SNIS-003', 'javlibrary', proxies=proxydict, morestoryline=True))
 # print(search('n1403', 'javlibrary', proxies=proxydict))   # not found
-# print(search('SSNI-468', 'javlibrary', proxies=proxydict))
+# print(search('SSIS-698', 'javlibrary', proxies=proxydict))  # bluray
 # print(search('SSNI-468', specifiedSource='javlibrary', specifiedUrl='https://www.javlibrary.com/cn/?v=javli7zkyu', proxies=proxydict))
 
 # print(search('EBOD-646', proxies=proxydict))
