@@ -13,7 +13,7 @@ with open("README.md", "r", "utf-8") as f:
 
 setup(
     name='scrapinglib',
-    version='0.6.0',
+    version='0.6.1',
     author="suwmlee",
     author_email='suwmlee@gmail.com',
     url='https://github.com/Suwmlee/scrapinglib',
