@@ -1,0 +1,4 @@
+lxml
+pysocks
+mechanicalsoup
+cloudscraper
