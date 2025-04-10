@@ -34,7 +34,7 @@ class Scraping:
     """
     """
     adult_full_sources = ['javlibrary', 'javdb', 'javbus', 'airav', 'fanza', 'xcity', 'jav321',
-                          'mgstage', 'fc2', 'avsox', 'dlsite', 'carib', 'madou',
+                          'mgstage', 'fc2', 'avsox', 'dlsite', 'carib', 'madouclub', 'madouqu',
                           'getchu', 'gcolle', 'javday'
                           ]
 
@@ -183,8 +183,8 @@ class Scraping:
                 sources = insert(sources, "mgstage")
             elif "gcolle" in sources and (re.search("\d{6}", file_number)):
                 sources = insert(sources, "gcolle")
-            elif "madou" in sources and (re.search(r"^[a-z0-9]{3,}-[0-9]{1,}$", lo_file_number)):
-                sources = insert(sources, "madou")
+            elif "madouclub" in sources and (re.search(r"^[a-z0-9]{3,}-[0-9]{1,}$", lo_file_number)):
+                sources = insert(sources, "madouclub")
 
             elif re.search(r"^\d{5,}", file_number) or "heyzo" in lo_file_number:
                 if "avsox" in sources:
@@ -192,8 +192,8 @@ class Scraping:
             elif re.search(r"^[a-z0-9]{3,}$", lo_file_number):
                 if "xcity" in sources:
                     sources = insert(sources, "xcity")
-                if "madou" in sources:
-                    sources = insert(sources, "madou")
+                if "madouclub" in sources:
+                    sources = insert(sources, "madouclub")
 
         # check sources in func_mapping
         todel = []

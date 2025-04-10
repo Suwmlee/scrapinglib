@@ -28,8 +28,8 @@ def change_number(number):
 
 
 
-class Madou(Parser):
-    source = 'madou'
+class MadouClub(Parser):
+    source = 'madouclub'
 
     expr_url = '//a[@class="share-weixin"]/@data-url'
     expr_title = "/html/head/title/text()"
