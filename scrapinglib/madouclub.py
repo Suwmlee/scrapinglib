@@ -28,7 +28,7 @@ def change_number(number):
 
 
 
-class MadouClub(Parser):
+class Madouclub(Parser):
     source = 'madouclub'
 
     expr_url = '//a[@class="share-weixin"]/@data-url'
