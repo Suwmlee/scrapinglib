@@ -24,7 +24,7 @@ class Madouqu(Parser):
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
-            self.detailurl = f"https://madouqu.com/video/{self.number}/"
+            self.detailurl = f"https://madouqu.com/video/{number}/"
         
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
