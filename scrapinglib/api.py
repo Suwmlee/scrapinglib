@@ -118,6 +118,8 @@ class Scraping:
                     if data == 404:
                         continue
                     json_data = json.loads(data)
+                    # clean json_data
+                    json_data = self.clean_title_tags(json_data)
                 except Exception as e:
                     logging.debug(e)
                 # if any service return a valid return, break
@@ -205,6 +207,60 @@ class Scraping:
             logging.debug('[!] Remove Source : ' + s)
             sources.remove(d)
         return sources
+
+    def clean_title_tags(self, data: dict) -> dict:
+        """清理标题中的标签词缀等"""
+        if "title" in data and data["title"]:
+            patterns = [
+                r'【[^】]*限定[^】]*】',
+                r'【[^】]*DMM[^】]*】',
+                r'【[^】]*FANZA[^】]*】',
+                r'【[^】]*独占[^】]*】',
+                r'【[^】]*配信[^】]*】',
+                r'【[^】]*デジタル[^】]*】',
+                r'【[^】]*独家[^】]*】',
+                r'\[[^\]]*限定[^\]]*\]',
+                r'\[[^\]]*DMM[^\]]*\]',
+                r'\[[^\]]*FANZA[^\]]*\]',
+            ]
+
+            title = data["title"]
+            for pattern in patterns:
+                title = re.sub(pattern, '', title)
+
+            title = re.sub(r'\s+', ' ', title).strip()
+            data["title"] = title
+
+        resolution_patterns = [
+            r'^\d+[pP]$',
+            r'^\d+[kK]$',
+            r'^[Hh][Dd]$',
+            r'^[Ss][Dd]$',
+        ]
+
+        # 清理 tag 字段
+        if "tag" in data and isinstance(data["tag"], list):
+            cleaned_tags = []
+            for tag in data["tag"]:
+                if tag and isinstance(tag, str):
+                    should_keep = True
+                    for pattern in resolution_patterns:
+                        if re.match(pattern, tag.strip()):
+                            should_keep = False
+                            break
+                    if should_keep:
+                        cleaned_tags.append(tag)
+            data["tag"] = cleaned_tags
+
+        # 清理 label 字段
+        if "label" in data and data["label"] and isinstance(data["label"], str):
+            label = data["label"].strip()
+            for pattern in resolution_patterns:
+                if re.match(pattern, label):
+                    data["label"] = ''
+                    break
+
+        return data
 
     def get_data_state(self, data: dict) -> bool:  # 元数据获取失败检测
         if "title" not in data or "number" not in data:
