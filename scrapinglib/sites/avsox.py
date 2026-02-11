@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Avsox(Parser):
+class Avsox(BaseScraper):
     source = 'avsox'
 
     expr_number = '//span[contains(text(),"识别码:")]/../span[2]/text()'

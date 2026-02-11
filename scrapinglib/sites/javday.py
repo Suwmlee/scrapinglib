@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Javday(Parser):
+class Javday(BaseScraper):
     source = 'javday'
 
     expr_url = '/html/head/meta[@property="og:url"]/@content'

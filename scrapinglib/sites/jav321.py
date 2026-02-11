@@ -2,11 +2,11 @@
 
 import re
 from lxml import etree
-from . import httprequest
-from .parser import Parser
+from .. import http_client
+from ..base_scraper import BaseScraper
 
 
-class Jav321(Parser):
+class Jav321(BaseScraper):
     source = 'jav321'
 
     expr_title = "/html/body/div[2]/div[1]/div[1]/div[1]/h3/text()"
@@ -31,10 +31,10 @@ class Jav321(Parser):
         """
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
-            resp = httprequest.get(self.detailurl, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+            resp = http_client.get(self.detailurl, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
             self.detailhtml = resp
             return etree.fromstring(resp, etree.HTMLParser())
-        resp = httprequest.post(url, data={"sn": self.number}, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+        resp = http_client.post(url, data={"sn": self.number}, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
         if "/video/" in resp.url:
             self.detailurl = resp.url
             self.detailhtml = resp.text

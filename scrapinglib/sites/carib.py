@@ -3,10 +3,10 @@
 import re
 from urllib.parse import urljoin
 from lxml import html
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Carib(Parser):
+class Carib(BaseScraper):
     source = 'carib'
 
     expr_title = "//div[@class='movie-info section']/div[@class='heading']/h1[@itemprop='name']/text()"

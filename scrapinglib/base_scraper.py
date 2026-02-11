@@ -4,11 +4,11 @@ import json
 import re
 from lxml import etree, html
 
-from . import httprequest
-from .httprequest import HTTP_CLIENT_AUTO, HTTP_CLIENT_REQUESTS, HTTP_CLIENT_CURL_CFFI
+from . import http_client
+from .http_client import HTTP_CLIENT_AUTO, HTTP_CLIENT_REQUESTS, HTTP_CLIENT_CURL_CFFI
 from .utils import getTreeElement, getTreeAll
 
-class Parser:
+class BaseScraper:
     """ 基础刮削类
     """
     source = 'base'
@@ -55,7 +55,6 @@ class Parser:
         self.cookies = None
         self.morestoryline = False
         self.specifiedUrl = None
-        # HTTP 客户端类型：'requests', 'curl_cffi', 'auto'
         self.http_client = HTTP_CLIENT_AUTO
         self.extraInit()
 
@@ -125,7 +124,7 @@ class Parser:
     def getHtml(self, url):
         """ 访问网页
         """
-        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, extra_headers=self.extraheader, 
+        resp = http_client.get(url, cookies=self.cookies, proxies=self.proxies, extra_headers=self.extraheader, 
                              verify=self.verify, http_client=self.http_client)
         if '<title>404 Page Not Found' in resp \
             or '<title>未找到页面' in resp \
@@ -199,7 +198,7 @@ class Parser:
         """
         try:
             release = self.getRelease(htmltree)
-            return str(re.findall('\d{4}', release)).strip(" ['']")
+            return str(re.findall(r'\d{4}', release)).strip(" ['']")
         except:
             return release
 

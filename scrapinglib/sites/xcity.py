@@ -3,11 +3,11 @@
 import re
 import secrets
 from urllib.parse import urljoin
-from .httprequest import get_html_by_form
-from .parser import Parser
+from ..http_client import get_html_by_form
+from ..base_scraper import BaseScraper
 
 
-class Xcity(Parser):
+class Xcity(BaseScraper):
     source = 'xcity'
 
     expr_number = '//*[@id="hinban"]/text()'

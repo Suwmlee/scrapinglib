@@ -2,11 +2,11 @@
 
 import re
 from lxml import etree
-from .httprequest import request_session
-from .parser import Parser
+from ..http_client import request_session
+from ..base_scraper import BaseScraper
 
 
-class Gcolle(Parser):
+class Gcolle(BaseScraper):
     source = 'gcolle'
 
     expr_r18 = '//*[@id="main_content"]/table[1]/tbody/tr/td[2]/table/tbody/tr/td/h4/a[2]/@href'

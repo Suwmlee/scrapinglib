@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import re
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Dlsite(Parser):
+class Dlsite(BaseScraper):
     source = 'dlsite'
 
     expr_title = '/html/head/title/text()'

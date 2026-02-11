@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
-from .httprequest import request_session
-from .parser import Parser
+from ..http_client import request_session
+from ..base_scraper import BaseScraper
 
 
-class Javlibrary(Parser):
+class Javlibrary(BaseScraper):
     source = 'javlibrary'
 
     expr_number = '//div[@id="video_id"]/table/tr/td[@class="text"]/text()'

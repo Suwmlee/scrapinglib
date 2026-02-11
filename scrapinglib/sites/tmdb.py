@@ -2,10 +2,10 @@
 
 
 from urllib.parse import quote, urljoin
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Tmdb(Parser):
+class Tmdb(BaseScraper):
     """
     两种实现,带apikey与不带key
     apikey

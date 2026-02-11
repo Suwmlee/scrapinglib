@@ -5,8 +5,8 @@ import json
 import logging
 import importlib
 
-from .parser import Parser
-from .httprequest import HTTP_CLIENT_AUTO, HTTP_CLIENT_REQUESTS, HTTP_CLIENT_CURL_CFFI
+from .base_scraper import BaseScraper
+from .http_client import HTTP_CLIENT_AUTO, HTTP_CLIENT_REQUESTS, HTTP_CLIENT_CURL_CFFI
 
 
 def search(number, sources: str = None, http_client: str = HTTP_CLIENT_AUTO, **kwargs):
@@ -50,7 +50,6 @@ class Scraping:
     dbsite = None
     # 使用storyline方法进一步获取故事情节
     morestoryline = False
-    # HTTP 客户端类型：'requests'（默认）, 'curl_cffi'（绕过 Cloudflare）, 'auto'
     http_client = HTTP_CLIENT_AUTO
 
     def search(self, number, sources=None, proxies=None, verify=None, type='adult',
@@ -85,9 +84,9 @@ class Scraping:
             try:
                 logging.debug(f'[+]select {source}')
                 try:
-                    module = importlib.import_module('.' + source, 'scrapinglib')
+                    module = importlib.import_module('.sites.' + source, 'scrapinglib')
                     parser_type = getattr(module, source.capitalize())
-                    parser: Parser = parser_type()
+                    parser: BaseScraper = parser_type()
                     data = parser.scrape(name, self)
                     if data == 404:
                         continue
@@ -118,9 +117,9 @@ class Scraping:
             try:
                 logging.debug(f'[+]select {source}')
                 try:
-                    module = importlib.import_module('.' + source, 'scrapinglib')
+                    module = importlib.import_module('.sites.' + source, 'scrapinglib')
                     parser_type = getattr(module, source.capitalize())
-                    parser: Parser = parser_type()
+                    parser: BaseScraper = parser_type()
                     data = parser.scrape(number, self)
                     if data == 404:
                         continue
@@ -190,7 +189,7 @@ class Scraping:
             elif "mgstage" in sources and \
                     (re.search(r"\d+\D+", file_number) or "siro" in lo_file_number):
                 sources = insert(sources, "mgstage")
-            elif "gcolle" in sources and (re.search("\d{6}", file_number)):
+            elif "gcolle" in sources and (re.search(r"\d{6}", file_number)):
                 sources = insert(sources, "gcolle")
             elif "madouclub" in sources and (re.search(r"^[a-z0-9]{3,}-[0-9]{1,}$", lo_file_number)):
                 sources = insert(sources, "madouclub")

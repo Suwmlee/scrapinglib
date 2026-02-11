@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Imdb(Parser):
+class Imdb(BaseScraper):
     source = 'imdb'
 
     expr_title = '//h1[@data-testid="hero-title-block__title"]/text()'

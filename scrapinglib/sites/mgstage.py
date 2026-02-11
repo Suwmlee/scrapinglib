@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Mgstage(Parser):
+class Mgstage(BaseScraper):
     source = 'mgstage'
 
     expr_number = '//th[contains(text(),"品番：")]/../td/a/text()'

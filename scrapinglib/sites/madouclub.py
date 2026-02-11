@@ -3,7 +3,7 @@
 import re
 from lxml import etree
 from urllib.parse import urlparse, unquote
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
 NUM_RULES3=[
@@ -28,7 +28,7 @@ def change_number(number):
 
 
 
-class Madouclub(Parser):
+class Madouclub(BaseScraper):
     source = 'madouclub'
 
     expr_url = '//a[@class="share-weixin"]/@data-url'

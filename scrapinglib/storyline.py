@@ -16,9 +16,9 @@ from urllib.parse import urljoin
 from lxml.html import fromstring
 from multiprocessing.dummy import Pool as ThreadPool
 
-from .airav import Airav
-from .xcity import Xcity
-from .httprequest import get_html_by_form, get_html_by_scraper, request_session
+from .sites.airav import Airav
+from .sites.xcity import Xcity
+from .http_client import get_html_by_form, get_html_by_scraper, request_session
 
 # 舍弃 Amazon 源
 G_registered_storyline_site = {"airavwiki", "airav", "avno1", "xcity", "58avgo"}

@@ -4,11 +4,11 @@ import re
 import time
 from urllib.parse import urljoin
 from lxml import etree
-from .httprequest import request_session
-from .parser import Parser
+from ..http_client import request_session
+from ..base_scraper import BaseScraper
 
 
-class Javdb(Parser):
+class Javdb(BaseScraper):
     source = 'javdb'
 
     expr_number = '//strong[contains(text(),"番號")]/../span/text()'

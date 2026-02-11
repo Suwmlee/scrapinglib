@@ -3,7 +3,7 @@
 import re
 import json
 from urllib.parse import quote
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
 class Getchu():
@@ -27,7 +27,7 @@ class Getchu():
                 pass
         return dic
 
-class wwwGetchu(Parser):
+class Getchu(BaseScraper):
     expr_title = '//*[@id="soft-title"]/text()'
     expr_cover = '//head/meta[@property="og:image"]/@content'
     expr_director = "//td[contains(text(),'ブランド')]/following-sibling::td/a[1]/text()"

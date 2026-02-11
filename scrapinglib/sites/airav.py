@@ -3,10 +3,10 @@
 import json
 import re
 from lxml import etree
-from .parser import Parser
+from ..base_scraper import BaseScraper
 from .javbus import Javbus
 
-class Airav(Parser):
+class Airav(BaseScraper):
     source = 'airav'
 
     expr_title = '/html/head/title/text()'

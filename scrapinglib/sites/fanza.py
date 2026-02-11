@@ -3,10 +3,10 @@
 import re
 from lxml import etree
 from urllib.parse import urlencode
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Fanza(Parser):
+class Fanza(BaseScraper):
     source = 'fanza'
 
     expr_title = '//*[starts-with(@id, "title")]/text()'

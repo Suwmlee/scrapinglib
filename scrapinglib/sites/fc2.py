@@ -4,10 +4,10 @@ import re
 from lxml import etree
 from urllib.parse import urljoin
 
-from .parser import Parser
+from ..base_scraper import BaseScraper
 
 
-class Fc2(Parser):
+class Fc2(BaseScraper):
     source = 'fc2'
 
     expr_title = '/html/head/title/text()'
