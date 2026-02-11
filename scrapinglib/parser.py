@@ -5,6 +5,7 @@ import re
 from lxml import etree, html
 
 from . import httprequest
+from .httprequest import HTTP_CLIENT_AUTO, HTTP_CLIENT_REQUESTS, HTTP_CLIENT_CURL_CFFI
 from .utils import getTreeElement, getTreeAll
 
 class Parser:
@@ -54,6 +55,8 @@ class Parser:
         self.cookies = None
         self.morestoryline = False
         self.specifiedUrl = None
+        # HTTP 客户端类型：'requests', 'curl_cffi', 'auto'
+        self.http_client = HTTP_CLIENT_AUTO
         self.extraInit()
 
     def extraInit(self):
@@ -106,6 +109,9 @@ class Parser:
             self.morestoryline = True
         if core.specifiedSource == self.source:
             self.specifiedUrl = core.specifiedUrl
+        # 设置 HTTP 客户端类型
+        if hasattr(core, 'http_client') and core.http_client:
+            self.http_client = core.http_client
 
     def queryNumberUrl(self, number):
         """ 根据番号查询详细信息url
@@ -116,10 +122,11 @@ class Parser:
         url = "http://detailurl.ai/" + number
         return url
 
-    def getHtml(self, url, type = None):
+    def getHtml(self, url):
         """ 访问网页
         """
-        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, extra_headers=self.extraheader, verify=self.verify, return_type=type)
+        resp = httprequest.get(url, cookies=self.cookies, proxies=self.proxies, extra_headers=self.extraheader, 
+                             verify=self.verify, http_client=self.http_client)
         if '<title>404 Page Not Found' in resp \
             or '<title>未找到页面' in resp \
             or '404 Not Found' in resp \
@@ -128,10 +135,10 @@ class Parser:
             return 404
         return resp
 
-    def getHtmlTree(self, url, type = None):
+    def getHtmlTree(self, url):
         """ 访问网页,返回`etree`
         """
-        resp = self.getHtml(url, type)
+        resp = self.getHtml(url)
         if resp == 404:
             return 404
         ret = etree.fromstring(resp, etree.HTMLParser())

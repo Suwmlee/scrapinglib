@@ -42,14 +42,15 @@ class Javbus(Parser):
                 self.detailurl = 'https://www.javbus.com/' + number
                 self.htmlcode = self.getHtml(self.detailurl)
             except:
-                mirror_url = "https://www." + secrets.choice([
-                    'buscdn.fun', 'busdmm.fun', 'busfan.fun', 'busjav.fun',
-                    'cdnbus.fun',
-                    'dmmbus.fun', 'dmmsee.fun',
-                    'seedmm.fun',
-                    ]) + "/"
-                self.detailurl = mirror_url + number
-                self.htmlcode = self.getHtml(self.detailurl)
+                # mirror_url = "https://www." + secrets.choice([
+                #     'buscdn.fun', 'busdmm.fun', 'busfan.fun', 'busjav.fun',
+                #     'cdnbus.fun',
+                #     'dmmbus.fun', 'dmmsee.fun',
+                #     'seedmm.fun',
+                #     ]) + "/"
+                # self.detailurl = mirror_url + number
+                # self.htmlcode = self.getHtml(self.detailurl)
+                return 404
             if self.htmlcode == 404:
                 return 404
             htmltree = etree.fromstring(self.htmlcode,etree.HTMLParser())
@@ -68,7 +69,7 @@ class Javbus(Parser):
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
-            self.detailurl = 'https://www.javbus.red/' + w_number
+            self.detailurl = 'https://www.javbus.com/' + w_number
         self.htmlcode = self.getHtml(self.detailurl)
         if self.htmlcode == 404:
             return 404
@@ -81,7 +82,7 @@ class Javbus(Parser):
 
     def getTitle(self, htmltree):
         title = super().getTitle(htmltree)
-        title = str(re.findall('^.+?\s+(.*) - JavBus$', title)[0]).strip()
+        title = str(re.findall(r'^.+?\s+(.*) - JavBus$', title)[0]).strip()
         return title
 
     def getStudio(self, htmltree):

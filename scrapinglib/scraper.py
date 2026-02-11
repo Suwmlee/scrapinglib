@@ -6,17 +6,19 @@ import logging
 import importlib
 
 from .parser import Parser
+from .httprequest import HTTP_CLIENT_AUTO, HTTP_CLIENT_REQUESTS, HTTP_CLIENT_CURL_CFFI
 
 
-def search(number, sources: str = None, **kwargs):
+def search(number, sources: str = None, http_client: str = HTTP_CLIENT_AUTO, **kwargs):
     """ 根据`番号/电影`名搜索信息
 
     :param number: number/name  depends on type
     :param sources: sources string with `,` Eg: `avsox,javbus`
+    :param http_client: HTTP 客户端类型 ('requests', 'curl_cffi', 'auto')
     :param type: `adult`, `general`
     """
     sc = Scraping()
-    return sc.search(number, sources, **kwargs)
+    return sc.search(number, sources, http_client=http_client, **kwargs)
 
 
 def getSupportedSources(tag='adult'):
@@ -48,10 +50,13 @@ class Scraping:
     dbsite = None
     # 使用storyline方法进一步获取故事情节
     morestoryline = False
+    # HTTP 客户端类型：'requests'（默认）, 'curl_cffi'（绕过 Cloudflare）, 'auto'
+    http_client = HTTP_CLIENT_AUTO
 
     def search(self, number, sources=None, proxies=None, verify=None, type='adult',
                specifiedSource=None, specifiedUrl=None,
-               dbcookies=None, dbsite=None, morestoryline=False
+               dbcookies=None, dbsite=None, morestoryline=False, 
+               http_client: str = HTTP_CLIENT_AUTO
                ):
         self.proxies = proxies
         self.verify = verify
@@ -60,6 +65,8 @@ class Scraping:
         self.dbcookies = dbcookies
         self.dbsite = dbsite
         self.morestoryline = morestoryline
+        self.http_client = http_client
+        
         if type == 'adult':
             return self.searchAdult(number, sources)
         else:

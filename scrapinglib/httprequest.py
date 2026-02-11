@@ -11,32 +11,92 @@ G_USER_AGENT = r'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (K
 G_DEFAULT_TIMEOUT = 10
 G_DEFAULT_RETRY = 3
 
+# 支持的 HTTP 客户端类型
+HTTP_CLIENT_REQUESTS = 'requests'      # 标准 requests 库
+HTTP_CLIENT_CURL_CFFI = 'curl_cffi'    # curl_cffi (绕过 Cloudflare)
+HTTP_CLIENT_AUTO = 'auto'              # 自动选择（默认使用 curl_cffi）
 
-def get(url: str, cookies=None, ua: str = None, extra_headers=None, return_type: str = None, encoding: str = None,
-        retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+
+def _resolve_http_client(http_client: str) -> str:
     """
-    网页请求核心函数
+    解析 HTTP 客户端类型，将 'auto' 转换为具体的客户端
+    """
+    if http_client == HTTP_CLIENT_AUTO:
+        return HTTP_CLIENT_CURL_CFFI
+    return http_client
 
+
+def get(url: str, cookies=None, ua: str = None, extra_headers=None, encoding: str = None,
+        retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None, 
+        http_client: str = HTTP_CLIENT_AUTO):
+    """
+    网页请求核心函数，返回网页文本内容
+
+    Args:
+        http_client: HTTP 客户端类型
+            - 'requests': 标准 requests 库
+            - 'curl_cffi': curl_cffi 库（绕过 Cloudflare）
+            - 'auto': 自动选择（默认使用 curl_cffi）
+    
+    Returns:
+        str: 网页文本内容
+    
     是否使用代理应由上层处理
     """
+    http_client = _resolve_http_client(http_client)
+    
     errors = ""
     headers = {"User-Agent": ua or G_USER_AGENT}
     if extra_headers != None:
         headers.update(extra_headers)
-    for i in range(retry):
-        try:
-            result = requests.get(url, headers=headers, timeout=timeout, proxies=proxies,
-                                  verify=verify, cookies=cookies)
-            if return_type == "object":
-                return result
-            elif return_type == "content":
-                return result.content
-            else:
+    
+    # 根据 http_client 类型选择请求库
+    if http_client == HTTP_CLIENT_CURL_CFFI:
+        # 使用 curl_cffi 模拟真实浏览器
+        for i in range(retry):
+            try:
+                # 添加浏览器特征头
+                curl_headers = headers.copy()
+                curl_headers.update({
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+                    'Upgrade-Insecure-Requests': '1',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'none',
+                    'Sec-Fetch-User': '?1',
+                })
+                
+                result = curl_requests.get(
+                    url, 
+                    headers=curl_headers, 
+                    timeout=timeout, 
+                    proxies=proxies,
+                    verify=False if verify is False else True,
+                    cookies=cookies,
+                    impersonate="chrome120"
+                )
+                
+                # curl_cffi 的 Response 对象没有 apparent_encoding 属性
+                result.encoding = encoding or getattr(result, 'apparent_encoding', None) or result.encoding or 'utf-8'
+                return result.text
+            except Exception as e:
+                logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
+                errors = str(e)
+    elif http_client == HTTP_CLIENT_REQUESTS:
+        # 使用标准 requests
+        for i in range(retry):
+            try:
+                result = requests.get(url, headers=headers, timeout=timeout, proxies=proxies,
+                                      verify=verify, cookies=cookies)
                 result.encoding = encoding or result.apparent_encoding
                 return result.text
-        except Exception as e:
-            logging.debug(f"[-]Connect: {url} retry {i + 1}/{retry}")
-            errors = str(e)
+            except Exception as e:
+                logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
+                errors = str(e)
+    else:
+        raise ValueError(f"Unsupported http_client type: {http_client}. Supported types: {HTTP_CLIENT_REQUESTS}, {HTTP_CLIENT_CURL_CFFI}")
+    
     if "getaddrinfo failed" in errors:
         logging.debug("[-]Connect Failed! Please Check your proxy config")
         logging.debug("[-]" + errors)
@@ -46,28 +106,71 @@ def get(url: str, cookies=None, ua: str = None, extra_headers=None, return_type:
     raise Exception('Connect Failed')
 
 
-def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, return_type: str = None, encoding: str = None,
-         retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, encoding: str = None,
+         retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None, 
+         http_client: str = HTTP_CLIENT_AUTO):
     """
+    POST 请求函数，返回网页文本内容
+    
+    Args:
+        http_client: HTTP 客户端类型
+            - 'requests': 标准 requests 库
+            - 'curl_cffi': curl_cffi 库（绕过 Cloudflare）
+            - 'auto': 自动选择（默认使用 curl_cffi）
+    
+    Returns:
+        str: 网页文本内容
+    
     是否使用代理应由上层处理
     """
+    http_client = _resolve_http_client(http_client)
+    
     errors = ""
     headers = {"User-Agent": ua or G_USER_AGENT}
 
-    for i in range(retry):
-        try:
-            result = requests.post(url, data=data, files=files, headers=headers, timeout=timeout, proxies=proxies,
-                                   verify=verify, cookies=cookies)
-            if return_type == "object":
-                return result
-            elif return_type == "content":
-                return result.content
-            else:
+    # 根据 http_client 类型选择请求库
+    if http_client == HTTP_CLIENT_CURL_CFFI:
+        # 使用 curl_cffi 模拟真实浏览器
+        for i in range(retry):
+            try:
+                curl_headers = headers.copy()
+                curl_headers.update({
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+                })
+                
+                result = curl_requests.post(
+                    url, 
+                    data=data,
+                    files=files,
+                    headers=curl_headers, 
+                    timeout=timeout, 
+                    proxies=proxies,
+                    verify=False if verify is False else True,
+                    cookies=cookies,
+                    impersonate="chrome120"
+                )
+                
+                # curl_cffi 的 Response 对象没有 apparent_encoding 属性
+                result.encoding = encoding or getattr(result, 'apparent_encoding', None) or result.encoding or 'utf-8'
+                return result.text
+            except Exception as e:
+                logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
+                errors = str(e)
+    elif http_client == HTTP_CLIENT_REQUESTS:
+        # 使用标准 requests
+        for i in range(retry):
+            try:
+                result = requests.post(url, data=data, files=files, headers=headers, timeout=timeout, proxies=proxies,
+                                       verify=verify, cookies=cookies)
                 result.encoding = encoding or result.apparent_encoding
-                return result
-        except Exception as e:
-            logging.debug(f"[-]Connect: {url} retry {i + 1}/{retry}")
-            errors = str(e)
+                return result.text
+            except Exception as e:
+                logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
+                errors = str(e)
+    else:
+        raise ValueError(f"Unsupported http_client type: {http_client}. Supported types: {HTTP_CLIENT_REQUESTS}, {HTTP_CLIENT_CURL_CFFI}")
+    
     if "getaddrinfo failed" in errors:
         logging.debug("[-]Connect Failed! Please Check your proxy config")
         logging.debug("[-]" + errors)

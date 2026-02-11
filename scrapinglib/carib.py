@@ -80,19 +80,22 @@ class Carib(Parser):
         for k, v in t.items():
             if '/search_act/' not in v:
                 continue
-            r = self.getHtml(urljoin('https://www.caribbeancom.com', v), type='object')
-            if not r.ok:
+            actor_url = urljoin('https://www.caribbeancom.com', v)
+            try:
+                html = self.getHtml(actor_url)
+                if html == 404 or not html:
+                    continue
+                pos = html.find('.full-bg')
+                if pos<0:
+                    continue
+                css = html[pos:pos+100]
+                cssBGjpgs = re.findall(r'background: url\((.+\.jpg)', css, re.I)
+                if not cssBGjpgs or not len(cssBGjpgs[0]):
+                    continue
+                p = {k: urljoin(actor_url, cssBGjpgs[0])}
+                o.update(p)
+            except:
                 continue
-            html = r.text
-            pos = html.find('.full-bg')
-            if pos<0:
-                continue
-            css = html[pos:pos+100]
-            cssBGjpgs = re.findall(r'background: url\((.+\.jpg)', css, re.I)
-            if not cssBGjpgs or not len(cssBGjpgs[0]):
-                continue
-            p = {k: urljoin(r.url, cssBGjpgs[0])}
-            o.update(p)
         return o
 
     def getOutline(self, htmltree):
