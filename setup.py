@@ -5,7 +5,7 @@ requires = [
     "lxml",
     "pysocks",
     "mechanicalsoup",
-    "cloudscraper",
+    "curl_cffi",
 ]
 
 with open("README.md", "r", "utf-8") as f:

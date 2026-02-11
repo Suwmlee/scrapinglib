@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import time
 from urllib.parse import urljoin
 from lxml import etree
 from .httprequest import request_session
@@ -43,6 +44,8 @@ class Javdb(Parser):
     def extraInit(self):
         self.fixstudio = False
         self.noauth = False
+        self.request_delay = 1.0  # 默认请求延迟（秒）
+        self.search_delay = 0.5   # 搜索延迟（秒）
 
     def updateCore(self, core):
         if core.proxies:
@@ -65,12 +68,28 @@ class Javdb(Parser):
 
     def search(self, number: str):
         self.number = number
-        self.session = request_session(cookies=self.cookies, proxies=self.proxies, verify=self.verify)
+        # 使用 curl_cffi 绕过 Cloudflare
+        self.session = request_session(cookies=self.cookies, proxies=self.proxies, verify=self.verify, use_curl_cffi=True)
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
             self.detailurl = self.queryNumberUrl(number)
-        self.deatilpage = self.session.get(self.detailurl).text
+        
+        # 添加延迟，模拟真实用户行为
+        time.sleep(self.request_delay)
+        
+        # 添加 Referer，模拟从搜索页进入
+        detail_headers = {
+            'Referer': f'https://{self.dbsite}.com/search?q={number}&f=all'
+        }
+        
+        response = self.session.get(self.detailurl, headers=detail_headers)
+        self.deatilpage = response.text
+        
+        # 检测 Cloudflare 防护
+        if 'Checking your browser' in self.deatilpage or 'Just a moment' in self.deatilpage or 'cf-browser-verification' in self.deatilpage:
+            raise Exception(f'[!] {self.number}: Cloudflare protection detected. Response status: {response.status_code}')
+        
         if '此內容需要登入才能查看或操作' in self.deatilpage or '需要VIP權限才能訪問此內容' in self.deatilpage:
             self.noauth = True
             self.imagecut = 0
@@ -82,11 +101,24 @@ class Javdb(Parser):
 
     def queryNumberUrl(self, number):
         javdb_url = 'https://' + self.dbsite + '.com/search?q=' + number + '&f=all'
+        
+        # 添加 Referer，模拟从首页进入
+        referer_headers = {
+            'Referer': f'https://{self.dbsite}.com/',
+            'Origin': f'https://{self.dbsite}.com'
+        }
+        
         try:
-            resp = self.session.get(javdb_url)
+            # 添加延迟，避免请求过快
+            time.sleep(self.search_delay)
+            resp = self.session.get(javdb_url, headers=referer_headers)
+            
+            # 检测 Cloudflare 防护
+            if 'Checking your browser' in resp.text or 'Just a moment' in resp.text or 'cf-browser-verification' in resp.text:
+                raise Exception(f'[!] {self.number}: Cloudflare protection detected on search page. Status: {resp.status_code}')
         except Exception as e:
             #print(e)
-            raise Exception(f'[!] {self.number}: page not fond in javdb')
+            raise Exception(f'[!] {self.number}: page not fond in javdb - {str(e)}')
 
         self.querytree = etree.fromstring(resp.text, etree.HTMLParser()) 
         # javdb sometime returns multiple results,
@@ -214,6 +246,7 @@ class Javdb(Parser):
             return ''
 
     def getaphoto(self, url, session):
+        time.sleep(0.3)  # 添加小延迟
         html_page = session.get(url).text
         img_url = re.findall(r'<span class\=\"avatar\" style\=\"background\-image\: url\((.*?)\)', html_page)
         return img_url[0] if img_url else ''

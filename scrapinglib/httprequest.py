@@ -5,9 +5,9 @@ import requests
 import logging
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from cloudscraper import create_scraper
+from curl_cffi import requests as curl_requests
 
-G_USER_AGENT = r'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.133 Safari/537.36'
+G_USER_AGENT = r'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 G_DEFAULT_TIMEOUT = 10
 G_DEFAULT_RETRY = 3
 
@@ -92,22 +92,54 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None, use_curl_cffi=False):
     """
-    keep-alive
+    创建 HTTP session
+    
+    Args:
+        use_curl_cffi: 是否使用 curl_cffi 绕过 Cloudflare（用于 javdb）
     """
+    if use_curl_cffi:
+        # 使用 curl_cffi 模拟真实 Chrome 浏览器
+        session = curl_requests.Session(impersonate="chrome120")
+        
+        session.headers.update({
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+        })
+        
+        if isinstance(cookies, dict) and len(cookies):
+            session.cookies.update(cookies)
+        if proxies:
+            if 'https' in proxies:
+                session.proxies = {'https': proxies['https'], 'http': proxies.get('http', proxies['https'])}
+            elif 'http' in proxies:
+                session.proxies = {'http': proxies['http'], 'https': proxies.get('https', proxies['http'])}
+        session.verify = False if verify is False else True
+        
+        return session
+    
+    # 普通 requests session
     session = requests.Session()
+    session.headers = {"User-Agent": ua or G_USER_AGENT}
+    
     retries = Retry(total=retry, connect=retry, backoff_factor=1,
                     status_forcelist=[429, 500, 502, 503, 504])
     session.mount("https://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
     session.mount("http://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
+    
     if isinstance(cookies, dict) and len(cookies):
         requests.utils.add_dict_to_cookiejar(session.cookies, cookies)
-    if verify:
+    if verify is not None:
         session.verify = verify
     if proxies:
         session.proxies = proxies
-    session.headers = {"User-Agent": ua or G_USER_AGENT}
+    
     return session
 
 
@@ -156,23 +188,23 @@ def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies:
 # storyline javdb only
 def get_html_by_scraper(url: str = None, cookies: dict = None, ua: str = None, return_type: str = None,
                         encoding: str = None, retry: int = G_DEFAULT_RETRY, proxies=None, timeout: int = G_DEFAULT_TIMEOUT, verify=None):
-    session = create_scraper(browser={'custom': ua or G_USER_AGENT, })
+    session = curl_requests.Session(impersonate="chrome120")
+    
     if isinstance(cookies, dict) and len(cookies):
-        requests.utils.add_dict_to_cookiejar(session.cookies, cookies)
-    retries = Retry(total=retry, connect=retry, backoff_factor=1,
-                    status_forcelist=[429, 500, 502, 503, 504])
-    session.mount("https://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
-    session.mount("http://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
-    if verify:
-        session.verify = verify
+        session.cookies.update(cookies)
     if proxies:
-        session.proxies = proxies
+        if 'https' in proxies:
+            session.proxies = {'https': proxies['https'], 'http': proxies.get('http', proxies['https'])}
+        elif 'http' in proxies:
+            session.proxies = {'http': proxies['http'], 'https': proxies.get('https', proxies['http'])}
+    session.verify = False if verify is False else True
+    
     try:
         if isinstance(url, str) and len(url):
-            result = session.get(str(url))
-        else:  # 空url参数直接返回可重用scraper对象，无需设置return_type
+            result = session.get(str(url), timeout=timeout)
+        else:
             return session
-        if not result.ok:
+        if result.status_code != 200:
             return None
         if return_type == "object":
             return result
@@ -181,10 +213,7 @@ def get_html_by_scraper(url: str = None, cookies: dict = None, ua: str = None, r
         elif return_type == "scraper":
             return result, session
         else:
-            result.encoding = encoding or "utf-8"
             return result.text
-    except requests.exceptions.ProxyError:
-        logging.debug("[-]get_html_by_scraper() Proxy error! Please check your Proxy")
     except Exception as e:
         logging.debug(f"[-]get_html_by_scraper() failed. {e}")
     return None

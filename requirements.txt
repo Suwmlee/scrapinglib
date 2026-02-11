@@ -1,4 +1,4 @@
 lxml
 pysocks
 mechanicalsoup
-cloudscraper
+curl_cffi
