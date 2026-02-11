@@ -100,7 +100,7 @@ class Carib(BaseScraper):
 
     def getOutline(self, htmltree):
         if self.morestoryline:
-            from .storyline import getStoryline
+            from ..storyline import getStoryline
             result = getStoryline(self.number, uncensored=self.uncensored,
                                   proxies=self.proxies, verify=self.verify)
             if len(result):

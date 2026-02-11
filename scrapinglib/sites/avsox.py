@@ -72,7 +72,7 @@ class Avsox(BaseScraper):
 
     def getOutline(self, htmltree):
         if self.morestoryline:
-            from .storyline import getStoryline
+            from ..storyline import getStoryline
             return getStoryline(self.number, proxies=self.proxies, verify=self.verify)
         return ''
 
