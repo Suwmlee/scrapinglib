@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from codecs import open
 
 requires = [
@@ -13,13 +13,13 @@ with open("README.md", "r", "utf-8") as f:
 
 setup(
     name='scrapinglib',
-    version='0.9.1',
+    version='0.9.2',
     author="suwmlee",
     author_email='suwmlee@gmail.com',
     url='https://github.com/Suwmlee/scrapinglib',
     long_description=readme,
     long_description_content_type="text/markdown",
-    packages=["scrapinglib"],
+    packages=find_packages(),
     package_dir={'scrapinglib': 'scrapinglib'},   
     install_requires=requires,
     python_requires=">=3.7",
