@@ -5,6 +5,8 @@ from ..base_scraper import BaseScraper
 
 class Mgstage(BaseScraper):
     source = 'mgstage'
+    content_type = 'adult'
+    priority = 60
 
     expr_number = '//th[contains(text(),"品番：")]/../td/a/text()'
     expr_title = '//*[@id="center_column"]/div[1]/h1/text()'

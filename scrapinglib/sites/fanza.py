@@ -8,6 +8,8 @@ from ..base_scraper import BaseScraper
 
 class Fanza(BaseScraper):
     source = 'fanza'
+    content_type = 'adult'
+    priority = 40
 
     expr_title = '//*[starts-with(@id, "title")]/text()'
     expr_actor = "//td[contains(text(),'出演者')]/following-sibling::td/span/a/text()"

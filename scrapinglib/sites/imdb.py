@@ -6,6 +6,8 @@ from ..base_scraper import BaseScraper
 
 class Imdb(BaseScraper):
     source = 'imdb'
+    content_type = 'general'
+    priority = 20
 
     expr_title = '//h1[@data-testid="hero-title-block__title"]/text()'
     expr_release = '//a[contains(text(),"Release date")]/following-sibling::div[1]/ul/li/a/text()'

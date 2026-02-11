@@ -11,6 +11,8 @@ class Tmdb(BaseScraper):
     apikey
     """
     source = 'tmdb'
+    content_type = 'general'
+    priority = 10
 
     expr_title = '//head/meta[@property="og:title"]/@content'
     expr_release = '//div/span[@class="release"]/text()'

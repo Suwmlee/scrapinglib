@@ -6,28 +6,9 @@ from urllib.parse import quote
 from ..base_scraper import BaseScraper
 
 
-class Getchu():
-    source = 'getchu'
-
-    def scrape(self, number, core: None):
-        dl = dlGetchu()
-        www = wwwGetchu()
-        number = number.replace("-C", "")
-        dic = {}
-        if "item" in number:
-            sort = ["dl.scrape(number, core)", "www.scrape(number, core)"]
-        else:
-            sort = ["www.scrape(number, core)", "dl.scrape(number, core)"]
-        for i in sort:
-            try:
-                dic = eval(i)
-                if dic != None and json.loads(dic).get('title') != '':
-                    break
-            except:
-                pass
-        return dic
-
-class Getchu(BaseScraper):
+class wwwGetchu(BaseScraper):
+    source = 'getchu_www'
+    
     expr_title = '//*[@id="soft-title"]/text()'
     expr_cover = '//head/meta[@property="og:image"]/@content'
     expr_director = "//td[contains(text(),'ブランド')]/following-sibling::td/a[1]/text()"
@@ -148,3 +129,27 @@ class dlGetchu(wwwGetchu):
             i = "https://dl.getchu.com" + i
             extrafanart.append(i)
         return extrafanart
+
+class Getchu(BaseScraper):
+    source = 'getchu'
+    content_type = 'adult'
+    priority = 80
+
+    def scrape(self, number, core: None):
+        """重写 scrape 方法，使用 wwwGetchu 和 dlGetchu"""
+        dl = dlGetchu()
+        www = wwwGetchu()
+        number = number.replace("-C", "")
+        dic = {}
+        if "item" in number:
+            sort = ["dl.scrape(number, core)", "www.scrape(number, core)"]
+        else:
+            sort = ["www.scrape(number, core)", "dl.scrape(number, core)"]
+        for i in sort:
+            try:
+                dic = eval(i)
+                if dic != None and json.loads(dic).get('title') != '':
+                    break
+            except:
+                pass
+        return dic

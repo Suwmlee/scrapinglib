@@ -10,6 +10,8 @@ from ..base_scraper import BaseScraper
 
 class Javdb(BaseScraper):
     source = 'javdb'
+    content_type = 'adult'
+    priority = 20
 
     expr_number = '//strong[contains(text(),"番號")]/../span/text()'
     expr_number2 = '//strong[contains(text(),"番號")]/../span/a/text()'

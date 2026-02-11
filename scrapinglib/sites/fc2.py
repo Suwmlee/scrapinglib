@@ -9,6 +9,8 @@ from ..base_scraper import BaseScraper
 
 class Fc2(BaseScraper):
     source = 'fc2'
+    content_type = 'adult'
+    priority = 60
 
     expr_title = '/html/head/title/text()'
     expr_studio = '//*[@id="top"]/div[1]/section[1]/div/section/div[2]/ul/li[3]/a/text()'

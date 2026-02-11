@@ -8,6 +8,8 @@ from ..base_scraper import BaseScraper
 
 class Gcolle(BaseScraper):
     source = 'gcolle'
+    content_type = 'adult'
+    priority = 80
 
     expr_r18 = '//*[@id="main_content"]/table[1]/tbody/tr/td[2]/table/tbody/tr/td/h4/a[2]/@href'
     expr_number = '//td[contains(text(),"商品番号")]/../td[2]/text()'

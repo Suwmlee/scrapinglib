@@ -30,6 +30,8 @@ def change_number(number):
 
 class Madouclub(BaseScraper):
     source = 'madouclub'
+    content_type = 'adult'
+    priority = 80
 
     expr_url = '//a[@class="share-weixin"]/@data-url'
     expr_title = "/html/head/title/text()"

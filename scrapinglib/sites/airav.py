@@ -8,6 +8,8 @@ from .javbus import Javbus
 
 class Airav(BaseScraper):
     source = 'airav'
+    content_type = 'adult'
+    priority = 40
 
     expr_title = '/html/head/title/text()'
     expr_number = '/html/head/title/text()'

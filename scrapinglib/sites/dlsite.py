@@ -6,6 +6,8 @@ from ..base_scraper import BaseScraper
 
 class Dlsite(BaseScraper):
     source = 'dlsite'
+    content_type = 'adult'
+    priority = 80
 
     expr_title = '/html/head/title/text()'
     expr_actor = '//th[contains(text(),"声优")]/../td/a/text()'

@@ -8,6 +8,8 @@ from ..base_scraper import BaseScraper
 
 class Carib(BaseScraper):
     source = 'carib'
+    content_type = 'adult'
+    priority = 45
 
     expr_title = "//div[@class='movie-info section']/div[@class='heading']/h1[@itemprop='name']/text()"
     expr_release = "//li[2]/span[@class='spec-content']/text()"

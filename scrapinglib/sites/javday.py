@@ -6,6 +6,8 @@ from ..base_scraper import BaseScraper
 
 class Javday(BaseScraper):
     source = 'javday'
+    content_type = 'adult'
+    priority = 90
 
     expr_url = '/html/head/meta[@property="og:url"]/@content'
     expr_cover = '/html/head/meta[@property="og:image"]/@content'

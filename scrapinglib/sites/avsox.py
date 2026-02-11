@@ -5,6 +5,8 @@ from ..base_scraper import BaseScraper
 
 class Avsox(BaseScraper):
     source = 'avsox'
+    content_type = 'adult'
+    priority = 50
 
     expr_number = '//span[contains(text(),"识别码:")]/../span[2]/text()'
     expr_actor = '//a[@class="avatar-box"]'

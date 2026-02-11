@@ -4,6 +4,7 @@ import re
 import json
 import logging
 import importlib
+from pathlib import Path
 
 from .base_scraper import BaseScraper
 from .http_client import HTTP_CLIENT_AUTO, HTTP_CLIENT_REQUESTS, HTTP_CLIENT_CURL_CFFI
@@ -35,12 +36,8 @@ def getSupportedSources(tag='adult'):
 class Scraping:
     """
     """
-    adult_full_sources = ['javlibrary', 'javdb', 'javbus', 'airav', 'fanza', 'xcity', 'jav321',
-                          'mgstage', 'fc2', 'avsox', 'dlsite', 'carib', 'madouclub', 'madouqu',
-                          'getchu', 'gcolle', 'javday'
-                          ]
-
-    general_full_sources = ['tmdb', 'imdb']
+    adult_full_sources = []
+    general_full_sources = []
     proxies = None
     verify = None
     specifiedSource = None
@@ -52,9 +49,54 @@ class Scraping:
     morestoryline = False
     http_client = HTTP_CLIENT_AUTO
 
+    def __init__(self):
+        """初始化并扫描可用源"""
+        if not self.adult_full_sources or not self.general_full_sources:
+            self._scan_sources()
+
+    def _scan_sources(self):
+        """扫描 sites 目录，获取可用的 scraper 源列表（不实际导入）"""
+        adult_sources = []
+        general_sources = []
+
+        try:
+            sites_dir = Path(__file__).parent / 'sites'
+            for py_file in sites_dir.glob('*.py'):
+                module_name = py_file.stem
+                if module_name == '__init__':
+                    continue
+                try:
+                    module = importlib.import_module(f'.sites.{module_name}', 'scrapinglib')
+                    class_name = module_name.capitalize()
+                    if hasattr(module, class_name):
+                        scraper_class = getattr(module, class_name)
+                        if issubclass(scraper_class, BaseScraper) and scraper_class != BaseScraper:
+                            source_name = getattr(scraper_class, 'source', module_name)
+                            content_type = getattr(scraper_class, 'content_type', 'adult')
+                            priority = getattr(scraper_class, 'priority', 100)
+                            if content_type == 'general':
+                                general_sources.append((source_name, priority))
+                            else:
+                                adult_sources.append((source_name, priority))
+                except Exception as e:
+                    logging.debug(f'[-] Failed to scan {module_name}: {e}')
+                    continue
+
+            adult_sources.sort(key=lambda x: x[1])
+            general_sources.sort(key=lambda x: x[1])
+            Scraping.adult_full_sources = [name for name, _ in adult_sources]
+            Scraping.general_full_sources = [name for name, _ in general_sources]
+            logging.debug(f'[+] Found {len(Scraping.adult_full_sources)} adult sources')
+            logging.debug(f'[+] Found {len(Scraping.general_full_sources)} general sources')
+
+        except Exception as e:
+            logging.error(f'[-] Failed to scan sources: {e}')
+            Scraping.adult_full_sources = []
+            Scraping.general_full_sources = []
+
     def search(self, number, sources=None, proxies=None, verify=None, type='adult',
                specifiedSource=None, specifiedUrl=None,
-               dbcookies=None, dbsite=None, morestoryline=False, 
+               dbcookies=None, dbsite=None, morestoryline=False,
                http_client: str = HTTP_CLIENT_AUTO
                ):
         self.proxies = proxies
@@ -65,7 +107,7 @@ class Scraping:
         self.dbsite = dbsite
         self.morestoryline = morestoryline
         self.http_client = http_client
-        
+
         if type == 'adult':
             return self.searchAdult(number, sources)
         else:
@@ -174,25 +216,30 @@ class Scraping:
             # if the input file name matches certain rules,
             # move some web service to the beginning of the list
             lo_file_number = file_number.lower()
-            if "carib" in sources and (re.search(r"^\d{6}-\d{3}", file_number)
-            ):
-                sources = insert(sources, "carib")
+            if re.search(r"^\d{6}-\d{3}", file_number):
+                if "carib" in sources:
+                    sources = insert(sources, "carib")
             elif "item" in file_number or "GETCHU" in file_number.upper():
-                sources = insert(sources, "getchu")
+                if "getchu" in sources:
+                    sources = insert(sources, "getchu")
             elif "rj" in lo_file_number or "vj" in lo_file_number or re.search(r"[\u3040-\u309F\u30A0-\u30FF]+",
                                                                                file_number):
-                sources = insert(sources, "getchu")
-                sources = insert(sources, "dlsite")
+                if "getchu" in sources:
+                    sources = insert(sources, "getchu")
+                if "dlsite" in sources:
+                    sources = insert(sources, "dlsite")
             elif "fc2" in lo_file_number:
                 if "fc2" in sources:
                     sources = insert(sources, "fc2")
-            elif "mgstage" in sources and \
-                    (re.search(r"\d+\D+", file_number) or "siro" in lo_file_number):
-                sources = insert(sources, "mgstage")
-            elif "gcolle" in sources and (re.search(r"\d{6}", file_number)):
-                sources = insert(sources, "gcolle")
-            elif "madouclub" in sources and (re.search(r"^[a-z0-9]{3,}-[0-9]{1,}$", lo_file_number)):
-                sources = insert(sources, "madouclub")
+            elif re.search(r"\d+\D+", file_number) or "siro" in lo_file_number:
+                if "mgstage" in sources:
+                    sources = insert(sources, "mgstage")
+            elif re.search(r"\d{6}", file_number):
+                if "gcolle" in sources:
+                    sources = insert(sources, "gcolle")
+            elif re.search(r"^[a-z0-9]{3,}-[0-9]{1,}$", lo_file_number):
+                if "madouclub" in sources:
+                    sources = insert(sources, "madouclub")
 
             elif re.search(r"^\d{5,}", file_number) or "heyzo" in lo_file_number:
                 if "avsox" in sources:

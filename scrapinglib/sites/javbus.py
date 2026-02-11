@@ -11,6 +11,8 @@ from ..base_scraper import BaseScraper
 class Javbus(BaseScraper):
     
     source = 'javbus'
+    content_type = 'adult'
+    priority = 30
 
     expr_number = '/html/head/meta[@name="keywords"]/@content'
     expr_title = '/html/head/title/text()'

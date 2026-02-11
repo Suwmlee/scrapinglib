@@ -9,6 +9,8 @@ from ..base_scraper import BaseScraper
 
 class Xcity(BaseScraper):
     source = 'xcity'
+    content_type = 'adult'
+    priority = 50
 
     expr_number = '//*[@id="hinban"]/text()'
     expr_title = '//*[@id="program_detail_title"]/text()'

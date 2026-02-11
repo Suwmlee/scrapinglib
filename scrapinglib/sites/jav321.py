@@ -8,6 +8,8 @@ from ..base_scraper import BaseScraper
 
 class Jav321(BaseScraper):
     source = 'jav321'
+    content_type = 'adult'
+    priority = 70
 
     expr_title = "/html/body/div[2]/div[1]/div[1]/div[1]/h3/text()"
     expr_cover = "/html/body/div[2]/div[2]/div[1]/p/a/img/@src"

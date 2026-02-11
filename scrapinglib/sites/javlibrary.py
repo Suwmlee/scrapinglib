@@ -7,6 +7,8 @@ from ..base_scraper import BaseScraper
 
 class Javlibrary(BaseScraper):
     source = 'javlibrary'
+    content_type = 'adult'
+    priority = 10
 
     expr_number = '//div[@id="video_id"]/table/tr/td[@class="text"]/text()'
     expr_title = '//div[@id="video_title"]/h3/a/text()'

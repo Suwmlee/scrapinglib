@@ -8,6 +8,8 @@ from ..base_scraper import BaseScraper
 
 class Madouqu(BaseScraper):
     source = 'madouqu'
+    content_type = 'adult'
+    priority = 80
 
     expr_title = "//h1[@class='entry-title']/text()"
     expr_studio = '//span[@class="meta-category"]//i[@class="dot"]/following-sibling::text()'
