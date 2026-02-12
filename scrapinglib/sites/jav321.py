@@ -37,14 +37,15 @@ class Jav321(BaseScraper):
             self.detailhtml = resp
             return etree.fromstring(resp, etree.HTMLParser())
         resp = http_client.post(url, data={"sn": self.number}, cookies=self.cookies, proxies=self.proxies, verify=self.verify)
-        if "/video/" in resp.url:
-            self.detailurl = resp.url
-            self.detailhtml = resp.text
-            return etree.fromstring(resp.text, etree.HTMLParser())
-        return None
+        tree = etree.fromstring(resp, etree.HTMLParser())
+        cn_link = tree.xpath('//a[contains(text(),"简体中文")]/@href')
+        if cn_link:
+            self.detailurl = 'https:' + cn_link[0] if cn_link[0].startswith('//') else cn_link[0]
+        self.detailhtml = resp
+        return tree
 
     def getNum(self, htmltree):
-        return super().getNum(htmltree).split(": ")[1]
+        return super().getNum(htmltree).split(": ")[1].upper()
 
     def getTrailer(self, htmltree):
         videourl_pather = re.compile(r'<source src=\"(.*?)\"')

@@ -27,29 +27,19 @@ def _resolve_http_client(http_client: str) -> str:
 
 
 def get(url: str, cookies=None, ua: str = None, extra_headers=None, encoding: str = None,
-        retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None, 
+        retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None,
         http_client: str = HTTP_CLIENT_AUTO):
     """
     网页请求核心函数，返回网页文本内容
-
-    Args:
-        http_client: HTTP 客户端类型
-            - 'requests': 标准 requests 库
-            - 'curl_cffi': curl_cffi 库（绕过 Cloudflare）
-            - 'auto': 自动选择（默认使用 curl_cffi）
-    
     Returns:
         str: 网页文本内容
-    
-    是否使用代理应由上层处理
     """
     http_client = _resolve_http_client(http_client)
-    
-    errors = ""
+
     headers = {"User-Agent": ua or G_USER_AGENT}
     if extra_headers != None:
         headers.update(extra_headers)
-    
+
     # 根据 http_client 类型选择请求库
     if http_client == HTTP_CLIENT_CURL_CFFI:
         # 使用 curl_cffi 模拟真实浏览器
@@ -66,23 +56,21 @@ def get(url: str, cookies=None, ua: str = None, extra_headers=None, encoding: st
                     'Sec-Fetch-Site': 'none',
                     'Sec-Fetch-User': '?1',
                 })
-                
+
                 result = curl_requests.get(
-                    url, 
-                    headers=curl_headers, 
-                    timeout=timeout, 
+                    url,
+                    headers=curl_headers,
+                    timeout=timeout,
                     proxies=proxies,
                     verify=False if verify is False else True,
                     cookies=cookies,
                     impersonate="chrome120"
                 )
-                
-                # curl_cffi 的 Response 对象没有 apparent_encoding 属性
                 result.encoding = encoding or getattr(result, 'apparent_encoding', None) or result.encoding or 'utf-8'
                 return result.text
             except Exception as e:
                 logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
-                errors = str(e)
+                logging.debug(f"[-]Error: {e}")
     elif http_client == HTTP_CLIENT_REQUESTS:
         # 使用标准 requests
         for i in range(retry):
@@ -93,39 +81,23 @@ def get(url: str, cookies=None, ua: str = None, extra_headers=None, encoding: st
                 return result.text
             except Exception as e:
                 logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
-                errors = str(e)
+                logging.debug(f"[-]Error: {e}")
     else:
-        raise ValueError(f"Unsupported http_client type: {http_client}. Supported types: {HTTP_CLIENT_REQUESTS}, {HTTP_CLIENT_CURL_CFFI}")
-    
-    if "getaddrinfo failed" in errors:
-        logging.debug("[-]Connect Failed! Please Check your proxy config")
-        logging.debug("[-]" + errors)
-    else:
-        logging.debug("[-]" + errors)
-        logging.debug('[-]Connect Failed! Please check your Proxy or Network!')
-    raise Exception('Connect Failed')
+        raise ValueError(f"Unsupported http_client type: {http_client}.")
+
+    raise Exception(f"Connect Failed: {url}")
 
 
 def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, encoding: str = None,
-         retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None, 
+         retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None,
          http_client: str = HTTP_CLIENT_AUTO):
     """
     POST 请求函数，返回网页文本内容
-    
-    Args:
-        http_client: HTTP 客户端类型
-            - 'requests': 标准 requests 库
-            - 'curl_cffi': curl_cffi 库（绕过 Cloudflare）
-            - 'auto': 自动选择（默认使用 curl_cffi）
-    
     Returns:
         str: 网页文本内容
-    
-    是否使用代理应由上层处理
     """
     http_client = _resolve_http_client(http_client)
-    
-    errors = ""
+
     headers = {"User-Agent": ua or G_USER_AGENT}
 
     # 根据 http_client 类型选择请求库
@@ -138,25 +110,23 @@ def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, 
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
                 })
-                
+
                 result = curl_requests.post(
-                    url, 
+                    url,
                     data=data,
                     files=files,
-                    headers=curl_headers, 
-                    timeout=timeout, 
+                    headers=curl_headers,
+                    timeout=timeout,
                     proxies=proxies,
                     verify=False if verify is False else True,
                     cookies=cookies,
                     impersonate="chrome120"
                 )
-                
-                # curl_cffi 的 Response 对象没有 apparent_encoding 属性
                 result.encoding = encoding or getattr(result, 'apparent_encoding', None) or result.encoding or 'utf-8'
                 return result.text
             except Exception as e:
                 logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
-                errors = str(e)
+                logging.debug(f"[-]Error: {e}")
     elif http_client == HTTP_CLIENT_REQUESTS:
         # 使用标准 requests
         for i in range(retry):
@@ -167,17 +137,11 @@ def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, 
                 return result.text
             except Exception as e:
                 logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
-                errors = str(e)
+                logging.debug(f"[-]Error: {e}")
     else:
-        raise ValueError(f"Unsupported http_client type: {http_client}. Supported types: {HTTP_CLIENT_REQUESTS}, {HTTP_CLIENT_CURL_CFFI}")
-    
-    if "getaddrinfo failed" in errors:
-        logging.debug("[-]Connect Failed! Please Check your proxy config")
-        logging.debug("[-]" + errors)
-    else:
-        logging.debug("[-]" + errors)
-        logging.debug('[-]Connect Failed! Please check your Proxy or Network!')
-    raise Exception('Connect Failed')
+        raise ValueError(f"Unsupported http_client type: {http_client}.")
+
+    raise Exception(f"Connect Failed: {url}")
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):
@@ -198,14 +162,11 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None, use_curl_cffi=False):
     """
     创建 HTTP session
-    
-    Args:
-        use_curl_cffi: 是否使用 curl_cffi 绕过 Cloudflare（用于 javdb）
     """
     if use_curl_cffi:
         # 使用 curl_cffi 模拟真实 Chrome 浏览器
         session = curl_requests.Session(impersonate="chrome120")
-        
+
         session.headers.update({
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
             'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
@@ -215,7 +176,7 @@ def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, 
             'Sec-Fetch-Site': 'none',
             'Sec-Fetch-User': '?1',
         })
-        
+
         if isinstance(cookies, dict) and len(cookies):
             session.cookies.update(cookies)
         if proxies:
@@ -224,25 +185,25 @@ def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, 
             elif 'http' in proxies:
                 session.proxies = {'http': proxies['http'], 'https': proxies.get('https', proxies['http'])}
         session.verify = False if verify is False else True
-        
+
         return session
-    
+
     # 普通 requests session
     session = requests.Session()
     session.headers = {"User-Agent": ua or G_USER_AGENT}
-    
+
     retries = Retry(total=retry, connect=retry, backoff_factor=1,
                     status_forcelist=[429, 500, 502, 503, 504])
     session.mount("https://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
     session.mount("http://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
-    
+
     if isinstance(cookies, dict) and len(cookies):
         requests.utils.add_dict_to_cookiejar(session.cookies, cookies)
     if verify is not None:
         session.verify = verify
     if proxies:
         session.proxies = proxies
-    
+
     return session
 
 
@@ -257,7 +218,7 @@ def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies:
                     status_forcelist=[429, 500, 502, 503, 504])
     session.mount("https://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
     session.mount("http://", TimeoutHTTPAdapter(max_retries=retries, timeout=timeout))
-    if verify:
+    if verify is not None:
         session.verify = verify
     if proxies:
         session.proxies = proxies
@@ -292,7 +253,7 @@ def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies:
 def get_html_by_scraper(url: str = None, cookies: dict = None, ua: str = None, return_type: str = None,
                         encoding: str = None, retry: int = G_DEFAULT_RETRY, proxies=None, timeout: int = G_DEFAULT_TIMEOUT, verify=None):
     session = curl_requests.Session(impersonate="chrome120")
-    
+
     if isinstance(cookies, dict) and len(cookies):
         session.cookies.update(cookies)
     if proxies:
@@ -301,7 +262,7 @@ def get_html_by_scraper(url: str = None, cookies: dict = None, ua: str = None, r
         elif 'http' in proxies:
             session.proxies = {'http': proxies['http'], 'https': proxies.get('https', proxies['http'])}
     session.verify = False if verify is False else True
-    
+
     try:
         if isinstance(url, str) and len(url):
             result = session.get(str(url), timeout=timeout)
