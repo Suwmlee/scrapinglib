@@ -66,7 +66,8 @@ def get(url: str, cookies=None, ua: str = None, extra_headers=None, encoding: st
                     cookies=cookies,
                     impersonate="chrome120"
                 )
-                result.encoding = encoding or getattr(result, 'apparent_encoding', None) or result.encoding or 'utf-8'
+                if encoding:
+                    result.encoding = encoding
                 return result.text
             except Exception as e:
                 logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")
@@ -122,7 +123,8 @@ def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, 
                     cookies=cookies,
                     impersonate="chrome120"
                 )
-                result.encoding = encoding or getattr(result, 'apparent_encoding', None) or result.encoding or 'utf-8'
+                if encoding:
+                    result.encoding = encoding
                 return result.text
             except Exception as e:
                 logging.debug(f"[-]Connect ({http_client}): {url} retry {i + 1}/{retry}")

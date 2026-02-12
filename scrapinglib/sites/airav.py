@@ -12,22 +12,23 @@ class Airav(BaseScraper):
     priority = 40
 
     expr_title = '/html/head/title/text()'
-    expr_number = '/html/head/title/text()'
-    expr_studio = '//a[contains(@href,"?video_factory=")]/text()'
-    expr_release = '//li[contains(text(),"發片日期")]/text()'
-    expr_outline = "string(//div[@class='d-flex videoDataBlock']/div[@class='synopsis']/p)"
-    expr_actor = '//ul[@class="videoAvstarList"]/li/a[starts-with(@href,"/idol/")]/text()'
-    expr_cover = '//img[contains(@src,"/storage/big_pic/")]/@src'
-    expr_tags = '//div[@class="tagBtnMargin"]/a/text()'
+    expr_number = '//li[contains(text(),"番號：")]/span/text()'
+    expr_studio = '//li[contains(text(),"廠商：")]/a/text()'
+    expr_release = '//div[@class="video-item"]/div[contains(@class,"me-4")]/text()'
+    expr_outline = "string(//div[@class='video-info']/p[@class='my-3'])"
+    expr_actor = '//li[contains(text(),"女優：")]/a/text()'
+    expr_cover = '//meta[@property="og:image"]/@content'
+    expr_tags = '//li[contains(text(),"標籤：")]/a/text()'
+    expr_series = '//li[contains(text(),"系列：")]/a/text()'
     expr_extrafanart = '//div[@class="mobileImgThumbnail"]/a/@href'
 
     def extraInit(self):
         # for javbus
         self.specifiedSource = None
-        self.addtion_Javbus = True
+        self.addtion_Javbus = False
 
-    def search(self, number):
-        self.number = number
+    def search(self, number: str):
+        self.number = number.upper()
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
         else:
@@ -44,30 +45,39 @@ class Airav(BaseScraper):
         result = self.dictformat(htmltree)
         return result
 
-    def queryNumberUrl(self, number):
-        queryUrl =  "https://cn.airav.wiki/?search=" + number
+    def queryNumberUrl(self, number: str):
+        queryUrl =  "https://airav.io/search_result?kw=" + number
         queryTree = self.getHtmlTree(queryUrl)
-        results = self.getTreeAll(queryTree, '//div[contains(@class,"videoList")]/div/a')
+        results = self.getTreeAll(queryTree, '//div[contains(@class,"row row-cols-2 row-cols-lg-4 g-2 mt-0")]/div/div')
         for i in results:
-            num = self.getTreeElement(i, '//div/div[contains(@class,"videoNumber")]/p[1]/text()')
-            if num.replace('-','') == number.replace('-','').upper():
-                self.number = num
-                return "https://cn.airav.wiki" + i.attrib['href']
-        return 'https://cn.airav.wiki/video/' + number
+            title = self.getTreeElement(i, '//div[contains(@class,"oneVideo-body")]/h5/text()')
+            detailurl = self.getTreeElement(i, '//div[contains(@class,"oneVideo-top")]/a/@href')
+            if title.upper().startswith(number):
+                return "https://airav.io" + detailurl
+        return None
 
     def getNum(self, htmltree):
         if self.addtion_Javbus:
             result = self.javbus.get('number')
             if isinstance(result, str) and len(result):
                 return result
-        number = super().getNum(htmltree)
-        result = str(re.findall('^\[(.*?)]', number)[0])
-        return result
+        number = self.getTreeElement(htmltree, self.expr_number)
+        if number:
+            return number.strip()
+        title = super().getNum(htmltree)
+        match = re.search(r'^([A-Z]+-\d+)', title)
+        if match:
+            return match.group(1)
+        return ''
 
     def getTitle(self, htmltree):
         title = super().getTitle(htmltree)
-        result = str(re.findall('](.*?)- AIRAV-WIKI', title)[0]).strip()
-        return result
+        match = re.search(r'^[A-Z]+-\d+\s+(.*?)\s+-\s+airav\.io$', title)
+        if match:
+            return match.group(1).strip()
+        title = re.sub(r'^[A-Z]+-\d+\s+', '', title)
+        title = re.sub(r'\s+-\s+airav\.io$', '', title)
+        return title.strip()
 
     def getStudio(self, htmltree):
         if self.addtion_Javbus:
@@ -130,6 +140,9 @@ class Airav(BaseScraper):
         return super().getCover(htmltree)
 
     def getSeries(self, htmltree):
+        series = self.getTreeElement(htmltree, self.expr_series)
+        if series and len(series.strip()):
+            return series.strip()
         if self.addtion_Javbus:
             result = self.javbus.get('series')
             if isinstance(result, str) and len(result):
