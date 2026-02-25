@@ -37,6 +37,8 @@ class Fc2(BaseScraper):
             return 404
         htmltree = etree.HTML(self.htmlcode)
         result = self.dictformat(htmltree)
+        if result.get('title') and '未找到您要找的商品' in result['title']:
+            return 404
         return result
 
     def getNum(self, htmltree):
