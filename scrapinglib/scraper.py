@@ -228,6 +228,9 @@ class Scraping:
                     sources = insert(sources, "getchu")
                 if "dlsite" in sources:
                     sources = insert(sources, "dlsite")
+            elif "pcolle" in lo_file_number:
+                if "pcolle" in sources:
+                    sources = insert(sources, "pcolle")
             elif "fc2" in lo_file_number:
                 if "fc2" in sources:
                     sources = insert(sources, "fc2")
