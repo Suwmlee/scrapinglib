@@ -5,7 +5,6 @@
 """
 
 
-import json
 import os
 import re
 import time
@@ -152,7 +151,7 @@ def getStoryline_airavwiki(number, debug, proxies, verify):
         airavwiki.proxies = proxies
         airavwiki.verify = verify
         jsons = airavwiki.search(kwd)
-        outline = json.loads(jsons).get('outline')
+        outline = jsons.get('outline') if isinstance(jsons, dict) else None
         return outline
     except Exception as e:
         logging.debug(f"[-]MP def getStoryline_airavwiki Error: {e}, number [{number}].")
@@ -257,7 +256,7 @@ def getStoryline_xcity(number, debug, proxies, verify):  #获取剧情介绍 从
         xcityEngine.proxies = proxies
         xcityEngine.verify = verify
         jsons = xcityEngine.search(number)
-        outline = json.loads(jsons).get('outline')
+        outline = jsons.get('outline') if isinstance(jsons, dict) else None
         return outline
     except Exception as e:
         logging.debug(f"[-]MP getOutline_xcity Error: {e}, number [{number}].")

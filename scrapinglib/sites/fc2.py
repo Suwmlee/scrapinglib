@@ -40,7 +40,7 @@ class Fc2(BaseScraper):
             return 404
         htmltree = etree.HTML(self.htmlcode)
         result = self.dictformat(htmltree)
-        if result.get('title') and '未找到您要找的商品' in result['title']:
+        if '未找到您要找的商品' in result.get('title', ''):
             return 404
         return result
 
@@ -57,7 +57,11 @@ class Fc2(BaseScraper):
         return actors
 
     def getCover(self, htmltree):
-        return urljoin('https://adult.contents.fc2.com', super().getCover(htmltree)) 
+        return urljoin('https://adult.contents.fc2.com', super().getCover(htmltree))
+
+    def getExtrafanart(self, htmltree) -> list:
+        urls = super().getExtrafanart(htmltree)
+        return [('https:' + u if u.startswith('//') else u) for u in urls]
 
     def getTrailer(self, htmltree):
         video_pather = re.compile(r'\'[a-zA-Z0-9]{32}\'')

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
 import re
 from lxml import etree, html
 
@@ -147,7 +146,7 @@ class BaseScraper:
         ret = etree.fromstring(resp, etree.HTMLParser())
         return ret
 
-    def dictformat(self, htmltree):
+    def dictformat(self, htmltree) -> dict:
         try:
             dic = {
                 'number': self.getNum(htmltree),
@@ -175,11 +174,9 @@ class BaseScraper:
                 'imagecut': self.getImagecut(htmltree),
             }
             dic = self.extradict(dic)
-        except Exception as e:
-            # print(e)
+        except Exception:
             dic = {"title": ""}
-        js = json.dumps(dic, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
-        return js
+        return dic
 
     def extradict(self, dic: dict):
         """ 额外修改dict

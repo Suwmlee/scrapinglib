@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import json
 import logging
 import importlib
 from pathlib import Path
@@ -132,7 +131,7 @@ class Scraping:
                     data = parser.scrape(name, self)
                     if data == 404:
                         continue
-                    json_data = json.loads(data)
+                    json_data = data
                 except Exception as e:
                     logging.debug(e)
                 # if any service return a valid return, break
@@ -165,7 +164,7 @@ class Scraping:
                     data = parser.scrape(number, self)
                     if data == 404:
                         continue
-                    json_data = json.loads(data)
+                    json_data = data
                     # clean json_data
                     json_data = self.clean_title_tags(json_data)
                 except Exception as e:

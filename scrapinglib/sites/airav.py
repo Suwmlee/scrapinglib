@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
 import re
 from lxml import etree
 from ..base_scraper import BaseScraper
@@ -39,7 +38,7 @@ class Airav(BaseScraper):
             if javbusinfo == 404:
                 self.javbus = {"title": ""}
             else:
-                self.javbus = json.loads(javbusinfo)
+                self.javbus = javbusinfo
         self.htmlcode = self.getHtml(self.detailurl)
         htmltree = etree.fromstring(self.htmlcode, etree.HTMLParser())
         result = self.dictformat(htmltree)

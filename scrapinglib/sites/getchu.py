@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import json
 from urllib.parse import quote
 from ..base_scraper import BaseScraper
 
@@ -148,7 +147,7 @@ class Getchu(BaseScraper):
         for i in sort:
             try:
                 dic = eval(i)
-                if dic != None and json.loads(dic).get('title') != '':
+                if dic is not None and dic != 404 and isinstance(dic, dict) and dic.get('title') != '':
                     break
             except:
                 pass
