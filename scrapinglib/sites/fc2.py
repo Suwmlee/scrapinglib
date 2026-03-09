@@ -12,7 +12,7 @@ class Fc2(BaseScraper):
     content_type = 'adult'
     priority = 60
 
-    expr_title = '//div[@class="items_article_headerInfo"]/h3/text()'
+    expr_title = '//head/meta[@property="og:title"]/@content'
     expr_studio = '//*[@id="top"]/div[1]/section[1]/div/section/div[2]/ul/li[3]/a/text()'
     expr_release = '//*[@id="top"]/div[1]/section[1]/div/section/div[2]/div[2]/p/text()'
     expr_runtime = "//p[@class='items_article_info']/text()"
@@ -44,11 +44,20 @@ class Fc2(BaseScraper):
             return 404
         return result
 
+    def getTitle(self, htmltree):
+        title = super().getTitle(htmltree)
+        num = 'FC2-PPV-' + self.number
+        if title.upper().startswith(num.upper()):
+            title = title[len(num):].strip()
+        return title
+
     def getNum(self, htmltree):
         return 'FC2-' + self.number
 
     def getRelease(self, htmltree):
-        return super().getRelease(htmltree).strip(" ['販売日 : ']").replace('/','-')
+        release = super().getRelease(htmltree).replace('/', '-')
+        match = re.search(r'\d{4}-\d{2}-\d{2}', release)
+        return match.group() if match else release
     
     def getActors(self, htmltree):
         actors = super().getActors(htmltree)
