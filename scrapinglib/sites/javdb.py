@@ -169,7 +169,10 @@ class Javdb(BaseScraper):
 
     def getRelease(self, htmltree):
         if self.noauth:
-            return self.getTreeElement(htmltree, self.expr_release_no, self.queryid).strip()
+            release = self.getTreeElement(htmltree, self.expr_release_no, self.queryid).strip()
+            if release == 'N/A':
+                return ''
+            return release
         return super().getRelease(htmltree)
 
     def getDirector(self, htmltree):
