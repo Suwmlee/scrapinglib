@@ -169,8 +169,8 @@ class BaseScraper:
                 'userrating': self.getUserRating(htmltree),
                 'uservotes': self.getUserVotes(htmltree),
                 'uncensored': self.getUncensored(htmltree),
-                'website': self.detailurl,
-                'source': self.source,
+                'detailurl': self.detailurl,
+                'site': self.source,
                 'imagecut': self.getImagecut(htmltree),
             }
             dic = self.extradict(dic)

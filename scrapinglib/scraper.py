@@ -136,7 +136,7 @@ class Scraping:
                     logging.debug(e)
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
-                    logging.debug(f"[+]Find movie [{name}] metadata on website '{source}'")
+                    logging.debug(f"[+]Find movie [{name}] metadata on site '{source}'")
                     break
             except:
                 continue
@@ -171,7 +171,7 @@ class Scraping:
                     logging.debug(e)
                 # if any service return a valid return, break
                 if self.get_data_state(json_data):
-                    logging.debug(f"[+]Find movie [{number}] metadata on website '{source}'")
+                    logging.debug(f"[+]Find movie [{number}] metadata on site '{source}'")
                     break
             except:
                 continue
