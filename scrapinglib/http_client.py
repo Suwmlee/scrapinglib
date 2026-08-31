@@ -26,6 +26,36 @@ def _resolve_http_client(http_client: str) -> str:
     return http_client
 
 
+def _fix_proxy_url(url: str) -> str:
+    """去掉首尾空白；没有 scheme 时补 http://。"""
+    url = (url or "").strip()
+    if not url:
+        return ""
+    if "://" not in url:
+        url = "http://" + url
+    return url
+
+
+def normalize_proxies(proxies):
+    """统一代理格式，供 requests / curl_cffi 使用。
+
+    - None / 空 dict / 空字符串 → None
+    - 只填 http 或 https 时互相补全，避免 HTTPS 站点直连
+    - 无 scheme 时补 http://
+    """
+    if not proxies or not isinstance(proxies, dict):
+        return None
+    http = _fix_proxy_url(proxies.get("http") or "")
+    https = _fix_proxy_url(proxies.get("https") or "")
+    if not http and not https:
+        return None
+    if not http:
+        http = https
+    if not https:
+        https = http
+    return {"http": http, "https": https}
+
+
 def get(url: str, cookies=None, ua: str = None, extra_headers=None, encoding: str = None,
         retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None,
         http_client: str = HTTP_CLIENT_AUTO):
@@ -35,6 +65,7 @@ def get(url: str, cookies=None, ua: str = None, extra_headers=None, encoding: st
         str: 网页文本内容
     """
     http_client = _resolve_http_client(http_client)
+    proxies = normalize_proxies(proxies)
 
     headers = {"User-Agent": ua or G_USER_AGENT}
     if extra_headers != None:
@@ -98,6 +129,7 @@ def post(url: str, data: dict = None, files=None, cookies=None, ua: str = None, 
         str: 网页文本内容
     """
     http_client = _resolve_http_client(http_client)
+    proxies = normalize_proxies(proxies)
 
     headers = {"User-Agent": ua or G_USER_AGENT}
 
@@ -165,6 +197,7 @@ def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, 
     """
     创建 HTTP session
     """
+    proxies = normalize_proxies(proxies)
     if use_curl_cffi:
         # 使用 curl_cffi 模拟真实 Chrome 浏览器
         session = curl_requests.Session(impersonate="chrome120")
@@ -182,10 +215,7 @@ def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, 
         if isinstance(cookies, dict) and len(cookies):
             session.cookies.update(cookies)
         if proxies:
-            if 'https' in proxies:
-                session.proxies = {'https': proxies['https'], 'http': proxies.get('http', proxies['https'])}
-            elif 'http' in proxies:
-                session.proxies = {'http': proxies['http'], 'https': proxies.get('https', proxies['http'])}
+            session.proxies = proxies
         session.verify = False if verify is False else True
 
         return session
@@ -213,6 +243,7 @@ def request_session(cookies=None, ua: str = None, retry: int = G_DEFAULT_RETRY, 
 def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies: dict = None, ua: str = None,
                      return_type: str = None, encoding: str = None,
                      retry: int = G_DEFAULT_RETRY, timeout: int = G_DEFAULT_TIMEOUT, proxies=None, verify=None):
+    proxies = normalize_proxies(proxies)
     session = requests.Session()
     if isinstance(cookies, dict) and len(cookies):
         requests.utils.add_dict_to_cookiejar(session.cookies, cookies)
@@ -254,15 +285,13 @@ def get_html_by_form(url, form_select: str = None, fields: dict = None, cookies:
 # storyline javdb only
 def get_html_by_scraper(url: str = None, cookies: dict = None, ua: str = None, return_type: str = None,
                         encoding: str = None, retry: int = G_DEFAULT_RETRY, proxies=None, timeout: int = G_DEFAULT_TIMEOUT, verify=None):
+    proxies = normalize_proxies(proxies)
     session = curl_requests.Session(impersonate="chrome120")
 
     if isinstance(cookies, dict) and len(cookies):
         session.cookies.update(cookies)
     if proxies:
-        if 'https' in proxies:
-            session.proxies = {'https': proxies['https'], 'http': proxies.get('http', proxies['https'])}
-        elif 'http' in proxies:
-            session.proxies = {'http': proxies['http'], 'https': proxies.get('https', proxies['http'])}
+        session.proxies = proxies
     session.verify = False if verify is False else True
 
     try:

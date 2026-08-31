@@ -27,7 +27,8 @@ class Fc2(BaseScraper):
         self.allow_number_change = True
 
     def updateCore(self, core):
-        self.cookies =  {'wei6H':'1','GDPRCHECK':'true'}
+        super().updateCore(core)
+        self.cookies = {'wei6H': '1', 'GDPRCHECK': 'true'}
 
     def search(self, number):
         self.number = number.lower().replace('fc2-ppv-', '').replace('fc2-', '')

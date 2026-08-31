@@ -104,7 +104,7 @@ class BaseScraper:
         if not core:
             return
         if core.proxies:
-            self.proxies = core.proxies
+            self.proxies = http_client.normalize_proxies(core.proxies)
         if core.verify:
             self.verify = core.verify
         if core.morestoryline:

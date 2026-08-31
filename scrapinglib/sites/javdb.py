@@ -50,19 +50,15 @@ class Javdb(BaseScraper):
         self.search_delay = 0.5   # 搜索延迟（秒）
 
     def updateCore(self, core):
-        if core.proxies:
-            self.proxies = core.proxies
-        if core.verify:
-            self.verify = core.verify
-        if core.morestoryline:
-            self.morestoryline = True
-        if core.specifiedSource == self.source:
-            self.specifiedUrl = core.specifiedUrl
-        # special
+        super().updateCore(core)
+        if not core:
+            self.cookies = {'over18': '1', 'theme': 'auto', 'locale': 'zh'}
+            self.dbsite = 'javdb'
+            return
         if core.dbcookies:
             self.cookies = core.dbcookies
         else:
-            self.cookies =  {'over18':'1', 'theme':'auto', 'locale':'zh'}
+            self.cookies = {'over18': '1', 'theme': 'auto', 'locale': 'zh'}
         if core.dbsite:
             self.dbsite = core.dbsite
         else:
