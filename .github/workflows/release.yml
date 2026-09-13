@@ -1,29 +1,54 @@
-name: Upload Package to PyPI
+name: Release Version
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'setup.py'
   workflow_dispatch:
     inputs:
       publish_tag:
         description: 'Push PyPI'
         required: false
         default: 'Go!'
-  push:
-    tags:
-      - v**
+
+permissions:
+  contents: write
 
 jobs:
-  deploy:
+  release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout code
+      uses: actions/checkout@v7
+
+    - name: Extract version
+      id: extract_version
+      run: |
+        VERSION=$(grep -oP "^\s*version=['\"]\K[^'\"]+" setup.py)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Found version: $VERSION"
+
+    - name: Create Release
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v3
+      with:
+        tag_name: v${{ steps.extract_version.outputs.version }}
+        name: Release v${{ steps.extract_version.outputs.version }}
+        draft: false
+        prerelease: false
+
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
         python-version: '3.13'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel twine setuptools_scm toml
+
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
