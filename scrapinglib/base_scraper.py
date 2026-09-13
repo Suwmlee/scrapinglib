@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import re
 from lxml import etree, html
 
@@ -175,6 +176,10 @@ class BaseScraper:
             }
             dic = self.extradict(dic)
         except Exception:
+            logging.getLogger(__name__).warning(
+                'Failed to parse metadata: site=%s number=%s',
+                self.source, getattr(self, 'number', ''), exc_info=True,
+            )
             dic = {"title": ""}
         return dic
 

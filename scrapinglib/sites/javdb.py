@@ -122,20 +122,24 @@ class Javdb(BaseScraper):
         # javdb sometime returns multiple results,
         # and the first elememt maybe not the one we are looking for
         # iterate all candidates and find the match one
-        urls = self.getTreeAll(self.querytree, '//*[contains(@class,"movie-list")]/div/a/@href')
+        candidates = self.getTreeAll(self.querytree, '//*[contains(@class,"movie-list")]/div/a')
+        if not candidates:
+            raise ValueError("number not found in javdb")
         # 记录一下欧美的ids  ['Blacked','Blacked']
         if re.search(r'[a-zA-Z]+\.\d{2}\.\d{2}\.\d{2}', number):
-            correct_url = urls[0]
+            self.queryid = 0
+            correct_url = candidates[0].get('href')
         else:
-            ids = self.getTreeAll(self.querytree, '//*[contains(@class,"movie-list")]/div/a/div[contains(@class, "video-title")]/strong/text()')
-            try:
-                self.queryid = ids.index(number)
-                correct_url = urls[self.queryid]
-            except:
-                # 为避免获得错误番号，只要精确对应的结果
-                if ids[0].upper() != number.upper():
-                    raise ValueError("number not found in javdb")
-                correct_url = urls[0]
+            for index, candidate in enumerate(candidates):
+                ids = candidate.xpath('./div[contains(@class, "video-title")]/strong/text()')
+                if any(value.strip().upper() == number.upper() for value in ids):
+                    self.queryid = index
+                    correct_url = candidate.get('href')
+                    break
+            else:
+                raise ValueError("number not found in javdb")
+        if not correct_url:
+            raise ValueError("missing detail URL in javdb search result")
         return urljoin(resp.url, correct_url)
 
     def getNum(self, htmltree):
@@ -190,19 +194,19 @@ class Javdb(BaseScraper):
         return result
 
     def getActors(self, htmltree):
-        actors = self.getTreeAll(htmltree, self.expr_actor)
-        genders = self.getTreeAll(htmltree, self.expr_actor2)
         r = []
-        idx = 0
         # NOTE only female, we dont care others
-        actor_gendor = 'female'
-        for act in actors:
-            if((actor_gendor == 'all')
-            or (actor_gendor == 'both' and genders[idx] in ['symbol female', 'symbol male'])
-            or (actor_gendor == 'female' and genders[idx] == 'symbol female')
-            or (actor_gendor == 'male' and genders[idx] == 'symbol male')):
-                r.append(act)
-            idx = idx + 1
+        for actor in self.getTreeAll(htmltree, '//span[@class="value"]/a[contains(@href,"/actors/")]'):
+            classes = actor.get('class', '').split()
+            # Older pages put the gender marker immediately after each actor link.
+            legacy_classes = actor.xpath('following-sibling::*[1][self::strong]/@class')
+            female = 'actor-female' in classes
+            if not {'actor-female', 'actor-male'}.intersection(classes):
+                female = any({'symbol', 'female'}.issubset(value.split()) for value in legacy_classes)
+            if female:
+                name = ''.join(actor.itertext()).strip()
+                if name:
+                    r.append(name)
         if re.match(r'FC2-[\d]+', self.number, re.A) and not r:
             r = '素人'
             self.fixstudio = True
@@ -273,4 +277,3 @@ class Javdb(BaseScraper):
             except:
                 pass
         return actor_photo
-
